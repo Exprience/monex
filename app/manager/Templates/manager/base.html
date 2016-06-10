@@ -209,13 +209,14 @@
       $('[data-modal="modalview"]').DjangoModalRunner({
         //on_show_modal: function(){
         //},
-        //on_hide_modal: function(){
-        //},
+        on_hide_modal: function(){
+          location.reload();
+        },
         //on_hide_modal_after_submit: function(){
         //},
-        on_submit: function(){
+        //on_submit: function(){
           //location.reload();
-        }
+        //}
         //on_done: function(){
         //}
       });

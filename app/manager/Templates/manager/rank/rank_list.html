@@ -29,6 +29,7 @@
             <thead>
               <tr>
                 <th>№</th>
+                <th>PK</th>
                 <th>Ангилал</th>
                 <th>Хураамж</th>
                 <th>Шагналын сан</th>
@@ -39,6 +40,7 @@
               {% for o in object_list %}
               <tr>
                 <td>{{ forloop.counter }}</td>
+                <td>{{ o.id }}</td>
                 <td>{{ o.name }}</td>
                 <td>{{ o.fee }}</td>
                 <td>

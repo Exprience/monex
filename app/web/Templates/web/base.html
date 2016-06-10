@@ -35,7 +35,13 @@
           <div id="blog-sidebar" class="blog-sidebar widget-area" role="complementary">
             <div class="sidebar-content">
               <aside class="widget">
-                <h3 class="widget-title">{% trans 'Валют \ Хувьцаа' %}</h3>
+                <h3 class="widget-title">{% trans 'Валют' %}</h3>
+                <iframe src="http://xacbank.mn/mn/iframe/rates"></iframe>
+              </aside>
+
+              <aside class="widget">
+                <h3 class="widget-title">{% trans 'Хувьцаа' %}</h3>
+                <iframe src="http://mse.mn/content/list/2/0#"></iframe>
               </aside>
               
               <aside class="widget">
@@ -147,3 +153,11 @@
   });
 </script>
 {% endblock %}
+<style type="text/css">
+  iframe {
+    display: block;
+    border: none;
+    height: 350px;
+    width: 100%;
+  }
+</style>

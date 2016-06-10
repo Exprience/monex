@@ -60,7 +60,7 @@
             </li>
             {% if user.is_authenticated %}
             <li class="{% if menu_num == 5 %}active{% endif %}">
-              <a href="{% if sudalgaa_first %}{% url 'research' sudalgaa_first.id %}{% endif %}">Судалгаа</a>
+              <a href="{% url 'research' %}">Судалгаа</a>
             </li>
             {% endif %}
             <li class="{% if menu_num == 6 %}active{% endif %}">

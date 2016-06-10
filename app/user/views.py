@@ -25,6 +25,11 @@ class Login(FormView):
 	template_name = "user/login.html"
 	success_url = reverse_lazy('home')
 
+	def dispatch(self, request, *args, **kwargs):
+		if SystemUser.objects.filter(username = request.user.username):
+			return HttpResponseRedirect(reverse_lazy('home'))
+		return super(Login, self).dispatch(request, *args, **kwargs)
+
 	def form_valid(self, form):
 		user = authenticate(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
 		if user and SystemUser.objects.filter(username = user.username):

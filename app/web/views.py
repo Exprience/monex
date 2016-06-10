@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
+from reportlab.pdfgen import canvas
 
 from django.views.generic import TemplateView, FormView, ListView, CreateView
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -11,6 +13,7 @@ from .models import *
 from app.competition.models import *
 from app.competition.forms import CompetitionRegisterForm
 from app.user.models import SystemUser
+from app.manager.models import Manager
 
 from django_modalview.generic.base import ModalTemplateView
 from django_modalview.generic.edit import ModalFormView, ModalCreateView, ModalUpdateView
@@ -18,7 +21,8 @@ from django_modalview.generic.component import ModalResponse, ModalButton
 from django_modalview.generic.response import ModalJsonResponseRedirect
 
 __all__ = ['Home', 'About', 'News', 'Research', 'Lesson', 'Contact', 'NewsSelf',
-'WebCompetitionCalendar', 'Calendar', 'h404', 'BagtsView', 'WebCompetitionRegisterView']
+'WebCompetitionCalendar', 'Calendar', 'h404', 'BagtsView', 'WebCompetitionRegisterView', 'printexample']
+
 
 
 def h404(request):
@@ -34,7 +38,15 @@ def handler500(request):
     response.status_code = 500
     return response
 
-class Web(object):
+class SystemUserLoginRequired(object):
+
+	def dispatch(self, request, *args, **kwargs):
+		if not Manager.objects.filter(username = request.user.username):
+			return super(SystemUserLoginRequired, self).dispatch(request, *args, **kwargs)
+		else:
+			return HttpResponseRedirect(reverse_lazy('login'))
+
+class Web(SystemUserLoginRequired):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(Web, self).get_context_data(*args, **kwargs)
@@ -90,8 +102,8 @@ class Research(Home):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(Research, self).get_context_data(*args, **kwargs)
-		context['sudalgaa'] = Sudalgaa.objects.filter(angilal__id = self.sudalgaa_number)
-		context['sudalgaa_number'] = int(self.sudalgaa_number)
+		context['sudalgaa'] = Sudalgaa.objects.all() #filter(angilal__id = self.sudalgaa_number)
+		#context['sudalgaa_number'] = int(self.sudalgaa_number)
 		return context
 
 class Lesson(Web, ListView):
@@ -154,3 +166,16 @@ class WebCompetitionRegisterView(FormView):
 		else:
 			return super(WebCompetitionRegisterView, self).form_invalid(form)
 		
+
+
+def printexample(request):
+	response = HttpResponse(content_type='application/pdf')
+	response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+	p = canvas.Canvas(response)
+	for i in dir(p):
+		print i
+	p.drawString(100, 100, "Hello world.")
+	p.drawString(1,1, 'Hello world')
+	p.showPage()
+	p.save()
+	return response

@@ -11,55 +11,66 @@
       <button class="btn-sm btn-info">Явагдаж байгаа тэмцээн</button>
       <button class="btn-sm btn-danger" date="daterange"><i class="fa fa-calendar"></i></button>
     </div>
-		<div id="calendar" class="calendar" style="height: 1000px;"></div>
-    {% if user.is_authenticated %}
-    <table id="example2" class="table table-bordered table-hover">
-      <thead>
-        <tr>
-          <th>№</th>
-          <th>Ангилал</th>
-          <th>Хураамж</th>
-          <th>Шагналын сан</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for o in object_list %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ o.rank.name }}</td>
-          <td>{{ o.rank.fee }}</td>
-          <td>
-            <a href="#shagnal{{ o.id }}" data-toggle="modal">Шагналын сан</a>
-          </td>
-          <td>
-            {% if o.competition_status == "0" %}
-            <a href="{% url 'web_competition_register' o.id %}" class="btn btn-success btn-flat">{% trans 'Бүртгүүлэх' %}</a>
-            {% elif o.competition_status == "1" %}
-            <a href="" disable = "true" class="btn btn-disable btn-flat">{% trans 'Тэмцээн эхэлсэн' %}</a>
-            {% endif %}
-          </td>
-        </tr>
-        <div class="modal fade" id="shagnal{{ o.id }}">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Шагналын сан</h4>
-              </div>
-              <div class="modal-body">
-                {{ o.rank.shagnal|safe }}
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Хаах</button>
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#table-competition" data-toggle="tab">Хүснэгт</a></li>
+      <li><a href="#calendar-competition" data-toggle="tab">Календарь</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="table-competition">
+        {% if user.is_authenticated %}
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>№</th>
+              <th>Ангилал</th>
+              <th>Хураамж</th>
+              <th>Шагналын сан</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for o in object_list %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ o.rank.name }}</td>
+              <td>{{ o.rank.fee }}</td>
+              <td>
+                <a href="#shagnal{{ o.id }}" data-toggle="modal">Шагналын сан</a>
+              </td>
+              <td>
+                {% if o.competition_status == "0" %}
+                <a href="{% url 'web_competition_register' o.id %}" class="btn btn-success btn-flat">{% trans 'Бүртгүүлэх' %}</a>
+                {% elif o.competition_status == "1" %}
+                <a href="" disable = "true" class="btn btn-disable btn-flat">{% trans 'Тэмцээн эхэлсэн' %}</a>
+                {% endif %}
+              </td>
+            </tr>
+            <div class="modal fade" id="shagnal{{ o.id }}">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Шагналын сан</h4>
+                  </div>
+                  <div class="modal-body">
+                    {{ o.rank.shagnal|safe }}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Хаах</button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+      <div class="tab-pane" id="calendar-competition">
+        <div id="calendar" class="calendar" style="height: 1000px;"></div>
+      </div>
+    </div>
 	</div>
 </div>
 {% endblock %}
@@ -72,71 +83,88 @@
 <script src="/static/assets/js/plugins.js"></script>  
 <script src="/static/assets/js/functions.js"></script>
 <script type="text/javascript">
+</script>
+<script type="text/javascript">
+  $(function() {
+      var currentYear = new Date().getFullYear();
+      
+      $('#calendar').calendar({ 
+        enableContextMenu: true,
+        enableRangeSelection: true,
+
+        mouseOnDay: function(e) {
+          if(e.events.length > 0) {
+            var content = '';
+                  
+            for(var i in e.events) {
+              content += '<div class="event-tooltip-content">'
+              + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
+              + '<div class="event-location">' + e.events[i].location + '</div>'
+              + '</div>';
+            }
+              
+            $(e.element).popover({ 
+              trigger: 'manual',
+              container: 'body',
+              html:true,
+              content: content
+            });
+            
+            $(e.element).popover('show');
+            }
+          },
+          mouseOutDay: function(e) {
+            if(e.events.length > 0) {
+              $(e.element).popover('hide');
+            }
+          },
+          dayContextMenu: function(e) {
+            $(e.element).popover('hide');
+          },
+          clickDay: function(e) {
+            if(e.events.length > 0){
+              for(var i in e.events) {
+                window.location.href  = "/competition/register/"+e.events[i].id;  
+              }  
+            }
+          },
+          dataSource: [
+            {% for o in object_list %}
+              {
+                id: {{ o.id }},
+                name: '{{ o.rank.name }}',
+                location: '{{ o.get_competition_status_display }}',
+                startDate: new Date({{ o.start.year }}, {{ o.start.month }} - 1, {{ o.start.day }}),
+                endDate: new Date({{ o.end.year }}, {{ o.end.month }} - 1, {{ o.end.day }}),
+                {% if o.competition_status == '0' %}
+                color:'#5cb85c'
+                {% else %}
+                color:'#337ab7'
+                {% endif %}
+              },
+            {% endfor %}
+          ]
+      });
+  });
+
   $(function(){
     $('button[date="daterange"]').daterangepicker();
   });
-</script>
-<script type="text/javascript">
-$(function() {
-    var currentYear = new Date().getFullYear();
-    
-    $('#calendar').calendar({ 
-      enableContextMenu: true,
-      enableRangeSelection: true,
 
-      mouseOnDay: function(e) {
-        if(e.events.length > 0) {
-          var content = '';
-                
-          for(var i in e.events) {
-            content += '<div class="event-tooltip-content">'
-            + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
-            + '<div class="event-location">' + e.events[i].location + '</div>'
-            + '</div>';
-          }
-            
-          $(e.element).popover({ 
-            trigger: 'manual',
-            container: 'body',
-            html:true,
-            content: content
-          });
-          
-          $(e.element).popover('show');
-          }
-        },
-        mouseOutDay: function(e) {
-          if(e.events.length > 0) {
-            $(e.element).popover('hide');
-          }
-        },
-        dayContextMenu: function(e) {
-          $(e.element).popover('hide');
-        },
-        clickDay: function(e) {
-          if(e.events.length > 0){
-            for(var i in e.events) {
-              window.location.href  = "/competition/register/"+e.events[i].id;  
-            }  
-          }
-        },
-        dataSource: [
-          {% for o in object_list %}
-            {
-              id: {{ o.id }},
-              name: '{{ o.rank.name }}',
-              location: '{{ o.get_competition_status_display }}',
-              startDate: new Date({{ o.start.year }}, {{ o.start.month }} - 1, {{ o.start.day }}),
-              endDate: new Date({{ o.end.year }}, {{ o.end.month }} - 1, {{ o.end.day }}),
-              {% if o.competition_status == '0' %}
-              color:'#5cb85c'
-              {% else %}
-              color:'#337ab7'
-              {% endif %}
-            },
-          {% endfor %}
-        ]
-    });
-});
+  /* Last tab show */
+  $('a[data-toggle="tab"]').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+
+  $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
+      var id = $(e.target).attr("href");
+      localStorage.setItem('selectedTab', id)
+  });
+
+  var selectedTab = localStorage.getItem('selectedTab');
+  if (selectedTab != null) {
+      $('a[data-toggle="tab"][href="' + selectedTab + '"]').tab('show');
+  }
 </script>
 {% endblock %}

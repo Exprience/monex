@@ -2,21 +2,17 @@
 {% block content %}
 <div class="col-md-8">
 	<div class="wall">
-		{% for i in news %}
-		<div class="wall">{{ i.title }}</div>
-		{% endfor %}
-		<div class="pagination">
-	    <span class="step-links">
-	      {% if news.has_previous %}
-	        <a href="?page={{ news.previous_page_number }}">previous</a>
-	      {% endif %}
-	      <span class="current">
-	        Page {{ news.number }} of {{ news.paginator.num_pages }}.
-	      </span>
-	      {% if news.has_next %}
-	        <a href="?page={{ news.next_page_number }}">next</a>
-	      {% endif %}
-	    </span>
+		<div class="row">
+			<div class="col-md-4">
+				{% for i in sudalgaa_angilal %}
+				<div class="wall">{{ i }}</div>
+				{% endfor %}
+			</div>
+			<div class="col-md-8">
+				{% for i in sudalgaa %}
+				<div class="wall">{{ i }}</div>
+				{% endfor %}
+			</div>
 		</div>
 	</div>
 </div>
