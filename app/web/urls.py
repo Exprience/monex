@@ -18,5 +18,4 @@ urlpatterns = [
 	url(r'^bagts/$', BagtsView.as_view(), name = 'bagts'),
 	url(r'^competition/register/(?P<id>[0-9]+)/$', WebCompetitionRegisterView.as_view(),
 		name = 'web_competition_register'),
-	url(r'example', printexample, name = 'example')
 ]

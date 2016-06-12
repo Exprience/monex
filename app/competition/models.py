@@ -44,6 +44,9 @@ class Competition(models.Model):
 	def historys(self):
 		return self.history.first()
 
+	def if_registered(self):
+		return self.competitionregister_set.all()
+
 	def __unicode__(self):
 		return unicode(self.rank)
 
@@ -61,7 +64,6 @@ class CompetitionRegister(models.Model):
 			self.account = 10000001
 		else:
 			self.account = 10000001 + a
-	
 
 	def __unicode__(self):
 		return unicode(self.user)

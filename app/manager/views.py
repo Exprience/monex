@@ -97,6 +97,7 @@ class ManagerLoginView(FormView):
 	def form_valid(self, form):
 		user = authenticate(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
 		if user and Manager.objects.filter(username = user.username):
+			self.request.user = Manager.objects.get(username = user.username)
 			login(self.request, user)
 		return super(ManagerLoginView, self).form_valid(form)
 
@@ -112,8 +113,7 @@ class ManagerLoginRequired(object):
 		if user.is_authenticated():
 			if Manager.objects.filter(username = user.username):	
 				return super(ManagerLoginRequired, self).dispatch(request, *args, **kwargs)
-		else:
-			return HttpResponseRedirect(reverse_lazy('manager_login'))
+		return HttpResponseRedirect(reverse_lazy('manager_login'))
 
 class ManagerHomeView(ManagerLoginRequired, TemplateView):
 	template_name = 'manager/home.html'

@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-from reportlab.pdfgen import canvas
 
 from django.views.generic import TemplateView, FormView, ListView, CreateView
 from django.http import HttpResponseRedirect, HttpResponse
@@ -21,7 +20,7 @@ from django_modalview.generic.component import ModalResponse, ModalButton
 from django_modalview.generic.response import ModalJsonResponseRedirect
 
 __all__ = ['Home', 'About', 'News', 'Research', 'Lesson', 'Contact', 'NewsSelf',
-'WebCompetitionCalendar', 'Calendar', 'h404', 'BagtsView', 'WebCompetitionRegisterView', 'printexample']
+'WebCompetitionCalendar', 'Calendar', 'h404', 'BagtsView', 'WebCompetitionRegisterView']
 
 
 
@@ -41,12 +40,25 @@ def handler500(request):
 class SystemUserLoginRequired(object):
 
 	def dispatch(self, request, *args, **kwargs):
-		if not Manager.objects.filter(username = request.user.username):
-			return super(SystemUserLoginRequired, self).dispatch(request, *args, **kwargs)
+		if request.user.is_authenticated():
+			if SystemUser.objects.filter(username = request.user.username):
+				return super(SystemUserLoginRequired, self).dispatch(request, *args, **kwargs)
+			else:
+				return HttpResponseRedirect(reverse_lazy('login'))
 		else:
 			return HttpResponseRedirect(reverse_lazy('login'))
 
-class Web(SystemUserLoginRequired):
+class NotManager(object):
+
+	def dispatch(self, request, *args, **kwargs):
+		if not Manager.objects.filter(username = request.user.username):
+			return super(NotManager, self).dispatch(request, *args, **kwargs)
+		else:
+			return HttpResponseRedirect(reverse_lazy('login'))
+
+class Web(NotManager):
+
+	menu_num = 0
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(Web, self).get_context_data(*args, **kwargs)
@@ -63,10 +75,9 @@ class Web(SystemUserLoginRequired):
 
 class Home(Web, TemplateView):
 	template_name = 'web/home.html'
-	user = None
 	menu_num = 1
 
-class About(Home):
+class About(Web, TemplateView):
 	template_name = 'web/about.html'
 	menu_num = 2
 
@@ -80,7 +91,7 @@ class News(Web, ListView):
 	menu_num = 4
 	model = Medee
 
-class NewsSelf(Home):
+class NewsSelf(Web, TemplateView):
 	template_name = 'web/news_self.html'
 	menu_num = 4
 
@@ -91,7 +102,7 @@ class NewsSelf(Home):
 		context['news_self'].save()
 		return context
 
-class Research(Home):
+class Research(Web, TemplateView):
 	template_name = 'web/research.html'
 	menu_num = 5
 
@@ -111,7 +122,7 @@ class Lesson(Web, ListView):
 	menu_num = 6
 	model = Surgalt
 
-class Contact(Home):
+class Contact(Web, TemplateView):
 
 	template_name = 'web/contact.html'
 
@@ -125,11 +136,11 @@ class WebCompetitionCalendar(Web, ListView):
 	template_name = 'web/competition.html'
 	model = Competition
 
-class Contact(Home):
+class Contact(Web, TemplateView):
 	menu_num = 9
 	template_name = 'web/contact.html'
 
-class Calendar(Home):
+class Calendar(Web, TemplateView):
 	menu_num = 7
 	template_name = 'web/calendar.html'
 
@@ -149,7 +160,8 @@ class BagtsView(ModalFormView):
 		self.response = ModalResponse("{obj} is created".format(obj=self.object), 'success')
 		return super(BagtsView, self).form_valid(form, commit = False, **kwargs)
 
-class WebCompetitionRegisterView(FormView):
+class WebCompetitionRegisterView(SystemUserLoginRequired, CreateView):
+	model = CompetitionRegister
 	form_class = CompetitionRegisterForm
 	template_name = 'web/web_competition_register.html'
 	success_url = reverse_lazy('competition_calendar')
@@ -165,17 +177,3 @@ class WebCompetitionRegisterView(FormView):
 			return super(WebCompetitionRegisterView, self).form_valid(form)
 		else:
 			return super(WebCompetitionRegisterView, self).form_invalid(form)
-		
-
-
-def printexample(request):
-	response = HttpResponse(content_type='application/pdf')
-	response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
-	p = canvas.Canvas(response)
-	for i in dir(p):
-		print i
-	p.drawString(100, 100, "Hello world.")
-	p.drawString(1,1, 'Hello world')
-	p.showPage()
-	p.save()
-	return response
