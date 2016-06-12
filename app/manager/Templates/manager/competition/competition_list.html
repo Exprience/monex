@@ -17,32 +17,51 @@
       <div class="box">
         <div class="box-header">
           <h3 class="box-title">
-            Тэмцээн
+            {% trans 'Тэмцээн' %}
             <a href="{% url 'manager_competition_create' %}"><i class="fa fa-plus-circle"></i></a>
           </h3>
         </div>
         <div class="box-body">
-          <table id="example2" class="table table-bordered table-hover">
+          <table id="example2" class="table table-bordered table-hover table-striped">
             <thead>
               <tr>
-                <th>№</th>
-                <th>Ангилал</th>
-                <th>Эхлэх огноо</th>
-                <th>Дуусах огноо</th>
-                <th>Төлөв</th>
+                <th>{% trans '№' %}</th>
+                <th>{% trans 'Ангилал' %}</th>
+                <th>{% trans 'Эхлэх огноо' %}</th>
+                <th>{% trans 'Дуусах огноо' %}</th>
+                <th>{% trans 'Төлөв' %}</th>
+                <th>{% trans 'Түүх' %}</th>
+                <th>{% trans 'Шагналын сан' %}</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               {% for o in object_list %}
+              {% if o.started %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ o.last_ranked.name }}</td>
+                <td>{{ o.historys.start|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ o.historys.end|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ o.historys.get_competition_status_display }}</td>
+                <td><a href="#history_{{ o.id }}" data-toggle="modal">Түүх</a></td>
+                <td>{{ o.last_ranked.shagnal }}</td>
+                <td></td>
+              </tr>
+              {% else %}
               <tr>
                 <td>{{ forloop.counter }}</td>
                 <td>{{ o.rank.name }}</td>
                 <td>{{ o.start|date:"Y-m-d H:i:s" }}</td>
                 <td>{{ o.end|date:"Y-m-d H:i:s" }}</td>
                 <td>{{ o.get_competition_status_display }}</td>
-                <td><a href="{% url 'manager_competition_update' o.id %}"><i class="fa fa-edit"></i></a></td>
+                <td><a href="#history_{{ o.id }}" data-toggle="modal">Түүх</a></td>
+                <td>{{ o.rank.shagnal }}</td>
+                <td>
+                  <a href="{% url 'manager_competition_update' o.id %}"><i class="fa fa-edit"></i></a>
+                </td>
               </tr>
+              {% endif %}
               {% endfor %}
             </tbody>
           </table>
@@ -56,4 +75,59 @@
     </div>
   </div>
 </section>
+{% for o in object_list %}
+<div id="history_{{ o.id }}" class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{% trans 'Түүх' %}</h4>
+      </div>
+      <div class="modal-body">
+        {% if o.history.all %}
+        <table class="table table-bordered table-hover table-striped">
+          <thead>
+            <tr>
+              <th>{% trans '№' %}</th>
+              <th>{% trans 'Ангилал' %}</th>
+              <th>{% trans 'Эхлэх огноо' %}</th>
+              <th>{% trans 'Дуусах огноо' %}</th>
+              <th>{% trans 'Төлөв' %}</th>
+              <th>{% trans 'Хэн' %}</th>
+              <th>{% trans 'Хэзээ' %}</th>
+              <th>{% trans 'Төрөл' %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in o.history.all %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ i.rank.name }}</td>
+              <td>{{ i.start|date:"Y-m-d H:i:s" }}</td>
+              <td>{{ i.start|date:"Y-m-d H:i:s" }}</td>
+              <td>{{ i.get_competition_status_display }}</td>
+              <td>{{ i.history_user }}</td>
+              <td>{{ i.history_date|date:"Y-m-d H:i:s" }}</td>
+              <td>
+                {% if i.history_type == "+" %}
+                {% trans 'Үүсгэсэн' %}
+                {% elif i.history_type == "~" %}
+                {% trans 'Засварласан' %}
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        {% trans 'Түүх байхгүй байна.' %}
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn btn-flat btn-default">{% trans 'Хаах' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
 {% endblock %}

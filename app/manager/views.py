@@ -4,7 +4,7 @@ from django.contrib.auth import  authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import (FormView, TemplateView, ListView, CreateView, UpdateView)
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.utils.html import escape
 
 
@@ -107,11 +107,11 @@ class ManagerLoginView(FormView):
 
 class ManagerLoginRequired(object):
 
-	@method_decorator(login_required)
 	def dispatch(self, request, *args, **kwargs):
 		user = request.user
-		if Manager.objects.filter(username = user.username):	
-			return super(ManagerLoginRequired, self).dispatch(request, *args, **kwargs)
+		if user.is_authenticated():
+			if Manager.objects.filter(username = user.username):	
+				return super(ManagerLoginRequired, self).dispatch(request, *args, **kwargs)
 		else:
 			return HttpResponseRedirect(reverse_lazy('manager_login'))
 
@@ -128,14 +128,14 @@ class ManagerRankCreateView(ManagerLoginRequired, CreateView):
 	model = CompetitionRank
 	form_class = CompetitionRankForm
 	template_name = 'manager/rank/rank_form.html'
-	success_url = reverse_lazy('manager_rank')
+	success_url = reverse_lazy('manager_rank_list')
 
 
 class ManagerRankUpdateView(ManagerLoginRequired, UpdateView):
 	model = CompetitionRank
 	form_class = CompetitionRankForm
 	template_name = 'manager/rank/rank_form.html'
-	success_url = reverse_lazy('manager_rank')
+	success_url = reverse_lazy('manager_rank_list')
 # End temtseenii angilal crud
 
 ''' Тэмцээний crud view '''
@@ -154,6 +154,12 @@ class ManagerCompetitionUpdateView(ManagerLoginRequired, UpdateView):
 	form_class = CompetitionForm
 	template_name = 'manager/competition/competition_form.html'
 	success_url = reverse_lazy('manager_competition')
+
+	def dispatch(self, request, *args, **kwargs):
+		self.object = self.model.objects.get(id = self.kwargs['pk'])
+		if self.object.started():
+			raise Http404
+		return super(ManagerCompetitionUpdateView, self).dispatch(request, *args, **kwargs)
 
 class ManagerCompetitionRankCreateView(PopupCreate, ManagerLoginRequired, CreateView):
 	model = CompetitionRank

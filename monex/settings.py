@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'bootstrap3_datetime',
     'pagination_bootstrap',
     'django_modalview',
+    'simple_history',
 )
 
 
@@ -60,7 +61,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'pagination_bootstrap.middleware.PaginationMiddleware',
-
+    'simple_history.middleware.HistoryRequestMiddleware',
 )
 
 ROOT_URLCONF = 'monex.urls'

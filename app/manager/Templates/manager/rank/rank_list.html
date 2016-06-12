@@ -25,7 +25,7 @@
           </h3>
         </div>
         <div class="box-body">
-          <table id="example2" class="table table-bordered table-hover">
+          <table class="table table-bordered table-striped table-hover">
             <thead>
               <tr>
                 <th>№</th>
@@ -33,6 +33,7 @@
                 <th>Ангилал</th>
                 <th>Хураамж</th>
                 <th>Шагналын сан</th>
+                <th>Түүх харах</th>
                 <th></th>
               </tr>
             </thead>
@@ -43,30 +44,13 @@
                 <td>{{ o.id }}</td>
                 <td>{{ o.name }}</td>
                 <td>{{ o.fee }}</td>
-                <td>
-                  <a href="#shagnal{{ o.id }}" data-toggle="modal">Шагналын сан</a>
-                </td>
+                <td><a href="#shagnal_{{ o.id }}" data-toggle="modal">Шагналын сан</a></td>
+                <td><a href="#history_{{ o.id }}" data-toggle="modal">Түүх</a></td>
                 <td>
                   <a href="{% url 'manager_rank_update' o.id %}"><i class="fa fa-edit"></i></a>
                   <a href="{% url 'mymodal_update' o.id %}" data-modal="modalview"><i class="fa fa-edit"></i></a>
                 </td>
               </tr>
-              <div class="modal fade" id="shagnal{{ o.id }}">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      <h4 class="modal-title">Шагналын сан</h4>
-                    </div>
-                    <div class="modal-body">
-                      {{ o.shagnal|safe }}
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Хаах</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
               {% endfor %}
             </tbody>
           </table>
@@ -80,4 +64,70 @@
     </div>
   </div>
 </section>
+{% for o in object_list %}
+<div class="modal fade" id="shagnal_{{ o.id }}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Шагналын сан</h4>
+      </div>
+      <div class="modal-body">
+        {{ o.shagnal|safe }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Хаах</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="history_{{ o.id }}">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Түүх</h4>
+      </div>
+      <div class="modal-body">
+        {% if o.history.all %}
+        <table class="table table-bordered table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Ангилал</th>
+              <th>Хураамж</th>
+              <th>Хэн</th>
+              <th>Хэзээ</th>
+              <th>Төлөв</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in o.history.all %}
+            <tr>
+              <td>{{ i.name }}</td>
+              <td>{{ i.fee }}</td>
+              <td>{{ i.history_user }}</td>
+              <td>{{ i.history_date|date:"Y-m-d H:i:s" }}</td>
+              <td>
+                {% if i.history_type == "+" %}
+                {% trans 'Үүсгэсэн' %}
+                {% elif i.history_type == "~" %}
+                {% trans 'Засварласан' %}
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        Түүх байхгүй байна
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Хаах</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
 {% endblock %}
