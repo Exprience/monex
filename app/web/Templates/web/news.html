@@ -5,33 +5,167 @@
 <div class="col-md-8">
 	<div class="wall">
 		<h2 class="title">Мэдээлэл</h2>
-			<div class="row">
+		{% comment %}
+		<div class="row">
 			<div class="col-md-3">
 				<div class="wall">
-				<h3 class="title">Ангилал</h3>
-				<ul>
-					{% for m in medee_angilal %}
-					<li><a>{{ m }}</a></li><br>
-					{% endfor %}	
-				</ul>
+					<h3 class="title">Ангилал</h3>
 				</div>
 			</div>
 			<div class="col-md-9">
 				<div class="wall">
 					<h3 class="title">Мэдээ</h3>
-					{% for m in object_list %}
-			    <div class="wall-wall">
-						<span class="service-image"><img src="{{ m.img_url }}" alt="{{ m.img_url }}"></span>
-			    	<span class="accordion-title"><a href="{% url 'news_self' m.id %}">{{ m.title|truncatechars:60 }}</a></span>
-			    	<p>{{ m.remove_html|truncatechars:200|safe }}</p>
-			    </div>
-			    {% endfor %}
 				</div>
 				<div class="pull-right">
 			    {% paginate %}
 			  </div>
 			</div>
 		</div>
+		{% endcomment %}
+		<div class="row">
+			<div class="col-md-12">
+				<div class="tabs-left">
+					<ul class="nav nav-tabs text-sm" style="width:25%;">
+						{% for i in news_category %}
+						<li>
+							<a href="#tabs_{{ i.id }}" data-toggle="tab">{{ i }}</a>
+						</li>
+						{% endfor %}
+					</ul>
+					<div class="tab-content">
+						{% for i in news_category %}
+	         	<div class="tab-pane" id="tabs_{{ i.id }}">
+	         		{% for m in i.medee_set.all %}
+	         		<div class="wall-wall">
+								<span class="service-image"><img src="{{ m.img_url }}" alt="{{ m.img_url }}"></span>
+					    	<span class="accordion-title"><a href="{% url 'news_self' m.id %}">{{ m.title|truncatechars:60 }}</a></span>
+					    	<p>{{ m.remove_html|truncatechars:200|safe }}</p>
+					    </div>
+					    <hr>
+	         		{% endfor %}
+	         	</div>
+						{% endfor %}
+	        </div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
+<style type="text/css">
+	.tabs-below > .nav-tabs,
+	.tabs-right > .nav-tabs,
+	.tabs-left > .nav-tabs {
+  	border-bottom: 0;
+	}
+
+.tab-content > .tab-pane,
+.pill-content > .pill-pane {
+  display: none;
+}
+
+.tab-content > .active,
+.pill-content > .active {
+  display: block;
+}
+
+.tabs-below > .nav-tabs {
+  border-top: 1px solid #ddd;
+}
+
+.tabs-below > .nav-tabs > li {
+  margin-top: -1px;
+  margin-bottom: 0;
+}
+
+.tabs-below > .nav-tabs > li > a {
+  -webkit-border-radius: 0 0 4px 4px;
+     -moz-border-radius: 0 0 4px 4px;
+          border-radius: 0 0 4px 4px;
+}
+
+.tabs-below > .nav-tabs > li > a:hover,
+.tabs-below > .nav-tabs > li > a:focus {
+  border-top-color: #ddd;
+  border-bottom-color: transparent;
+}
+
+.tabs-below > .nav-tabs > .active > a,
+.tabs-below > .nav-tabs > .active > a:hover,
+.tabs-below > .nav-tabs > .active > a:focus {
+  border-color: transparent #ddd #ddd #ddd;
+}
+
+.tabs-left > .nav-tabs > li,
+.tabs-right > .nav-tabs > li {
+  float: none;
+}
+
+.tabs-left > .nav-tabs > li > a,
+.tabs-right > .nav-tabs > li > a {
+  min-width: 74px;
+  margin-right: 0;
+  margin-bottom: 3px;
+}
+
+.tabs-left > .nav-tabs {
+  float: left;
+  margin-right: 19px;
+  border-right: 1px solid #ddd;
+}
+
+.tabs-left > .nav-tabs > li > a {
+  margin-right: -1px;
+  -webkit-border-radius: 4px 0 0 4px;
+     -moz-border-radius: 4px 0 0 4px;
+          border-radius: 4px 0 0 4px;
+}
+
+.tabs-left > .nav-tabs > li > a:hover,
+.tabs-left > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #dddddd #eeeeee #eeeeee;
+}
+
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover,
+.tabs-left > .nav-tabs .active > a:focus {
+  border-color: #ddd transparent #ddd #ddd;
+  *border-right-color: #ffffff;
+}
+
+.tabs-right > .nav-tabs {
+  float: right;
+  margin-left: 19px;
+  border-left: 1px solid #ddd;
+}
+
+.tabs-right > .nav-tabs > li > a {
+  margin-left: -1px;
+  -webkit-border-radius: 0 4px 4px 0;
+     -moz-border-radius: 0 4px 4px 0;
+          border-radius: 0 4px 4px 0;
+}
+
+.tabs-right > .nav-tabs > li > a:hover,
+.tabs-right > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #eeeeee #eeeeee #dddddd;
+}
+
+.tabs-right > .nav-tabs .active > a,
+.tabs-right > .nav-tabs .active > a:hover,
+.tabs-right > .nav-tabs .active > a:focus {
+  border-color: #ddd #ddd #ddd transparent;
+  *border-left-color: #ffffff;
+}
+</style>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("ul.nav-tabs li:nth-child(1)").addClass( "active" );
+		$('div.tab-content .tab-pane:nth-child(1)').addClass( "active" );
+	});
+	$(document).ready(function() {
+  	$('#rootwizard').bootstrapWizard({'tabClass': 'nav nav-tabs'});
+	});
+</script>
 {% endblock %}

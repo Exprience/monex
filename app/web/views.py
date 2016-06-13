@@ -63,7 +63,7 @@ class Web(NotManager):
 	def get_context_data(self, *args, **kwargs):
 		context = super(Web, self).get_context_data(*args, **kwargs)
 		context['corausel'] = Medee.objects.all().order_by('created_at')[:5]
-		context['medee_angilal'] = MedeeAngilal.objects.all()
+		context['news_category'] = MedeeAngilal.objects.all()
 		context['sudalgaa_angilal'] = SudalgaaAngilal.objects.all()
 		context['surgalt_angilal'] = SurgaltAngilal.objects.all()
 		context['medee'] = Medee.objects.all().order_by('-id')[:5]
