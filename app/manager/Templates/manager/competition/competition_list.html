@@ -43,7 +43,11 @@
                 <td>{{ o.last_ranked.name }}</td>
                 <td>{{ o.historys.start|date:"Y-m-d H:i:s" }}</td>
                 <td>{{ o.historys.end|date:"Y-m-d H:i:s" }}</td>
-                <td>{{ o.historys.get_competition_status_display }}</td>
+                <td>
+                  <span class='label label-pill label-{% if o.competition_status == "0" %}success{% elif o.competition_status == "1" %}info{% else %}primary{% endif %}'>
+                  {{ o.historys.get_competition_status_display }}
+                  </span>
+                </td>
                 <td><a href="#history_{{ o.id }}" data-toggle="modal">Түүх</a></td>
                 <td>{{ o.last_ranked.shagnal }}</td>
                 <td></td>
@@ -54,7 +58,11 @@
                 <td>{{ o.rank.name }}</td>
                 <td>{{ o.start|date:"Y-m-d H:i:s" }}</td>
                 <td>{{ o.end|date:"Y-m-d H:i:s" }}</td>
-                <td>{{ o.get_competition_status_display }}</td>
+                <td>
+                  <span class='label label-pill label-{% if o.competition_status == "0" %}success{% elif o.competition_status == "1" %}info{% else %}primary{% endif %}'>
+                  {{ o.historys.get_competition_status_display }}
+                </span>
+                </td>
                 <td><a href="#history_{{ o.id }}" data-toggle="modal">Түүх</a></td>
                 <td>{{ o.rank.shagnal }}</td>
                 <td>

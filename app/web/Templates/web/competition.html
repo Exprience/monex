@@ -18,7 +18,7 @@
 
     <div class="tab-content text-sm">
       <div class="tab-pane active" id="table-competition">
-        <table id="example2" class="table table-bordered table-hover table-striped">
+        <table class="table table-bordered table-hover table-striped">
           <thead>
             <tr>
               <th>{% trans '№' %}</th>
@@ -62,7 +62,7 @@
               <td>{{ o.start|date:"Y-m-d H:i:s" }}</td>
               <td>{{ o.end|date:"Y-m-d H:i:s" }}</td>
               <td>
-              <span class='label label-pill label-{% if o.competition_status == "0" %}success{% elif o.competition_status == "1" %}info{% else %}primary{% endif %}'>
+                <span class='label label-pill label-{% if o.competition_status == "0" %}success{% elif o.competition_status == "1" %}info{% else %}primary{% endif %}'>
                   {{ o.historys.get_competition_status_display }}
                 </span>
               </td>
