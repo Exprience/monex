@@ -55,7 +55,7 @@ class CompetitionRegister(models.Model):
 	competition = models.ForeignKey(Competition)
 	status = models.BooleanField(default = False)
 	account = models.IntegerField()
-	barimt = models.ImageField()
+	barimt = models.ImageField(verbose_name = u'Баримт')
 	history = HistoricalRecords()
 
 	def auto_increment(self):

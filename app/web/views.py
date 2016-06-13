@@ -160,11 +160,15 @@ class BagtsView(ModalFormView):
 		self.response = ModalResponse("{obj} is created".format(obj=self.object), 'success')
 		return super(BagtsView, self).form_valid(form, commit = False, **kwargs)
 
-class WebCompetitionRegisterView(SystemUserLoginRequired, CreateView):
-	model = CompetitionRegister
-	form_class = CompetitionRegisterForm
-	template_name = 'web/web_competition_register.html'
-	success_url = reverse_lazy('competition_calendar')
+class WebCompetitionRegisterView(SystemUserLoginRequired, ModalFormView):
+
+	def __init__(self, *args, **kwargs):
+		super(WebCompetitionRegisterView, self).__init__(*args, **kwargs)
+		self.title = "Тэмцээний ангилал"
+		self.form_class = CompetitionRegisterForm
+		self.submit_button = ModalButton(value=u'Хадгалах', loading_value = "Уншиж байна...",
+			button_type='success btn-flat')
+		self.close_button = ModalButton(value=u'Хаах', button_type ='default btn-flat')
 
 	def form_valid(self, form):
 		object = form.save(commit = False)

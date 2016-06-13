@@ -68,16 +68,17 @@
               </td>
               <td>{{ o.rank.shagnal }}</td>
               <td>
-                {% for i in o.if_registered %}
-                {% if user.id == i.user.id %}
-                <span class="label label-pill label-warning">{% trans 'Бүртгэлтэй байна' %}</span>
+                {% if o.if_registered %}
+                  {% for i in o.if_registered %}
+                  {% if user.id == i.user.id %}
+                  <span class="label label-pill label-warning">{% trans 'Бүртгэлтэй байна' %}</span>
+                  {% endif %}
+                  {% endfor %}
                 {% else %}
-                  <a href="{% url 'web_competition_register' o.id %}" class="btn btn-success btn-flat btn-xs">
+                  <a href="{% url 'web_competition_register' o.id %}" data-modal="modalview" class="btn btn-success btn-flat btn-xs">
                     {% trans 'Бүртгүүлэх' %}
                   </a>
                 {% endif %}
-                {% endfor %}
-                
               </td>
             </tr>
             {% endif %}
@@ -118,6 +119,10 @@
 <script src="{% static 'assets/assets/bootstrap-year-calendar-master/js/bootstrap-year-calendar.js' %}"></script>
 <script src="/static/assets/js/plugins.js"></script>  
 <script src="/static/assets/js/functions.js"></script>
+
+<script type="text/javascript" src="{% static 'django_modalview/js/django_modal_view.js' %}"></script>
+<script type="text/javascript" src="{% static 'django_modalview/js/jquery.form.js' %}"></script>
+
 <script type="text/javascript">
 </script>
 <script type="text/javascript">
@@ -202,5 +207,26 @@
   if (selectedTab != null) {
       $('a[data-toggle="tab"][href="' + selectedTab + '"]').tab('show');
   }
+</script>
+
+<script type="text/javascript">
+  $(function(){
+    $('[data-modal="modalview"]').DjangoModalRunner({
+      //on_show_modal: function(){
+      //},
+      //on_hide_modal: function(){
+      //},
+      //on_hide_modal_after_submit: function(){
+      //},
+      on_submit: function(){
+        //location.reload();
+      }
+      //on_done: function(){
+      //}
+    });
+  });
+  $(function() {
+    $.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
+  });
 </script>
 {% endblock %}

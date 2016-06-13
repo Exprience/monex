@@ -326,10 +326,10 @@ audio {
 	height: auto;
 	border: none;
 }
-input,
+/*input,
 textarea {
 	width: 100%;
-}
+}*/
 .form-control:focus,
 input:focus,
 textarea:focus,

@@ -1,5 +1,23 @@
+{% comment %}
+{% extends 'web/base.html' %}
 {% load i18n %}
-<form method="post" enctype="multipart/form-data">{% csrf_token %}
-	{{ form }}
-	<button type="submit">{% trans 'Хадгалах' %}</button>	
-</form>
+{% block header %}
+{% endblock %}
+{% block content %}
+<div class="col-md-12">
+	<div class="wall">
+	<form method="post" class="form-inline" enctype="multipart/form-data">{% csrf_token %}
+		{{ form }}
+		<button type="submit" class="btn btn-success btn-flat btn-block">{% trans 'Хадгалах' %}</button>	
+	</form>
+	</div>
+</div>
+{% endblock %}
+{% block rightcontent %}
+
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% endcomment %}
+
+
