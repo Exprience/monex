@@ -72,12 +72,28 @@
                   {% for i in o.if_registered %}
                   {% if user.id == i.user.id %}
                   <span class="label label-pill label-warning">{% trans 'Бүртгэлтэй байна' %}</span>
+                  {% else %}
+                  {% if user.is_authenticated %}
+                    <a href="{% url 'web_competition_register' o.id %}" data-modal="modalview" class="btn btn-success btn-flat btn-xs">
+                      {% trans 'Бүртгүүлэх' %}
+                    </a>
+                  {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-success btn-flat btn-xs">
+                      {% trans 'Бүртгүүлэх' %}
+                    </a>
+                  {% endif %}
                   {% endif %}
                   {% endfor %}
                 {% else %}
+                  {% if user.is_authenticated %}
                   <a href="{% url 'web_competition_register' o.id %}" data-modal="modalview" class="btn btn-success btn-flat btn-xs">
                     {% trans 'Бүртгүүлэх' %}
                   </a>
+                  {% else %}
+                  <a href="{% url 'login' %}" class="btn btn-success btn-flat btn-xs">
+                    {% trans 'Бүртгүүлэх' %}
+                  </a>
+                  {% endif %}
                 {% endif %}
               </td>
             </tr>

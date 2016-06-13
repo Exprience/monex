@@ -178,6 +178,7 @@ class WebCompetitionRegisterView(SystemUserLoginRequired, ModalFormView):
 			object.competition = Competition.objects.get(id = self.kwargs.pop('id', None))
 			object.auto_increment()
 			object.save()
+			self.response = ModalResponse('Амжилттай хадгалагдлаа', 'success')
 			return super(WebCompetitionRegisterView, self).form_valid(form)
 		else:
 			return super(WebCompetitionRegisterView, self).form_invalid(form)

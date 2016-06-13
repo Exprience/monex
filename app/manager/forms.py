@@ -4,6 +4,7 @@ from django import forms
 from app.user.forms import LoginForm
 from django.contrib.auth import authenticate
 from .models import Manager
+from django.utils.translation import ugettext as _
 
 class ManagerLoginForm(LoginForm):
 
