@@ -62,6 +62,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     'pagination_bootstrap.middleware.PaginationMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
+    'app.web.get_username.RequestMiddleware',
 )
 
 ROOT_URLCONF = 'monex.urls'

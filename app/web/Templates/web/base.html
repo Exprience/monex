@@ -19,7 +19,40 @@
 
 
     <link rel="stylesheet" href="{% static 'django_modalview/css/modal.css' %}" type="text/css" />
-    
+
+    <!--JS--> 
+    <script src="{% static 'assets/js/jQuery-2.2.0.min.js' %}"></script>
+    <script src="{% static 'assets/assets/bootstrap/js/bootstrap.js' %}"></script>
+    <script src="{% static 'assets/assets/bootstrap-player/bootstrap.youtubepopup.js' %}"></script>
+    <script src="{% static 'assets/assets/bootstrap-daterange/js/moment.min.js' %}"></script>
+    <script src="{% static 'assets/assets/bootstrap-daterange/js/daterangepicker.js' %}"></script>
+    <script src="/static/assets/js/plugins.js"></script>  
+    <script src="/static/assets/js/functions.js"></script>
+    <script src="/static/assets/js/web.js"></script>
+
+    <script type="text/javascript" src="{% static 'django_modalview/js/django_modal_view.js' %}"></script>
+    <script type="text/javascript" src="{% static 'django_modalview/js/jquery.form.js' %}"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        $('[data-modal="modalview"]').DjangoModalRunner({
+          //on_show_modal: function(){
+          //},
+          //on_hide_modal: function(){
+          //},
+          //on_hide_modal_after_submit: function(){
+          //},
+          on_submit: function(){
+            //location.reload();
+          }
+          //on_done: function(){
+          //}
+        });
+      });
+      $(function() {
+        $.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
+      });
+    </script>
     {% endblock %}
   </head>
 </html>
@@ -122,39 +155,7 @@
   {% endblock %}
 </body>
 {% block js %}
-<!--JS--> 
-<script src="{% static 'assets/js/jQuery-2.2.0.min.js' %}"></script>
-<script src="{% static 'assets/assets/bootstrap/js/bootstrap.js' %}"></script>
-<script src="{% static 'assets/assets/bootstrap-player/bootstrap.youtubepopup.js' %}"></script>
-<script src="{% static 'assets/assets/bootstrap-daterange/js/moment.min.js' %}"></script>
-<script src="{% static 'assets/assets/bootstrap-daterange/js/daterangepicker.js' %}"></script>
-<script src="/static/assets/js/plugins.js"></script>  
-<script src="/static/assets/js/functions.js"></script>
-<script src="/static/assets/js/web.js"></script>
 
-<script type="text/javascript" src="{% static 'django_modalview/js/django_modal_view.js' %}"></script>
-<script type="text/javascript" src="{% static 'django_modalview/js/jquery.form.js' %}"></script>
-
-<script type="text/javascript">
-  $(function(){
-    $('[data-modal="modalview"]').DjangoModalRunner({
-      //on_show_modal: function(){
-      //},
-      //on_hide_modal: function(){
-      //},
-      //on_hide_modal_after_submit: function(){
-      //},
-      on_submit: function(){
-        //location.reload();
-      }
-      //on_done: function(){
-      //}
-    });
-  });
-  $(function() {
-    $.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
-  });
-</script>
 {% endblock %}
 <style type="text/css">
   iframe {

@@ -1,9 +1,10 @@
 # -*- coding:utf-8 -*-
-
+import threading
 from django.db import models
 from app.user.models import SystemUser
 from simple_history.models import HistoricalRecords
 from datetime import datetime
+from app.web.get_username import get_username 
 # Create your models here.
 
 # Тэмцээний model үүсгэх
@@ -20,7 +21,6 @@ class CompetitionRank(models.Model):
 
 
 class Competition(models.Model):
-
 	competition_select = (
 		('0', u'Бүртгэл эхэлсэн'),
 		('1', u'Эхэлсэн'),
@@ -45,7 +45,11 @@ class Competition(models.Model):
 		return self.history.first()
 
 	def if_registered(self):
-		return self.competitionregister_set.all()
+		user = get_username().user
+		for i in self.competitionregister_set.all():
+			if i.user.id == user.id:
+				return True
+		return False
 
 	def __unicode__(self):
 		return unicode(self.rank)
