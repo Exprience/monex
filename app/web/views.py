@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
-
-from django.views.generic import TemplateView, FormView, ListView, CreateView
+from datetime import datetime, date, timedelta
+from django.views.generic import TemplateView, FormView, ListView, CreateView, View
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -143,6 +143,29 @@ class Contact(Web, TemplateView):
 class Calendar(Web, TemplateView):
 	menu_num = 7
 	template_name = 'web/calendar.html'
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(Calendar, self).get_context_data(*args, **kwargs)
+		filter_type = self.request.GET.get('filter', None)
+		start = self.request.GET.get('start', None)
+		end = self.request.GET.get('end', None)
+		if filter_type:
+
+			if filter_type == '1':
+				object_list = EconomicCalendar.objects.filter(time__startswith = date.today() - timedelta(1))
+			elif filter_type == '2':
+				object_list = EconomicCalendar.objects.filter(time__startswith = date.today())
+			elif filter_type == '3':
+				object_list = EconomicCalendar.objects.filter(time__startswith = date.today() + timedelta(1))
+			elif filter_type == '4':
+				object_list = EconomicCalendar.objects.filter(time__range =
+					(date.today(), date.today() + timedelta(7))).order_by('time')
+			elif filter_type == '0':
+				object_list = ''
+		else:
+			object_list = EconomicCalendar.objects.filter(time__startswith = date.today())
+		context['object_list'] = object_list 
+		return context
 
 class BagtsView(ModalFormView):
 	def __init__(self, *args, **kwargs):

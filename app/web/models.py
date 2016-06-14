@@ -4,7 +4,8 @@ import re
 from django.db import models
 from redactor.fields import RedactorField
 from app.manager.models import Manager
-__all__ = ['MedeeAngilal', 'Medee', 'SudalgaaAngilal', 'Sudalgaa', 'SurgaltAngilal', 'Surgalt', 'BidniiTuhai', 'HolbooBarih']
+__all__ = ['MedeeAngilal', 'Medee', 'SudalgaaAngilal', 'Sudalgaa', 'SurgaltAngilal',
+			'Surgalt', 'BidniiTuhai', 'HolbooBarih', 'EconomicCalendar']
 
 # Мэдээ
 class MedeeAngilal(models.Model):
@@ -86,3 +87,22 @@ class BidniiTuhai(models.Model):
 
 class HolbooBarih(models.Model):
 	body  = RedactorField()
+
+class EconomicCalendar(models.Model):
+	cur_select = (
+		('0', u'Мон'),
+		)
+	imp_select = (
+		('0', u'Амралт'),
+		('1', u'1'),
+		('2', u'2'),
+		('3', u'3'),
+		)
+	time = models.DateTimeField()
+	cur = models.CharField(choices = cur_select, max_length = 250)
+	imp = models.CharField(choices = imp_select, max_length = 250)
+	event = models.CharField(max_length = 250)
+	actual = models.FloatField()
+	forecast = models.FloatField()
+	previous = models.FloatField()
+

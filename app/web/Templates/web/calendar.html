@@ -1,29 +1,79 @@
 {% extends 'web/base.html' %}
+{% load i18n %}
 {% load static %}
 {% block content %}
 <div class="col-md-8">
 	<div class="wall">
-		<div class="buttons">
-			<button class="btn-sm btn-success">Өчигдөр</button>
-			<button class="btn-sm btn-primary">Өнөөдөр</button>
-			<button class="btn-sm btn-info">Маргааш</button>
-			<button class="btn-sm btn-warning">Энэ долоо хоног</button>
-			<button class="btn-sm btn-danger" date="daterange"><i class="fa fa-calendar"></i></button>
-		</div>
-		<table class="table">
+		<form action="{% url 'calendar' %}" id="filter-form" method="get" accept-charset="utf-8">
+			<input id="filter" type="hidden" name="filter" value="0">
+			<input type="hidden" name="start" id="start" value="">
+			<input type="hidden" name="end" id="end" value="">
+			<div class="buttons">
+				<button id="filter1" type="submit" class="btn-sm btn-success">{% trans 'Өчигдөр' %}</button>
+				<button id="filter2" type="submit" class="btn-sm btn-primary">{% trans 'Өнөөдөр' %}</button>
+				<button id="filter3" type="submit" class="btn-sm btn-info">{% trans 'Маргааш' %}</button>
+				<button id="filter4" type="submit" class="btn-sm btn-warning">{% trans 'Ирэх долоо хоног' %}</button>
+				<button id="filter5" type="button" class="btn-sm btn-danger" date="daterange">
+					<i class="fa fa-calendar"></i>
+				</button>
+			</div>
+		</form>
+		<table class="table table-bordered table-hover table-striped text-sm">
 			<tr>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
+				<th>{% trans 'Хугацаа' %}</th>
+				<th>{% trans 'Улс' %}</th>
+				<th>{% trans 'Ач холбогдол' %}</th>
+				<th>{% trans 'Үзүүлэлт' %}</th>
+				<th>{% trans 'Бодит' %}</th>
+				<th>{% trans 'Таамаглал' %}</th>
+				<th>{% trans 'Өмнөх' %}</th>
 			</tr>
+			{% for o in object_list %}
 			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td>{{ o.time|date:"Y-m-d H:i" }}</td>
+				<td>{{ o.get_cur_display }}</td>
+				<td>{{ o.get_imp_display }}</td>
+				<td>{{ o.event }}</td>
+				<td>{{ o.actual }}</td>
+				<td>{{ o.forecast }}</td>
+				<td>{{ o.previous }}</td>
 			</tr>
+			{% endfor %}
 		</table>
 	</div>
 </div>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+	$('#filter1').click(function(){
+		$('#filter').val(1);
+	});
+	$('#filter2').click(function(){
+		$('#filter').val(2);
+	});
+	$('#filter3').click(function(){
+		$('#filter').val(3);
+	});
+	$('#filter4').click(function(){
+		$('#filter').val(4);
+	});
+	$(function () {
+    $('#filter5').daterangepicker({
+        "buttonClasses": "btn btn-sm btn-flat",
+        "applyClass": "btn-success",
+        "cancelClass": "btn-default",
+        locale: {
+        		applyLabel: 'Шүүх',
+            cancelLabel: 'Цуцлах'
+        }
+    });
+
+    // New code
+    $('#filter5').on('apply.daterangepicker', function (ev, picker) {
+        //alert('fasdfasdf');
+        $('#filter-form').submit();  
+    });
+
+});
+</script>
 {% endblock %}
