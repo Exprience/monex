@@ -1,11 +1,11 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
 {% block content %}
-<div class="col-md-8">
+<div class="col-md-9">
 	<div class="wall">
 		<div class="row">
 			<h2 class="title">{% trans 'Судалгаа' %}</h2>
-			<form class="text-sm" method="get">
+			<form id="research_form" class="text-sm" method="get">
 				<div class="row">
 					<div class="col-md-4 col-md-offset-3">
 						<div class="form-group-sm has-feedback">
@@ -18,11 +18,12 @@
 		       	</div>	
 					</div>
 	       	<div class="col-md-1">
-						<input type="submit" value="{% trans 'Хайх' %}" class="btn btn-flat btn-sm">	       		
+						<button id="filter_button" type="submit" class="btn btn-flat btn-sm">{% trans 'Шүүх' %}</button>     		
 	       	</div>
 				</div>
-			</form>	
-			<div class="tabs-left">
+			</form>
+			{% if research_category %}
+			<div id="research_filter" class="tabs-left">
 				<ul class="nav nav-tabs text-sm" style="width:20%;">
 					{% for i in research_category %}
 					<li>
@@ -60,15 +61,35 @@
 					{% endfor %}
         </div>
 			</div>
+			{% else %}
+			{% trans 'Өгөгдөл байхгүй байна' %}
+			{% endif %}
 		</div>
 	</div>
 </div>
 {% endblock %}
 {% block extrajs %}
 <script type="text/javascript">
+	function research_filter(id, form_id, load_id){
+	  $(id).click(function(){
+	    $(form_id).submit(function(event){
+	    	event.preventDefault();
+	      $.ajax({
+	        url: "{% url 'research_filter' %}",
+	        method: 'GET',
+	        data: $(this).serialize()
+	      }).done(function(response){
+	        $(load_id).html(response)
+	        $("ul.nav-tabs li:nth-child(1)").addClass( "active" );
+					$('div.tab-content .tab-pane:nth-child(1)').addClass( "active" );
+	      });
+	    });
+	  });
+	}
 	$(document).ready(function(){
 		$("ul.nav-tabs li:nth-child(1)").addClass( "active" );
 		$('div.tab-content .tab-pane:nth-child(1)').addClass( "active" );
+		research_filter('#filter_button', '#research_form', '#research_filter');
 	});
 </script>
 {% endblock %}

@@ -1,0 +1,24 @@
+{% load static %}
+{% load i18n %}
+<table id="calendar_table" class="table table-bordered table-hover table-striped text-sm">
+	<tr>
+		<th>{% trans 'Хугацаа' %}</th>
+		<th>{% trans 'Улс' %}</th>
+		<th>{% trans 'Ач холбогдол' %}</th>
+		<th>{% trans 'Үзүүлэлт' %}</th>
+		<th>{% trans 'Бодит' %}</th>
+		<th>{% trans 'Таамаглал' %}</th>
+		<th>{% trans 'Өмнөх' %}</th>
+	</tr>
+	{% for o in object_list %}
+	<tr>
+		<td>{{ o.time|date:"Y-m-d H:i" }}</td>
+		<td>{{ o.get_cur_display }}</td>
+		<td>{{ o.get_imp_display }}</td>
+		<td>{{ o.event }}</td>
+		<td>{{ o.actual }}</td>
+		<td>{{ o.forecast }}</td>
+		<td>{{ o.previous }}</td>
+	</tr>
+	{% endfor %}
+</table>

@@ -1477,6 +1477,16 @@ h3.title {
 	border-bottom: 1px solid #6f7678;
 	/*position: relative;*/
 }
+h4.title {
+	color: #6f7678;
+	font-size: 0.825em;
+	font-weight: 800;
+	text-transform: uppercase;
+	margin-bottom: 10px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #6f7678;
+	/*position: relative;*/
+}
 
 .lesson img {
 	height: 220px;

@@ -20,7 +20,8 @@ from django_modalview.generic.component import ModalResponse, ModalButton
 from django_modalview.generic.response import ModalJsonResponseRedirect
 
 __all__ = ['Home', 'About', 'News', 'Research', 'Lesson', 'Contact', 'NewsSelf',
-'WebCompetitionCalendar', 'Calendar', 'h404', 'BagtsView', 'WebCompetitionRegisterView']
+'WebCompetitionCalendar', 'Calendar', 'h404', 'BagtsView', 'WebCompetitionRegisterView', 'CalendarFilter',
+'ResearchFilter']
 
 
 
@@ -65,7 +66,7 @@ class Web(NotManager):
 		context['corausel'] = Medee.objects.all().order_by('created_at')[:5]
 		context['news_category'] = MedeeAngilal.objects.all()
 		context['research_category'] = SudalgaaAngilal.objects.all()
-		context['surgalt_angilal'] = SurgaltAngilal.objects.all()
+		context['lesson_category'] = SurgaltAngilal.objects.all()
 		context['medee'] = Medee.objects.all().order_by('-id')[:5]
 		context['medee_most'] = Medee.objects.all().order_by('-view')[:5]
 		context['sudalgaa'] = Sudalgaa.objects.all().order_by('-id')[:5]
@@ -87,12 +88,12 @@ class About(Web, TemplateView):
 		return context
 
 class News(Web, ListView):
-	template_name = 'web/news.html'
+	template_name = 'web/news/news.html'
 	menu_num = 4
 	model = Medee
 
 class NewsSelf(Web, TemplateView):
-	template_name = 'web/news_self.html'
+	template_name = 'web/news/news_self.html'
 	menu_num = 4
 
 	def get_context_data(self, *args, **kwargs):
@@ -103,7 +104,7 @@ class NewsSelf(Web, TemplateView):
 		return context
 
 class Research(SystemUserLoginRequired, Web, TemplateView):
-	template_name = 'web/research.html'
+	template_name = 'web/research/research.html'
 	menu_num = 5
 
 	def get_context_data(self, **kwargs):
@@ -119,7 +120,6 @@ class Research(SystemUserLoginRequired, Web, TemplateView):
 			object_list = Sudalgaa.objects.filter(author_name__icontains = author_name)
 		else:
 			object_list = Sudalgaa.objects.all()
-		print object_list.values('angilal').distinct()
 		category_list = []
 		for i in object_list.values('angilal').distinct():
 			obj = SudalgaaAngilal.objects.get(id = i.values()[0])
@@ -130,6 +130,9 @@ class Research(SystemUserLoginRequired, Web, TemplateView):
 					obj.research_list.append(ob)
 		context['research_category'] = category_list
 		return context
+
+class ResearchFilter(Research):
+	template_name = 'web/research/research_filter.html'
 
 class Lesson(Web, ListView):
 	template_name = 'web/lesson.html'
@@ -156,7 +159,7 @@ class Contact(Web, TemplateView):
 
 class Calendar(Web, TemplateView):
 	menu_num = 7
-	template_name = 'web/calendar.html'
+	template_name = 'web/calendar/calendar.html'
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(Calendar, self).get_context_data(*args, **kwargs)
@@ -176,11 +179,15 @@ class Calendar(Web, TemplateView):
 			elif filter_type == '0':
 				start = datetime.strptime(start, '%Y-%m-%d').replace(hour=0, minute=0)
 				end = datetime.strptime(end, '%Y-%m-%d').replace(hour=0, minute=0)
-				object_list = EconomicCalendar.objects.filter(time__range = (start, end))
+				object_list = EconomicCalendar.objects.filter(time__range = (start, end)).order_by('time')
 		else:
 			object_list = EconomicCalendar.objects.filter(time__startswith = date.today())
-		context['object_list'] = object_list 
+		context['object_list'] = object_list
+		context['f'] = filter_type
 		return context
+
+class CalendarFilter(Calendar):
+	template_name = 'web/calendar/calendar_filter.html'
 
 class BagtsView(ModalFormView):
 	def __init__(self, *args, **kwargs):

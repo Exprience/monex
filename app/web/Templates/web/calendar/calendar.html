@@ -18,7 +18,7 @@
 				</button>
 			</div>
 		</form>
-		<table class="table table-bordered table-hover table-striped text-sm">
+		<table id="calendar_table" class="table table-bordered table-hover table-striped text-sm">
 			<tr>
 				<th>{% trans 'Хугацаа' %}</th>
 				<th>{% trans 'Улс' %}</th>
@@ -45,34 +45,53 @@
 {% endblock %}
 {% block extrajs %}
 <script type="text/javascript">
-	$('#filter1').click(function(){
-		$('#filter').val(1);
-	});
-	$('#filter2').click(function(){
-		$('#filter').val(2);
-	});
-	$('#filter3').click(function(){
-		$('#filter').val(3);
-	});
-	$('#filter4').click(function(){
-		$('#filter').val(4);
-	});
-	$(function () {
-    $('#filter5').daterangepicker({
+function calendar_filter(id, val, input_id, form_id, load_id){
+  $(id).click(function(){
+    $(input_id).val(val);
+    $(form_id).submit(function(event){
+      event.preventDefault();
+      $.ajax({
+        url: "{% url 'calendar_filter' %}",
+        method: 'GET',
+        data: $(this).serialize()
+      }).done(function(response){
+        $(load_id).html(response)
+      });
+    });
+  });
+}
+$(function () {
+	$('#filter5').daterangepicker({
         "buttonClasses": "btn btn-sm btn-flat",
         "applyClass": "btn-success",
         "cancelClass": "btn-default",
         locale: {
-        		applyLabel: 'Шүүх',
-            cancelLabel: 'Цуцлах'
-        }
-    });
-    $('#filter5').on('apply.daterangepicker', function (ev, picker) {
-    	$('#id_start').val(picker.startDate.format('YYYY-MM-DD'));
-			$('#id_end').val(picker.endDate.format('YYYY-MM-DD'));
-			$('#filter_form').submit();  
+        	applyLabel: 'Шүүх',
+            cancelLabel: 'Цуцлах',
+            customRangeLabel : 'Гараар сонгох'
+        },
+        ranges: {
+         	'Өнөөдөр': [moment(), moment()],
+         	'Өчигдөр': [moment().subtract('days', 1), moment().subtract('days', 1)],
+         	'Сүүлийн 7 хоног': [moment().subtract('days', 6), moment()],
+         	'Сүүлийн 30 хоног': [moment().subtract('days', 29), moment()],
+         	'Энэ сар': [moment().startOf('month'), moment().endOf('month')],
+         	'Өнгөрсөн сар': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+      	},
     });
 
+    $('#filter5').on('apply.daterangepicker', function (ev, picker) {
+    	$('#id_start').val(picker.startDate.format('YYYY-MM-DD'));
+		$('#id_end').val(picker.endDate.format('YYYY-MM-DD'));
+		$("#filter_form").submit();
+    });
+
+});
+$(document).ready(function(){
+	calendar_filter('#filter1', 1, '#filter', '#filter_form', '#calendar_table');
+	calendar_filter('#filter2', 2, '#filter', '#filter_form', '#calendar_table');
+	calendar_filter('#filter3', 3, '#filter', '#filter_form', '#calendar_table');
+	calendar_filter('#filter4', 4, '#filter', '#filter_form', '#calendar_table');
 });
 </script>
 {% endblock %}

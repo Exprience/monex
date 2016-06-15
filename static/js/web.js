@@ -51,3 +51,22 @@ formAjaxSubmit('#message-form', '#message-body');
 //    $('#bagts-body').show(); 
 //  }
 //});
+
+$(function(){
+  $('[data-modal="modalview"]').DjangoModalRunner({
+    //on_show_modal: function(){
+    //},
+    //on_hide_modal: function(){
+    //},
+    //on_hide_modal_after_submit: function(){
+    //},
+    on_submit: function(){
+      //location.reload();
+    }
+    //on_done: function(){
+    //}
+  });
+});
+$(function() {
+  $.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
+});
