@@ -64,7 +64,7 @@ class Web(NotManager):
 		context = super(Web, self).get_context_data(*args, **kwargs)
 		context['corausel'] = Medee.objects.all().order_by('created_at')[:5]
 		context['news_category'] = MedeeAngilal.objects.all()
-		context['sudalgaa_angilal'] = SudalgaaAngilal.objects.all()
+		context['research_category'] = SudalgaaAngilal.objects.all()
 		context['surgalt_angilal'] = SurgaltAngilal.objects.all()
 		context['medee'] = Medee.objects.all().order_by('-id')[:5]
 		context['medee_most'] = Medee.objects.all().order_by('-view')[:5]
@@ -102,19 +102,33 @@ class NewsSelf(Web, TemplateView):
 		context['news_self'].save()
 		return context
 
-class Research(Web, TemplateView):
+class Research(SystemUserLoginRequired, Web, TemplateView):
 	template_name = 'web/research.html'
 	menu_num = 5
 
-	@method_decorator(login_required)
-	def dispatch(self, request, *args, **kwargs):
-		self.sudalgaa_number = self.kwargs.pop('id', None)
-		return super(Research, self).dispatch(request, *args, **kwargs)
-
-	def get_context_data(self, *args, **kwargs):
-		context = super(Research, self).get_context_data(*args, **kwargs)
-		context['sudalgaa'] = Sudalgaa.objects.all() #filter(angilal__id = self.sudalgaa_number)
-		#context['sudalgaa_number'] = int(self.sudalgaa_number)
+	def get_context_data(self, **kwargs):
+		context = super(Research, self).get_context_data(**kwargs)
+		name = self.request.GET.get('name', None)
+		author_name = self.request.GET.get('author_name', None)
+		request = {}
+		if name and author_name:
+			object_list = Sudalgaa.objects.filter(name__icontains = name, author_name__icontains = author_name)
+		elif name:
+			object_list = Sudalgaa.objects.filter(name__icontains = name)
+		elif author_name:
+			object_list = Sudalgaa.objects.filter(author_name__icontains = author_name)
+		else:
+			object_list = Sudalgaa.objects.all()
+		print object_list.values('angilal').distinct()
+		category_list = []
+		for i in object_list.values('angilal').distinct():
+			obj = SudalgaaAngilal.objects.get(id = i.values()[0])
+			setattr(obj, 'research_list', [])
+			category_list.append(obj)
+			for ob in object_list:
+				if ob.angilal.id == obj.id:
+					obj.research_list.append(ob)
+		context['research_category'] = category_list
 		return context
 
 class Lesson(Web, ListView):
@@ -150,7 +164,6 @@ class Calendar(Web, TemplateView):
 		start = self.request.GET.get('start', None)
 		end = self.request.GET.get('end', None)
 		if filter_type:
-
 			if filter_type == '1':
 				object_list = EconomicCalendar.objects.filter(time__startswith = date.today() - timedelta(1))
 			elif filter_type == '2':
@@ -161,7 +174,9 @@ class Calendar(Web, TemplateView):
 				object_list = EconomicCalendar.objects.filter(time__range =
 					(date.today(), date.today() + timedelta(7))).order_by('time')
 			elif filter_type == '0':
-				object_list = ''
+				start = datetime.strptime(start, '%Y-%m-%d').replace(hour=0, minute=0)
+				end = datetime.strptime(end, '%Y-%m-%d').replace(hour=0, minute=0)
+				object_list = EconomicCalendar.objects.filter(time__range = (start, end))
 		else:
 			object_list = EconomicCalendar.objects.filter(time__startswith = date.today())
 		context['object_list'] = object_list 

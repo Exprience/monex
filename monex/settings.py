@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'pagination_bootstrap',
     'django_modalview',
     'simple_history',
+    'django_filters'
 )
 
 

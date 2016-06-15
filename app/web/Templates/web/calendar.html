@@ -4,10 +4,10 @@
 {% block content %}
 <div class="col-md-8">
 	<div class="wall">
-		<form action="{% url 'calendar' %}" id="filter-form" method="get" accept-charset="utf-8">
+		<form action="{% url 'calendar' %}" id="filter_form" method="get" accept-charset="utf-8">
 			<input id="filter" type="hidden" name="filter" value="0">
-			<input type="hidden" name="start" id="start" value="">
-			<input type="hidden" name="end" id="end" value="">
+			<input type="hidden" name="start" id="id_start" value="">
+			<input type="hidden" name="end" id="id_end" value="">
 			<div class="buttons">
 				<button id="filter1" type="submit" class="btn-sm btn-success">{% trans 'Өчигдөр' %}</button>
 				<button id="filter2" type="submit" class="btn-sm btn-primary">{% trans 'Өнөөдөр' %}</button>
@@ -67,11 +67,10 @@
             cancelLabel: 'Цуцлах'
         }
     });
-
-    // New code
     $('#filter5').on('apply.daterangepicker', function (ev, picker) {
-        //alert('fasdfasdf');
-        $('#filter-form').submit();  
+    	$('#id_start').val(picker.startDate.format('YYYY-MM-DD'));
+			$('#id_end').val(picker.endDate.format('YYYY-MM-DD'));
+			$('#filter_form').submit();  
     });
 
 });

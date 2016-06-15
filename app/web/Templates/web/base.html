@@ -96,7 +96,7 @@
                   {% trans 'Судалгаа ангилал' %}
                 </h3>
                 <ul class="archive-list">
-                  {% for s in sudalgaa_angilal %}
+                  {% for s in research_category %}
                   <li><a href="/media/{{ s.pdf_file }}">{{ s.name|truncatechars:40 }}</a></li>
                   {% endfor %}
                 </ul>
@@ -122,7 +122,7 @@
               <aside class="widget">
                 <h3 class="widget-title">Mэдээ ангилал</h3>
                 <ul class="category-list">
-                  {% for i in medee_angilal %}
+                  {% for i in news_category %}
                   <li><a href="{% url 'news' i.id %}">{{ i.name }}</a></li>
                   {% endfor %}
                 </ul>

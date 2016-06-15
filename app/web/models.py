@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 import re
-
 from django.db import models
 from redactor.fields import RedactorField
 from app.manager.models import Manager
@@ -49,7 +48,9 @@ class Sudalgaa(models.Model):
 	angilal = models.ForeignKey(SudalgaaAngilal, verbose_name = u'Ангилал')
 	name = models.CharField(max_length = 100, verbose_name = u'Нэр')
 	author_name = models.CharField(max_length = 100, verbose_name = u'Судалгаа хийсэн')
+	author_email = models.EmailField(verbose_name = 'Э-мэйл')
 	pdf_file = models.FileField(verbose_name = u'Файл')
+	date = models.DateTimeField(auto_now_add = True)
 
 	def __unicode__(self):
 		return unicode(self.name)

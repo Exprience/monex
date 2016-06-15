@@ -73,7 +73,9 @@ class ResearchForm(forms.ModelForm):
             	),
 			'name' : forms.TextInput(attrs = {'class':'form-control'}),
 			'author_name' : forms.TextInput(attrs = {'class':'form-control'}),
+			'author_email' : forms.TextInput(attrs = {'class' : 'form-control'}),
 			'pdf_file' : forms.FileInput(attrs = {'class':'form-control'}),
+
 
 		}
 
