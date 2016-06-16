@@ -5,88 +5,23 @@
 <div class="col-md-9">
 	<div class="wall">
 		<h2 class="title">Тэмцээн</h2>
+    <form id="competition_form" method="get">
+      <input id="id_filter_type" type="hidden" name="filter_type" value="0">
+      <input type="hidden" name="start" id="id_start">
+      <input type="hidden" name="end" id="id_end">  
+    </form>
     <div class="buttons">
-      <button class="btn-sm btn-success">{% trans 'Бүртгэл эхэлсэн тэмцээн' %}</button>
-      <button class="btn-sm btn-info">{% trans 'Эхэлсэн тэмцээн' %}</button>
-      <button class="btn-sm btn-primary">{% trans 'Дууссан тэмцээн' %}</button>
-      <button class="btn-sm btn-danger" date="daterange"><i class="fa fa-calendar"></i></button>
+      <button id="filter0" type="button" class="btn-sm btn-danger">{% trans 'Бүгд' %}</button>
+      {% if user.is_authenticated %}
+      <button id="filter1" type="button" class="btn-sm btn-warning">{% trans 'Миний тэмцээн' %}</button>
+      {% endif %}
+      <button id="filter2" type="button" class="btn-sm btn-success">{% trans 'Бүртгэл эхэлсэн тэмцээн' %}</button>
+      <button id="filter3" type="button" class="btn-sm btn-info">{% trans 'Эхэлсэн тэмцээн' %}</button>
+      <button id="filter4" type="button" class="btn-sm btn-primary">{% trans 'Дууссан тэмцээн' %}</button>
+      <button id="filter5" type="button" class="btn-sm btn-danger" date="daterange"><i class="fa fa-calendar"></i></button>
     </div>
-    <ul class="nav nav-tabs text-sm">
-      <li class="active"><a href="#table-competition" data-toggle="tab">Хүснэгт</a></li>
-      <li><a href="#calendar-competition" data-toggle="tab">Календарь</a></li>
-    </ul>
-    <div class="tab-content text-sm">
-      <div class="tab-pane active" id="table-competition">
-        <table class="table table-bordered table-hover table-striped">
-          <thead>
-            <tr>
-              <th>{% trans '№' %}</th>
-              <th>{% trans 'Ангилал' %}</th>
-              <th>{% trans 'Эхлэх огноо' %}</th>
-              <th>{% trans 'Дуусах огноо' %}</th>
-              <th>{% trans 'Төлөв' %}</th>
-              <th>{% trans 'Шагналын сан' %}</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for o in object_list %}
-            {% if o.started %}
-            <tr>
-              <td>{{ forloop.counter }}</td>
-              <td>{{ o.last_ranked.name }}</td>
-              <td>{{ o.historys.start|date:"Y-m-d H:i:s" }}</td>
-              <td>{{ o.historys.end|date:"Y-m-d H:i:s" }}</td>
-              <td>
-                <span class='label label-pill label-{% if o.competition_status == "0" %}success{% elif o.competition_status == "1" %}info{% else %}primary{% endif %}'>
-                  {{ o.historys.get_competition_status_display }}
-                </span>
-              </td>
-              <td>{{ o.last_ranked.shagnal }}</td>
-              <td>
-                {% if o.if_registered %}
-                <span class="label label-pill label-warning">{% trans 'Бүртгэлтэй байна' %}</span>
-                {% endif %}
-              </td>
-            </tr>
-            {% else %}
-            <tr>
-              <td>
-                {{ forloop.counter }} 
-              </td>
-              <td>{{ o.rank.name }}</td>
-              <td>{{ o.start|date:"Y-m-d H:i:s" }}</td>
-              <td>{{ o.end|date:"Y-m-d H:i:s" }}</td>
-              <td>
-                <span class='label label-pill label-{% if o.competition_status == "0" %}success{% elif o.competition_status == "1" %}info{% else %}primary{% endif %}'>
-                  {{ o.historys.get_competition_status_display }}
-                </span>
-              </td>
-              <td>{{ o.rank.shagnal }}</td>
-              <td>
-                {% if o.if_registered %}
-                <span class="label label-pill label-warning">{% trans 'Бүртгэлтэй байна' %}</span>
-                {% else %}
-                {% if user.is_authenticated %}
-                  <a href="{% url 'web_competition_register' o.id %}" data-modal="modalview" class="btn btn-success btn-flat btn-xs">
-                    {% trans 'Бүртгүүлэх' %}
-                  </a>
-                  {% else %}
-                  <a href="{% url 'login' %}" class="btn btn-success btn-flat btn-xs">
-                    {% trans 'Бүртгүүлэх' %}
-                  </a>
-                  {% endif %}
-                {% endif %}
-              </td>
-            </tr>
-            {% endif %}
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      <div class="tab-pane text-sm" id="calendar-competition">
-        <div id="calendar" class="calendar" style="height: 1000px;"></div>
-      </div>
+    <div id="competition_filter">
+    {% include 'web/competition/competition_filter.html' %}
     </div>
 	</div>
 </div>
@@ -115,73 +50,89 @@
 <script src="{% static 'assets/assets/bootstrap-year-calendar-master/js/bootstrap-year-calendar.js' %}"></script>
 
 <script type="text/javascript">
+  $('#filter0').click(function(){
+    $('#id_filter_type').val(0)
+    $('#competition_form').submit();
+  });
+  $('#filter1').click(function(){
+    $('#id_filter_type').val(1)
+    $('#competition_form').submit();
+  });
+  $('#filter2').click(function(){
+    $('#id_filter_type').val(2)
+    $('#competition_form').submit();
+  });
+  $('#filter3').click(function(){
+    $('#id_filter_type').val(3)
+    $('#competition_form').submit();
+  });
+  $('#filter4').click(function(){
+    $('#id_filter_type').val(4)
+    $('#competition_form').submit();
+  });
   $(function() {
-      var currentYear = new Date().getFullYear();
+    var currentYear = new Date().getFullYear();
       
-      $('#calendar').calendar({ 
-        enableContextMenu: true,
-        enableRangeSelection: true,
+    $('#calendar').calendar({ 
+      enableContextMenu: true,
+      enableRangeSelection: true,
 
-        mouseOnDay: function(e) {
-          if(e.events.length > 0) {
-            var content = '';
-                  
-            for(var i in e.events) {
-              content += '<div class="event-tooltip-content">'
-              + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
-              + '<div class="event-location">' + e.events[i].location + '</div>'
-              + '</div>';
-            }
+      mouseOnDay: function(e) {
+        if(e.events.length > 0) {
+          var content = '';        
+          for(var i in e.events) {
+            content += '<div class="event-tooltip-content">'
+            + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
+            + '<div class="event-location">' + e.events[i].location + '</div>'
+            + '</div>';
+          }
               
-            $(e.element).popover({ 
-              trigger: 'manual',
-              container: 'body',
-              html:true,
-              content: content
-            });
+          $(e.element).popover({ 
+            trigger: 'manual',
+            container: 'body',
+            html:true,
+            content: content
+          });
             
-            $(e.element).popover('show');
-            }
+          $(e.element).popover('show');
+        }
+      },
+          
+      mouseOutDay: function(e) {
+        if(e.events.length > 0) {
+          $(e.element).popover('hide');
+        }
+      },
+          
+      dayContextMenu: function(e) {
+        $(e.element).popover('hide');
+      },
+      //clickDay: function(e) {
+      //  if(e.events.length > 0){
+      //    for(var i in e.events) {
+      //      window.location.href  = "/competition/register/"+e.events[i].id;  
+      //    }  
+      //  }
+      //},
+      dataSource: [
+        {% for o in object_list %}
+          {
+            id: {{ o.id }},
+            name: '{{ o.rank.name }}',
+            location: '{{ o.get_competition_status_display }}',
+            startDate: new Date({{ o.start.year }}, {{ o.start.month }} - 1, {{ o.start.day }}),
+            endDate: new Date({{ o.end.year }}, {{ o.end.month }} - 1, {{ o.end.day }}),
+            {% if o.competition_status == '0' %}
+              color:'#5cb85c'
+            {% else %}
+              color:'#337ab7'
+            {% endif %}
           },
-          mouseOutDay: function(e) {
-            if(e.events.length > 0) {
-              $(e.element).popover('hide');
-            }
-          },
-          dayContextMenu: function(e) {
-            $(e.element).popover('hide');
-          },
-          //clickDay: function(e) {
-          //  if(e.events.length > 0){
-          //    for(var i in e.events) {
-          //      window.location.href  = "/competition/register/"+e.events[i].id;  
-          //    }  
-          //  }
-          //},
-          dataSource: [
-            {% for o in object_list %}
-              {
-                id: {{ o.id }},
-                name: '{{ o.rank.name }}',
-                location: '{{ o.get_competition_status_display }}',
-                startDate: new Date({{ o.start.year }}, {{ o.start.month }} - 1, {{ o.start.day }}),
-                endDate: new Date({{ o.end.year }}, {{ o.end.month }} - 1, {{ o.end.day }}),
-                {% if o.competition_status == '0' %}
-                color:'#5cb85c'
-                {% else %}
-                color:'#337ab7'
-                {% endif %}
-              },
-            {% endfor %}
-          ]
-      });
+        {% endfor %}
+      ]
+    });
   });
 
-  $(function(){
-    $('button[date="daterange"]').daterangepicker();
-  });
-
-  /* Last tab show */
   $('a[data-toggle="tab"]').click(function (e) {
     e.preventDefault();
     $(this).tab('show');
@@ -194,7 +145,39 @@
 
   var selectedTab = localStorage.getItem('selectedTab');
   if (selectedTab != null) {
-      $('a[data-toggle="tab"][href="' + selectedTab + '"]').tab('show');
+    $('a[data-toggle="tab"][href="' + selectedTab + '"]').tab('show');
   }
+  
+  
+  $(function () {
+    $('#filter5').daterangepicker({
+      "buttonClasses": "btn btn-sm btn-flat",
+      "applyClass": "btn-success",
+      "cancelClass": "btn-default",
+      locale: {
+        applyLabel: 'Шүүх',
+        cancelLabel: 'Цуцлах',
+        customRangeLabel : 'Гараар сонгох'
+      },
+      ranges: {
+        'Өнөөдөр': [moment(), moment()],
+        'Өчигдөр': [moment().subtract('days', 1), moment().subtract('days', 1)],
+        'Сүүлийн 7 хоног': [moment().subtract('days', 6), moment()],
+        'Сүүлийн 30 хоног': [moment().subtract('days', 29), moment()],
+        'Энэ сар': [moment().startOf('month'), moment().endOf('month')],
+        'Өнгөрсөн сар': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+      },
+    });
+
+    $('#filter5').on('apply.daterangepicker', function (ev, picker) {
+      $('#id_filter_type').val(5);
+      $('#id_start').val(picker.startDate.format('YYYY-MM-DD'));
+      $('#id_end').val(picker.endDate.format('YYYY-MM-DD'));
+      $("#competition_form").submit();
+    });
+  });
+  $(document).ready(function(){
+    form_submit('#competition_form', '#competition_filter', '{% url "competition_calendar_filter" %}')
+  });
 </script>
 {% endblock %}

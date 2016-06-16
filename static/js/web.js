@@ -70,3 +70,16 @@ $(function(){
 $(function() {
   $.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
 });
+
+function form_submit(form_id, load_id, load_url){
+  $(form_id).submit(function(event){
+    event.preventDefault();
+    $.ajax({
+      url: load_url,
+      method: 'GET',
+      data: $(this).serialize()
+    }).done(function(response){
+      $(load_id).html(response)
+    });
+  });
+}

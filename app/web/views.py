@@ -156,6 +156,7 @@ class Lesson(Web, ListView):
 					obj.lesson_list.append(ob)
 		context['lesson_category'] = lesson_category_list
 		return context
+
 class LessonFilter(Lesson):
 	template_name = 'web/lesson/lesson_filter.html'
 
@@ -172,6 +173,33 @@ class WebCompetitionCalendar(Web, ListView):
 	menu_num = 3
 	template_name = 'web/competition/competition.html'
 	model = Competition
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(WebCompetitionCalendar, self).get_context_data(*args, **kwargs)
+		filter_type = self.request.GET.get('filter_type', None)
+		start = self.request.GET.get('start', None)
+		end = self.request.GET.get('end', None)
+		if filter_type == '0':
+			object_list = Competition.objects.all()
+		elif filter_type == '1':
+			object_list = Competition.registered_competition(self.request.user)
+		elif filter_type == '2':
+			object_list = Competition.objects.filter(competition_status = 0)
+		elif filter_type == '3':
+			object_list = Competition.objects.filter(competition_status = 1)
+		elif filter_type == '4':
+			object_list = Competition.objects.filter(competition_status = 2)
+		elif filter_type == '5':
+			start = datetime.strptime(start, '%Y-%m-%d').replace(hour=0, minute=0)
+			end = datetime.strptime(end, '%Y-%m-%d').replace(hour=0, minute=0)
+			if start == end:
+				object_list = Competition.objects.filter(start__startswith = start.date())
+			else:
+				object_list = Competition.objects.filter(start__range = (start, end))
+		else:
+			object_list = Competition.objects.all()
+		context['object_list'] = object_list
+		return context
 
 class WebCompetitionCalendarFilter(WebCompetitionCalendar):
 	template_name = 'web/competition/competition_filter.html'
@@ -202,11 +230,14 @@ class Calendar(Web, TemplateView):
 			elif filter_type == '0':
 				start = datetime.strptime(start, '%Y-%m-%d').replace(hour=0, minute=0)
 				end = datetime.strptime(end, '%Y-%m-%d').replace(hour=0, minute=0)
-				object_list = EconomicCalendar.objects.filter(time__range = (start, end)).order_by('time')
+				if start == end:
+					print start
+					object_list = EconomicCalendar.objects.filter(time__startswith = start.date()).order_by('time')
+				else:
+					object_list = EconomicCalendar.objects.filter(time__range = (start.date(), end.date())).order_by('time')
 		else:
 			object_list = EconomicCalendar.objects.filter(time__startswith = date.today())
 		context['object_list'] = object_list
-		context['f'] = filter_type
 		return context
 
 class CalendarFilter(Calendar):

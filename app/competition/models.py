@@ -50,6 +50,15 @@ class Competition(models.Model):
 			if i.user.id == user.id:
 				return True
 		return False
+		
+	@classmethod
+	def registered_competition(self, user):
+		competition_list = []
+		system_user = SystemUser.objects.get(id = user.id)
+		competition_register_list = CompetitionRegister.objects.filter(user = system_user)
+		for i in competition_register_list:
+			competition_list.append(i.competition)
+		return competition_list
 
 	def __unicode__(self):
 		return unicode(self.rank)
