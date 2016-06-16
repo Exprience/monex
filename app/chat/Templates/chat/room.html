@@ -2,9 +2,9 @@
 {% block content %}
 <div class="col-md-8">
 	<div class="wall">
-		<h2 class="title">Форум</h2>
+		<h2 class="title">Форум <a href="{% url 'manager_news_create' %}"><i class="fa fa-plus-circle"></i></a></h2>
 		<div class="wall">
-			<form class="form-inline"  method="post">{% csrf_token %}
+			<form class="form-horizontal"  method="post">{% csrf_token %}
 				{% for f in form %}
 				<fieldset class="form-group">
 				<label>{{ f.label }}</label>

@@ -2,12 +2,12 @@
 
 from django import forms
 from .models import *
-
+from captcha.fields import CaptchaField
 __all__ = ['RoomForm', 'MessageForm']
 
 
 class RoomForm(forms.ModelForm):
-
+	captcha = CaptchaField()
 	class Meta:
 		model = Room
 		fields = '__all__'
