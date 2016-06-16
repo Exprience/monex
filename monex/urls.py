@@ -46,7 +46,7 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     
-    url(r'^redactor/', include(urls)),
+    url(r'^redactor/', include('redactor.urls')),
     
     url(r'^captcha/', include('captcha.urls')),
 

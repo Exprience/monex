@@ -49,11 +49,13 @@
 					              <span class="author-name">
 					                {{ m.author_name }}
 					              </span>
+					              {% if user.is_authenticated %}
 					              <span class="author-name">
 					                <a href="{% url 'lesson_mail' user.id m.id %}" data-modal="modalview">
 					                	<button class="btn btn-xs btn-warning">{% trans 'Мэйл илгээх' %}</button>
 					                </a>
 					              </span>
+					              {% endif %}
 					            </div><!-- /.entry-meta -->
 					          </div><!-- /.post-meta -->
 					        </article>

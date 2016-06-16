@@ -20,9 +20,21 @@
       <button id="filter4" type="button" class="btn-sm btn-primary">{% trans 'Дууссан тэмцээн' %}</button>
       <button id="filter5" type="button" class="btn-sm btn-danger" date="daterange"><i class="fa fa-calendar"></i></button>
     </div>
-    <div id="competition_filter">
-    {% include 'web/competition/competition_filter.html' %}
+    <ul class="nav nav-tabs text-sm">
+      <li class="active"><a href="#table-competition" data-toggle="tab">Хүснэгт</a></li>
+      <li><a href="#calendar-competition" data-toggle="tab">Календарь</a></li>
+    </ul>
+    <div class="tab-content text-sm">
+      <div class="tab-pane active" id="table-competition">
+        <div id="competition_filter">
+          {% include 'web/competition/competition_filter.html' %}
+        </div>
+      </div>
+      <div class="tab-pane text-sm" id="calendar-competition">
+        <div id="calendar" class="calendar" style="height: 1000px;"></div>
+      </div>
     </div>
+    
 	</div>
 </div>
 {% comment %}
