@@ -1,0 +1,53 @@
+{% load i18n %}
+{% if lesson_category %}
+<div id="lesson_filter" class="row">
+	<div class="col-md-3">
+		<div class="tabs-left">
+			<ul class="nav nav-tabs text-sm">
+				{% for i in lesson_category %}
+				<li  style="width:160px;">
+					<a href="#tabs_{{ i.id }}" data-toggle="tab">{{ i }}</a>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="tab-content" style="margin-left:-40px;">
+			{% for i in lesson_category %}
+     	<div class="tab-pane" id="tabs_{{ i.id }}">
+     		<div class="row">
+     		{% for m in i.lesson_list %}
+     			<div class="col-md-6">
+						<h4 class="title">{{ m.video_name }}</h4>
+						<article class="lesson">
+		          <a class="youtube" href="{{ m.url }}">
+		            <img src="{{ m.image }}" alt="post Image">
+		          </a>
+		          <div class="post-meta">
+		          	<div class="entry-meta">
+		              <span class="entry-date">
+		                <time>{{ m.created_at|date:"Y-m-d H:i" }}</time>
+		              </span>
+		              <span class="author-name">
+		                {{ m.author_name }}
+		              </span>
+		              <span class="author-name">
+		                <a href="{% url 'lesson_mail' user.id m.id %}" data-modal="modalview">
+		                	<button class="btn btn-xs btn-warning">{% trans 'Мэйл илгээх' %}</button>
+		                </a>
+		              </span>
+		            </div><!-- /.entry-meta -->
+		          </div><!-- /.post-meta -->
+		        </article>
+					</div>
+     		{% endfor %}	
+     		</div>
+     	</div>
+			{% endfor %}
+    </div>
+	</div>
+</div>
+{% else %}
+{% trans 'Бичлэг олдсонгүй' %}
+{% endif %}

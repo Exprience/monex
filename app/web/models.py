@@ -68,6 +68,7 @@ class Surgalt(models.Model):
 	url = models.URLField(null = True, blank = True, verbose_name = u'Видео')
 	author_name = models.CharField(max_length = 100, verbose_name = u'Хичээл заасан багш')
 	author_email = models.EmailField(verbose_name = u'Хичээл заасан багшийн э-мэйл')
+	created_at = models.DateTimeField(auto_now_add = True)
 
 	def image(self):
 		return "http://img.youtube.com/vi/%s/0.jpg" %self.url[32:]

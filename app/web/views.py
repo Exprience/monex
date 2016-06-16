@@ -6,8 +6,9 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render_to_response
+from django.core.mail import send_mail, BadHeaderError, EmailMessage
 
-from .forms import BagtsForm
+from .forms import BagtsForm, LessonMailForm
 from .models import *
 from app.competition.models import *
 from app.competition.forms import CompetitionRegisterForm
@@ -21,7 +22,7 @@ from django_modalview.generic.response import ModalJsonResponseRedirect
 
 __all__ = ['Home', 'About', 'News', 'Research', 'Lesson', 'Contact', 'NewsSelf',
 'WebCompetitionCalendar', 'Calendar', 'h404', 'BagtsView', 'WebCompetitionRegisterView', 'CalendarFilter',
-'ResearchFilter']
+'ResearchFilter', 'LessonMailView', 'WebCompetitionCalendarFilter', 'LessonFilter']
 
 
 
@@ -111,7 +112,6 @@ class Research(SystemUserLoginRequired, Web, TemplateView):
 		context = super(Research, self).get_context_data(**kwargs)
 		name = self.request.GET.get('name', None)
 		author_name = self.request.GET.get('author_name', None)
-		request = {}
 		if name and author_name:
 			object_list = Sudalgaa.objects.filter(name__icontains = name, author_name__icontains = author_name)
 		elif name:
@@ -135,9 +135,29 @@ class ResearchFilter(Research):
 	template_name = 'web/research/research_filter.html'
 
 class Lesson(Web, ListView):
-	template_name = 'web/lesson.html'
+	template_name = 'web/lesson/lesson.html'
 	menu_num = 6
 	model = Surgalt
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(Lesson, self).get_context_data(*args, **kwargs)
+		name = self.request.GET.get('name', None)
+		if name:
+			object_list = Surgalt.objects.filter(video_name__icontains = name)
+		else:
+			object_list = Surgalt.objects.all()
+		lesson_category_list = []
+		for i in object_list.values('angilal').distinct():
+			obj = SurgaltAngilal.objects.get(id = i.values()[0])
+			setattr(obj, 'lesson_list', [])
+			lesson_category_list.append(obj)
+			for ob in object_list:
+				if ob.angilal.id == obj.id:
+					obj.lesson_list.append(ob)
+		context['lesson_category'] = lesson_category_list
+		return context
+class LessonFilter(Lesson):
+	template_name = 'web/lesson/lesson_filter.html'
 
 class Contact(Web, TemplateView):
 
@@ -150,8 +170,11 @@ class Contact(Web, TemplateView):
 	
 class WebCompetitionCalendar(Web, ListView):
 	menu_num = 3
-	template_name = 'web/competition.html'
+	template_name = 'web/competition/competition.html'
 	model = Competition
+
+class WebCompetitionCalendarFilter(WebCompetitionCalendar):
+	template_name = 'web/competition/competition_filter.html'
 
 class Contact(Web, TemplateView):
 	menu_num = 9
@@ -227,3 +250,28 @@ class WebCompetitionRegisterView(SystemUserLoginRequired, ModalFormView):
 			return super(WebCompetitionRegisterView, self).form_valid(form)
 		else:
 			return super(WebCompetitionRegisterView, self).form_invalid(form)
+
+
+class LessonMailView(ModalFormView):
+
+	def __init__(self, *args, **kwargs):
+		super(LessonMailView, self).__init__(*args, **kwargs)
+		self.title = u"Санал хүсэлт"
+		self.form_class = LessonMailForm
+		self.submit_button = ModalButton(value=u'Илгээх', loading_value = "Уншиж байна...",
+			button_type='primary btn-flat')
+		self.close_button = ModalButton(value=u'Хаах', button_type ='default btn-flat')
+
+	def form_valid(self, form, **kwargs):
+		self.response = ModalResponse('Таны мэйл амжилттай илгээгдлээ', 'success')
+		subject = 'no reply'
+		message = form.cleaned_data['feedback']
+		user = SystemUser.objects.get(id = self.kwargs.pop('user_id', None))
+		video = Surgalt.objects.get(id = self.kwargs.pop('video_id', None))
+		message += user.email
+		try:
+			email = EmailMessage(subject, message, to = [video.author_email])
+			email.send()
+		except BadHeaderError:
+			return HttpResponse('Амжилтгүй')
+		return super(LessonMailView, self).form_valid(form, **kwargs)

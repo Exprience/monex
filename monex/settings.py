@@ -47,7 +47,8 @@ INSTALLED_APPS = (
     'pagination_bootstrap',
     'django_modalview',
     'simple_history',
-    'django_filters'
+    'django_filters',
+    'captcha',
 )
 
 
@@ -163,3 +164,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 from django.core.urlresolvers import reverse_lazy
 LOGIN_URL = reverse_lazy('login')
+
+
+CAPTCHA_FONT_SIZE = 30
+CAPTCHA_IMAGE_SIZE = (90, 36)
+CAPTCHA_LETTER_ROTATION = 0
+CAPTCHA_TEXT_FIELD_TEMPLATE = 'web/captcha/captcha_text_field.html'

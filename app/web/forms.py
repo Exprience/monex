@@ -3,6 +3,7 @@
 from django import forms
 from .models import *
 from app.competition.forms import RelAdd, my_admin_site
+from captcha.fields import CaptchaField, CaptchaTextInput
 
 __all__ = ['BagtsForm', 'NewsForm', 'AboutForm', 'LessonForm', 'ResearchForm', 'NewsCategoryForm',
 			'LessonCategoryForm', 'ResearchCategoryForm']
@@ -105,3 +106,7 @@ class ResearchCategoryForm(forms.ModelForm):
 		widgets = {
 			'name' : forms.TextInput(attrs = {'class' : 'form-control'})
 		}
+
+class LessonMailForm(forms.Form):
+	feedback = forms.CharField(widget = forms.Textarea(attrs = {'class':'form-control'}), label = u'Санал хүсэлт')
+	captcha = CaptchaField()

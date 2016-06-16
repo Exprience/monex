@@ -52,7 +52,11 @@
          					<td>{{ s.name }}</td>
          					<td>{{ s.author_name }}</td>
          					<td>{{ s.date|date:"Y-m-d H:i" }}</td>
-         					<td><a href="/media/{{ s.pdf_file }}" target="_blank">{% trans 'Үзэх' %}</a></td>
+         					<td>
+         						<a href="/media/{{ s.pdf_file }}" target="_blank">
+         							<button class="btn btn-info btn-xs">{% trans 'Үзэх' %}</button>
+         						</a>
+         					</td>
          				</tr>
          				{% endfor %}		
          			</tbody>
