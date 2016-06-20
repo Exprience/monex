@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views
 from redactor import urls
-from app.user.forms import UserPasswordResetForm, UserPasswordChangeForm
+from app.user.forms import UserPasswordResetForm, UserPasswordChangeForm, UserSetPasswordForm
 
 #handler400 = 'my_app.views.bad_request'
 #handler403 = 'my_app.views.permission_denied'
@@ -32,7 +32,8 @@ urlpatterns = [
 		{'template_name' : 'user/password/password_change_done.html' }, name="password_change_done"),
 
     url(r'^confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', views.password_reset_confirm, 
-        {'template_name' : 'user/password_confirm.html' }, name ='password_confirm'),
+        {'template_name' : 'user/password_confirm.html', 'set_password_form': UserSetPasswordForm },
+        name ='password_confirm'),
 
 	url(r'^', include('app.web.urls')),
     

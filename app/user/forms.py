@@ -4,8 +4,8 @@ from .models import SystemUser
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
-
+from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm, SetPasswordForm
+from django.contrib.auth.models import User
 
 
 __all__ = ['RegisterForm', 'LoginForm', 'ProfileUpdateForm']
@@ -33,6 +33,13 @@ class UserPasswordChangeForm(PasswordChangeForm):
 		self.fields['new_password1'].widget.attrs['placeholder'] = 'Шинэ нууц үг'
 		self.fields['new_password2'].widget.attrs['placeholder'] = 'Шинэ нууц үг давтах'
 
+class UserSetPasswordForm(SetPasswordForm):
+
+	def __init__(self, *args , **kwargs):
+		super(UserSetPasswordForm, self).__init__(*args, **kwargs)
+		self.fields['new_password1'].widget.attrs['placeholder'] = u'Нууц үг'
+		self.fields['new_password2'].widget.attrs['placeholder'] = u'Нууц үг давтах'
+
 class LoginForm(forms.Form):
 	username = forms.CharField(label = u"Нэвтрэх нэр:", widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Нэвтрэх нэр'}))
 	password = forms.CharField(label = u"Нууц үг:", widget = forms.PasswordInput(attrs = {'class': 'form-control', 'placeholder': 'Нууц үг'}))
@@ -59,23 +66,33 @@ class LoginForm(forms.Form):
 
 
 class RegisterForm(forms.ModelForm):
-
 	#repeat_password = forms.CharField(label = 'Нууц үг давтах:', widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг давтах'}))
 
 	class Meta:
 		model = SystemUser
-		fields = ['username', 'first_name', 'last_name', 'register', 'email', 'phone'] #'bank', 'account', 'password']
+		fields = ['username', 'email']
+
+		#fields = ['username', 'first_name', 'last_name', 'register', 'email', 'phone'] #'bank', 'account', 'password']
 		widgets = {
 			'username' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нэвтрэх нэр'}),
-			'first_name' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нэр'}),
-			'last_name' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Овог'}),
-			'register' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Регистер'}),
+			#'first_name' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нэр'}),
+			#'last_name' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Овог'}),
+			#'register' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Регистер'}),
 			'email' : forms.EmailInput(attrs = {'class':'form-control', 'placeholder':'Э-мэйл'}),
-			'phone' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Утас'}),
+			#'phone' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Утас'}),
 			#'bank' : forms.Select(attrs = {'class':'form-control', 'placeholder':'Банк'}),
 			#'account' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Дансны дугаар'}),
 			#'password' : forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}),
 		}
+
+	#def clean_email(self):
+	#	email = self.cleaned_data.get('email')
+	#	username = self.cleaned_data.get('username')
+	#	if email and User.objects.filter(email=email).exclude(username=username).count():
+	#		raise forms.ValidationError(u'Э-мэйл хаяг давхардсан байна.')
+	#	elif not email:
+	#		raise forms.ValidationError(u'Энэ талбарыг бөглөнө үү.')
+	#	return email
 		
 
 	#def clean(self):

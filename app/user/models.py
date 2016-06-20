@@ -15,8 +15,8 @@ class Bank(models.Model):
 
 class SystemUser(User):
 
-	register = models.CharField(max_length = 10, verbose_name = u'Регистер:', unique = True)
-	phone = models.IntegerField(verbose_name = u'Утас:')
+	register = models.CharField(max_length = 10, verbose_name = u'Регистер:', unique = True, null = True)
+	phone = models.IntegerField(verbose_name = u'Утас:', null = True)
 	bank = models.ForeignKey(Bank, verbose_name = 'Банк:', null = True)
 	account = models.IntegerField(verbose_name = 'Дансний дугаар:', null = True)
 	

@@ -14,11 +14,17 @@ from app.competition.models import *
 from app.competition.forms import CompetitionRegisterForm
 from app.user.models import SystemUser
 from app.manager.models import Manager
+from app.user.forms import RegisterForm
 
 from django_modalview.generic.base import ModalTemplateView
 from django_modalview.generic.edit import ModalFormView, ModalCreateView, ModalUpdateView
 from django_modalview.generic.component import ModalResponse, ModalButton
 from django_modalview.generic.response import ModalJsonResponseRedirect
+
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib import messages
 
 __all__ = ['Home', 'About', 'News', 'Research', 'Lesson', 'Contact', 'NewsSelf',
 'WebCompetitionCalendar', 'Calendar', 'h404', 'BagtsView', 'WebCompetitionRegisterView', 'CalendarFilter',
@@ -75,9 +81,34 @@ class Web(NotManager):
 		context['menu_num'] = self.menu_num
 		return context
 
-class Home(Web, TemplateView):
-	template_name = 'web/home.html'
+class Home(NotManager, CreateView):
+	template_name = 'web/home/home_example.html'
 	menu_num = 1
+	form_class = RegisterForm
+	success_url = reverse_lazy('home')
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(Home, self).get_context_data(*args, **kwargs)
+		context['news_first'] = Medee.objects.first()
+		context['research_first'] = Sudalgaa.objects.first()
+		context['lesson_first'] = Surgalt.objects.first()
+		return context
+
+	def form_valid(self, form):
+		user = form.save()
+		uid = urlsafe_base64_encode(force_bytes(user.pk))
+		token = default_token_generator.make_token(user)
+		text = 'http://127.0.0.1:8000/reset/%s/%s/' %(uid, token)
+		send_mail('subject', text, 'uuganaaaaaa@gmail.com', [user.email])
+		context = {}
+		context['email'] = user.email
+		messages.success(self.request,
+			u'Бүртгэл амжилттай хийгдлээ. %s мэйл хаяг руу орж бүртгэлээ баталгаажуулна уу.' %user.email)
+		return super(Home, self).form_valid(form) #render_to_response('user/register_confirm.html', context)
+
+	def form_invalid(self, form):
+		messages.error(self.request, 'Бүртгүүлэх формд алдаа гарлаа')
+		return super(Home, self).form_invalid(form)
 
 class About(Web, TemplateView):
 	template_name = 'web/about.html'

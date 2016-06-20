@@ -2,7 +2,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import  authenticate, login, logout
 from django.utils.decorators import method_decorator
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.views.generic import (FormView, TemplateView, ListView, CreateView, UpdateView)
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.utils.html import escape
@@ -88,6 +88,9 @@ class ManagerLoginView(FormView):
 	form_class = ManagerLoginForm
 	template_name = 'manager/login.html'
 	success_url = reverse_lazy('manager_home')
+
+	def get_success_url(self):
+		return reverse_lazy('manager_home')
 
 	def dispatch(self, request, *args, **kwargs):
 		if Manager.objects.filter(username = request.user.username):
