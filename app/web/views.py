@@ -75,14 +75,14 @@ class Web(NotManager):
 	def get_context_data(self, *args, **kwargs):
 		bank_list = [u'Голомт банк', u'Хаан банк', u'Худалдаа хөгжилийн банк', u'Төрийн банк']
 		context = super(Web, self).get_context_data(*args, **kwargs)
-		context['corausel'] = Medee.objects.all().order_by('created_at')[:5]
+		#context['corausel'] = Medee.objects.all().order_by('created_at')[:5]
 		context['news_category'] = MedeeAngilal.objects.all()
 		context['research_category'] = SudalgaaAngilal.objects.all()
 		context['lesson_category'] = SurgaltAngilal.objects.all()
-		context['medee'] = Medee.objects.all().order_by('-id')[:5]
+		#context['medee'] = Medee.objects.all().order_by('-id')[:5]
 		context['medee_most'] = Medee.objects.all().order_by('-view')[:5]
-		context['sudalgaa'] = Sudalgaa.objects.all().order_by('-id')[:5]
-		context['surgalt'] = Surgalt.objects.all()[:4]
+		#context['sudalgaa'] = Sudalgaa.objects.all().order_by('-id')[:5]
+		#context['surgalt'] = Surgalt.objects.all()[:4]
 		context['menu_num'] = self.menu_num
 		context['banks'] = Bank.objects.filter(name__in = bank_list)
 		return context

@@ -71,6 +71,8 @@ $(function () {
 });
 
 $(document).ready(function(){
+	$("ul.nav-tabs li:nth-child(1)").addClass( "active" );
+	$('div.tab-content .tab-pane:nth-child(1)').addClass( "active" );
 	form_submit('#filter_form', '#calendar_filter', '{% url "calendar_filter" %}')
 });
 </script>

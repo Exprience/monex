@@ -13,8 +13,12 @@ __all__ = ['MedeeAngilal', 'Medee', 'SudalgaaAngilal', 'Sudalgaa', 'SurgaltAngil
 class MedeeAngilal(models.Model):
 	name = models.CharField(max_length = 250, verbose_name = u"Мэдээ ангилал")
 
+	class Meta:
+		verbose_name_plural = u'Мэдээ ангилал'
+
 	def __unicode__(self):
 		return unicode(self.name)
+
 
 
 class Medee(models.Model):
@@ -26,6 +30,7 @@ class Medee(models.Model):
 	view = models.SmallIntegerField(default = 0)
 
 	class Meta:
+		verbose_name_plural = u'Мэдээ'
 		ordering = ['-id']
 
 	def __unicode__(self):
@@ -34,7 +39,8 @@ class Medee(models.Model):
 	def img_url(self):
 		path = re.compile(r'<img [^>]*src="([^"]+)')
 		url = path.findall(self.body)
-		return url[0]
+		if url:
+			return url[0]
 
 	def remove_html(self):
 		p = re.compile(r'<.*?>')
