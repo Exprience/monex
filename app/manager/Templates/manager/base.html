@@ -115,11 +115,20 @@
               <span>Бүртгэл</span>
             </a>
           </li>
-          <li>
-            <a href="{% url 'manager_user_list' %}">
+          <li class="treeview">
+            <a href="#">
               <i class="fa fa-circle-o text-aqua"></i>
               <span>Хэрэглэгчид</span>
+              <i class="fa fa-angle-left pull-right"></i>
             </a>
+            <ul class="treeview-menu">
+              <li><a href=""><i class="fa fa-circle-o"></i> Админ хэрэглэгчид</a></li>
+              <li>
+                <a href="{% url 'manager_user_list' %}">
+                  <i class="fa fa-circle-o"></i> Системийн хэрэглэгчид
+                </a>
+              </li>
+            </ul>
           </li>
           <li class="treeview">
             <a href="#">

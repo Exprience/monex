@@ -39,15 +39,17 @@ class PopupCreate(object):
 		model = form.save(commit=False)
 		form.save()
 		if "_popup" in self.request.POST:
-			return HttpResponse('<script>opener.dismissAddAnotherPopup(window, "%s", "%s");</script>'\
+			return HttpResponse('<script>opener.dismissAddRelatedObjectPopup(window, "%s", "%s");</script>'\
 				% (escape(model.pk), escape(model)))
 
 class PopupUpdate(object):
-
+	
 	def form_valid(self, form):
+		model = form.save(commit = False)
+		form.save()
 		if "_popup" in self.request.POST:
-			return HttpResponse('<script>opener.dismissAddAnotherPopup(window, "%s", "%s");</script>'\
-				% (escape(self.object.pk), escape(self.object)))
+			return HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "%s", "%s", "%s");</script>'\
+				% (escape(model.pk), escape(model), escape(model.pk)))
 
 class MyModal(ModalCreateView):
 	def __init__(self, *args, **kwargs):
@@ -174,7 +176,7 @@ class ManagerCompetitionRankCreateView(PopupCreate, ManagerLoginRequired, Create
 	template_name = 'manager/competition/competition_rank_form.html'
 	success_url = reverse_lazy('manager_competition')
 
-class ManagerCompetitionRankUpdateView(PopupCreate, ManagerLoginRequired, UpdateView):
+class ManagerCompetitionRankUpdateView(PopupUpdate, ManagerLoginRequired, UpdateView):
 	model = CompetitionRank
 	form_class = CompetitionRankForm
 	template_name = 'manager/competition/competition_rank_form.html'
@@ -203,7 +205,7 @@ class ManagerNewsCategoryCreateView(PopupCreate, ManagerLoginRequired, CreateVie
 	success_url = reverse_lazy('manager_news')
 	template_name = "manager/news/news_category_form.html"
 
-class ManagerNewsCategoryUpdateView(PopupCreate, ManagerLoginRequired, UpdateView):
+class ManagerNewsCategoryUpdateView(PopupUpdate, ManagerLoginRequired, UpdateView):
 	model = MedeeAngilal
 	form_class = NewsCategoryForm
 	success_url = reverse_lazy('manager_news')
@@ -265,7 +267,7 @@ class ManagerLessonCategoryCreateView(PopupCreate, ManagerLoginRequired, CreateV
 	template_name = 'manager/lesson/lesson_category_form.html'
 	success_url = reverse_lazy('manager_competition')
 
-class ManagerLessonCategoryUpdateView(PopupCreate, ManagerLoginRequired, UpdateView):
+class ManagerLessonCategoryUpdateView(PopupUpdate, ManagerLoginRequired, UpdateView):
 	model = SurgaltAngilal
 	form_class = LessonCategoryForm
 	template_name = 'manager/lesson/lesson_category_form.html'
@@ -295,7 +297,7 @@ class ManagerResearchCategoryCreateView(PopupCreate, ManagerLoginRequired, Creat
 	template_name = 'manager/research/research_category_form.html'
 	success_url = reverse_lazy('manager_competition')
 
-class ManagerResearchCategoryUpdateView(PopupCreate, ManagerLoginRequired, UpdateView):
+class ManagerResearchCategoryUpdateView(PopupUpdate, ManagerLoginRequired, UpdateView):
 	model = SudalgaaAngilal
 	form_class = ResearchCategoryForm
 	template_name = 'manager/research/research_category_form.html'
