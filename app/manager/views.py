@@ -6,15 +6,19 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.views.generic import (FormView, TemplateView, ListView, CreateView, UpdateView)
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.utils.html import escape
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
 
-
-from .forms import *
+from .forms import ManagerLoginForm, ManagerForm, ManagerUpdateForm
 from .models import Manager
 from app.competition.models import CompetitionRank, Competition, CompetitionRegister
 from app.competition.forms import *
 from app.web.models import *
 from app.web.forms import *
 from app.user.models import *
+
 
 from django_modalview.generic.base import ModalTemplateView
 from django_modalview.generic.edit import ModalFormView, ModalCreateView, ModalUpdateView
@@ -30,7 +34,8 @@ __all__ = ['ManagerLoginView','ManagerHomeView', 'ManagerRankCreateView',
 	'ManagerUserListView', 'MyModal', 'MyModalUpdate', 'ManagerCompetitionRankCreateView',
 	'ManagerCompetitionRankUpdateView', 'ManagerLessonCategoryUpdateView', 'ManagerLessonCategoryCreateView',
 	'ManagerResearchCategoryUpdateView', 'ManagerResearchCategoryCreateView', 'ManagerCompetitionRegisterView',
-	'manager_competition_register_view']
+	'manager_competition_register_view', 'ManagerAdminUserListView', 'ManagerAdminUserCreateView',
+	'ManagerAdminUserUpdateView']
 
 
 class PopupCreate(object):
@@ -306,6 +311,33 @@ class ManagerResearchCategoryUpdateView(PopupUpdate, ManagerLoginRequired, Updat
 class ManagerUserListView(ManagerLoginRequired, ListView):
 	model = SystemUser
 	template_name = 'manager/user/user.html'
+
+class ManagerAdminUserListView(ManagerLoginRequired, ListView):
+	model = Manager
+	template_name = 'manager/user/admin/admin_user_list.html'
+
+class ManagerAdminUserCreateView(ManagerLoginRequired, CreateView):
+	model = Manager
+	form_class = ManagerForm
+	template_name = 'manager/user/admin/admin_user_form.html'
+	success_url = reverse_lazy('manager_admin_user_list')
+
+	def form_valid(self, form):
+		user = form.save()
+		uid = urlsafe_base64_encode(force_bytes(user.pk))
+		token = default_token_generator.make_token(user)
+		text = 'http://127.0.0.1:8000/confirm/%s/%s/' %(uid, token)
+		send_mail('subject', text, 'uuganaaaaaa@gmail.com', [user.email])
+		context = {}
+		context['email'] = user.email
+		return super(ManagerAdminUserCreateView, self).form_valid(form)
+
+class ManagerAdminUserUpdateView(ManagerLoginRequired, UpdateView):
+	model = Manager
+	form_class = ManagerUpdateForm
+	template_name = 'manager/user/admin/admin_user_form.html'
+	success_url = reverse_lazy('manager_admin_user_list')
+	
 # End Temtseen crud
 
 class ManagerCompetitionRegisterView(ManagerLoginRequired, ListView):

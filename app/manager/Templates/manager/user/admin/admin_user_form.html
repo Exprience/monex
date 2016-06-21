@@ -1,0 +1,53 @@
+{% extends 'manager/base.html' %}
+{% load i18n %}
+{% block content %}
+<section class="content-header">
+  <h1>{% trans 'Админ хэрэглэгч' %}</h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url 'manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li><a href="{% url 'manager_admin_user_list' %}">{% trans 'Админ хэрэглэгч' %}</a></li>
+    <li class="active">
+      {% if object %}
+      {% trans 'Админ хэрэглэгч засварлах' %}
+      {% else %}
+      {% trans 'Админ нэмэх' %}
+      {% endif %}
+    </li>
+  </ol>
+</section>
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">
+            {% if object %}
+            {% trans 'Админ хэрэглэгч засварлах' %}
+            {% else %}
+            {% trans 'Алмин хэрэглэгч нэмэх' %}
+            {% endif %}
+          </h3>
+        </div>
+        <form method="post" class="form-horizontal">{% csrf_token %}
+          <div class="box-body">
+            {% if form.non_field_errors %}
+              {% for error in form.non_field_errors %}
+              <div class="alert alert-danger alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  <i class="icon fa fa-ban"></i> {{ error }}
+              </div>
+              {% endfor %}
+              {% endif %}
+            {{ form }}
+          </div>
+          <div class="box-footer">
+            <div class="pull-right">
+              <button type="submit" class="btn btn-success btn-flat">{% trans 'Хадгалах' %}</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
