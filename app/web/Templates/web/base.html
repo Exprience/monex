@@ -27,9 +27,6 @@
   <div class="container">
     <div class="row">
       {% block content %}
-      <div class="col-md-8">
-      asdfjgasfk asdgfkasgf kasdf gaskf
-      </div> 
       {% endblock %}
       {% block rightcontent %}
       <div class="col-md-3">
@@ -38,12 +35,51 @@
             <div class="sidebar-content">
               <aside class="widget">
                 <h3 class="widget-title">{% trans 'Валют' %}</h3>
-                <iframe src="http://xacbank.mn/mn/iframe/rates"></iframe>
+                <ul class="nav nav-tabs text-sm">
+                  {% for bank in banks %}
+                  <li>
+                    <a href="#bank_{{ bank.id }}" data-toggle="tab">
+                      <img src="/media/{{ bank.icon }}"/ width="24" height="24">
+                    </a>
+                  </li>
+                  {% endfor %}
+                </ul>
+                <div class="tab-content text-sm">
+                  {% for bank in banks %}
+                  <div class="tab-pane" id="bank_{{ bank.id }}">
+                    <table class="table table-bordered table-striped" style="margin-top:10px;">
+                      <thead>
+                        <tr>
+                          <th colspan="3">
+                            <h5 style="margin-top:5px;">{{ bank }}</h5>
+                          </th>
+                        </tr>
+                        <tr>
+                          <th>{% trans 'Валют' %}</th>
+                          <th>{% trans 'Авах' %}</th>
+                          <th>{% trans 'Зарах' %}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for c in bank.get_currency %}
+                          <tr>
+                            <td>
+                              <img src="/media/{{c.currency.icon}}" width="20" height="20"> {{ c.currency.bill }}
+                            </td>
+                            <td>{{ c.buy }}</td>
+                            <td>{{ c.sell }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  {% endfor %}
+                </div>
               </aside>
 
               <aside class="widget">
                 <h3 class="widget-title">{% trans 'Хувьцаа' %}</h3>
-                <iframe src="http://mse.mn/content/list/2/0#"></iframe>
+                {% comment %}<iframe src="http://mse.mn/content/list/2/0#"></iframe>{% endcomment %}
               </aside>
               
               <aside class="widget">

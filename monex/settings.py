@@ -163,6 +163,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 from django.core.urlresolvers import reverse_lazy
+
 LOGIN_URL = reverse_lazy('login')
 
 

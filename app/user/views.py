@@ -14,6 +14,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
+
 __all__ = ['Login', 'RegisterView', 'register_confirm']
 
 
@@ -34,6 +35,9 @@ class Login(FormView):
 		user = authenticate(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
 		if user and SystemUser.objects.filter(username = user.username):
 			login(self.request, user)
+			url = self.request.GET.get('next', None)
+			if url:
+				return HttpResponseRedirect(url)
 			return super(Login, self).form_valid(form)
 		else:
 			return super(Login, self).form_invalid(form)
@@ -42,7 +46,6 @@ class Login(FormView):
 	def logout(request):
 		logout(request)
 		return HttpResponseRedirect(reverse_lazy('home'))
-
 
 
 class RegisterView(CreateView):

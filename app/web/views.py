@@ -12,7 +12,7 @@ from .forms import BagtsForm, LessonMailForm
 from .models import *
 from app.competition.models import *
 from app.competition.forms import CompetitionRegisterForm
-from app.user.models import SystemUser
+from app.user.models import SystemUser, Bank
 from app.manager.models import Manager
 from app.user.forms import RegisterForm
 
@@ -45,8 +45,10 @@ def handler500(request):
     response.status_code = 500
     return response
 
+
 class SystemUserLoginRequired(object):
 
+	@method_decorator(login_required)
 	def dispatch(self, request, *args, **kwargs):
 		if request.user.is_authenticated():
 			if SystemUser.objects.filter(username = request.user.username):
@@ -56,6 +58,7 @@ class SystemUserLoginRequired(object):
 		else:
 			return HttpResponseRedirect(reverse_lazy('login'))
 
+
 class NotManager(object):
 
 	def dispatch(self, request, *args, **kwargs):
@@ -64,11 +67,13 @@ class NotManager(object):
 		else:
 			return HttpResponseRedirect(reverse_lazy('login'))
 
+
 class Web(NotManager):
 
 	menu_num = 0
 
 	def get_context_data(self, *args, **kwargs):
+		bank_list = [u'Голомт банк', u'Хаан банк', u'Худалдаа хөгжилийн банк', u'Төрийн банк']
 		context = super(Web, self).get_context_data(*args, **kwargs)
 		context['corausel'] = Medee.objects.all().order_by('created_at')[:5]
 		context['news_category'] = MedeeAngilal.objects.all()
@@ -79,7 +84,9 @@ class Web(NotManager):
 		context['sudalgaa'] = Sudalgaa.objects.all().order_by('-id')[:5]
 		context['surgalt'] = Surgalt.objects.all()[:4]
 		context['menu_num'] = self.menu_num
+		context['banks'] = Bank.objects.filter(name__in = bank_list)
 		return context
+
 
 class Home(NotManager, CreateView):
 	template_name = 'web/home/home_example.html'
@@ -110,6 +117,7 @@ class Home(NotManager, CreateView):
 		messages.error(self.request, 'Бүртгүүлэх формд алдаа гарлаа')
 		return super(Home, self).form_invalid(form)
 
+
 class About(Web, TemplateView):
 	template_name = 'web/about.html'
 	menu_num = 2
@@ -119,10 +127,12 @@ class About(Web, TemplateView):
 		context['about'] = BidniiTuhai.objects.last()
 		return context
 
+
 class News(Web, ListView):
 	template_name = 'web/news/news.html'
 	menu_num = 4
 	model = Medee
+
 
 class NewsSelf(Web, TemplateView):
 	template_name = 'web/news/news_self.html'
@@ -134,6 +144,7 @@ class NewsSelf(Web, TemplateView):
 		context['news_self'].view += 1
 		context['news_self'].save()
 		return context
+
 
 class Research(SystemUserLoginRequired, Web, TemplateView):
 	template_name = 'web/research/research.html'
@@ -162,8 +173,10 @@ class Research(SystemUserLoginRequired, Web, TemplateView):
 		context['research_category'] = category_list
 		return context
 
+
 class ResearchFilter(Research):
 	template_name = 'web/research/research_filter.html'
+
 
 class Lesson(Web, ListView):
 	template_name = 'web/lesson/lesson.html'
@@ -188,8 +201,10 @@ class Lesson(Web, ListView):
 		context['lesson_category'] = lesson_category_list
 		return context
 
+
 class LessonFilter(Lesson):
 	template_name = 'web/lesson/lesson_filter.html'
+
 
 class Contact(Web, TemplateView):
 
@@ -199,7 +214,8 @@ class Contact(Web, TemplateView):
 		context = super(Contact, self).get_context_data(*args, **kwargs)
 		context['contact'] = HolbooBarih.objects.last()
 		return context
-	
+
+
 class WebCompetitionCalendar(Web, ListView):
 	menu_num = 3
 	template_name = 'web/competition/competition.html'
@@ -232,12 +248,15 @@ class WebCompetitionCalendar(Web, ListView):
 		context['object_list'] = object_list
 		return context
 
+
 class WebCompetitionCalendarFilter(WebCompetitionCalendar):
 	template_name = 'web/competition/competition_filter.html'
+
 
 class Contact(Web, TemplateView):
 	menu_num = 9
 	template_name = 'web/contact.html'
+
 
 class Calendar(Web, TemplateView):
 	menu_num = 7
@@ -271,8 +290,10 @@ class Calendar(Web, TemplateView):
 		context['object_list'] = object_list
 		return context
 
+
 class CalendarFilter(Calendar):
 	template_name = 'web/calendar/calendar_filter.html'
+
 
 class BagtsView(ModalFormView):
 	def __init__(self, *args, **kwargs):
@@ -289,6 +310,7 @@ class BagtsView(ModalFormView):
 		self.save(form)
 		self.response = ModalResponse("{obj} is created".format(obj=self.object), 'success')
 		return super(BagtsView, self).form_valid(form, commit = False, **kwargs)
+
 
 class WebCompetitionRegisterView(SystemUserLoginRequired, ModalFormView):
 

@@ -1,10 +1,13 @@
 # -*- coding:utf-8 -*-
 import re
 from django.db import models
+from app.user.models import Bank
 from redactor.fields import RedactorField
 from app.manager.models import Manager
+from datetime import datetime
+
 __all__ = ['MedeeAngilal', 'Medee', 'SudalgaaAngilal', 'Sudalgaa', 'SurgaltAngilal',
-			'Surgalt', 'BidniiTuhai', 'HolbooBarih', 'EconomicCalendar']
+			'Surgalt', 'BidniiTuhai', 'HolbooBarih', 'EconomicCalendar', 'Currency', 'CurrencyValue']
 
 # Мэдээ
 class MedeeAngilal(models.Model):
@@ -12,6 +15,7 @@ class MedeeAngilal(models.Model):
 
 	def __unicode__(self):
 		return unicode(self.name)
+
 
 class Medee(models.Model):
 	angilal = models.ForeignKey(MedeeAngilal, verbose_name = u'Ангилал')
@@ -62,6 +66,7 @@ class SurgaltAngilal(models.Model):
 	def __unicode__(self):
 		return unicode(self.name)
 
+
 class Surgalt(models.Model):
 	angilal = models.ForeignKey(SurgaltAngilal, verbose_name = u'Ангилал')
 	video_name = models.CharField(max_length = 200, null = True, verbose_name = u'Видео нэр')
@@ -76,6 +81,7 @@ class Surgalt(models.Model):
 	def __unicode__(self):
 		return unicode(self.author_name)
 
+
 class BidniiTuhai(models.Model):
 	body = RedactorField()
 	video_url = models.URLField(null = True, blank = True)
@@ -89,6 +95,10 @@ class BidniiTuhai(models.Model):
 
 class HolbooBarih(models.Model):
 	body  = RedactorField()
+
+	def __unicode__(self):
+		return unicode(self.body)
+
 
 class EconomicCalendar(models.Model):
 	cur_select = (
@@ -108,3 +118,26 @@ class EconomicCalendar(models.Model):
 	forecast = models.FloatField()
 	previous = models.FloatField()
 
+
+class Currency(models.Model):
+	bill = models.CharField(max_length = 50, verbose_name = u'Валют')
+	icon = models.ImageField(null = True)
+
+	class Meta:
+		verbose_name_plural = u'Валют'
+
+	def __unicode__(self):
+		return unicode(self.bill)
+
+class CurrencyValue(models.Model):
+	bank = models.ForeignKey(Bank, verbose_name = u'Банк')
+	currency = models.ForeignKey(Currency, verbose_name = 'Валют')
+	buy = models.FloatField(verbose_name = u'Авах')
+	sell = models.FloatField(verbose_name = u'Зарах')
+	date = models.DateTimeField(auto_now_add = True)
+
+	class Meta:
+		verbose_name_plural = u'Валютийн ханш'
+
+	def __unicode__(self):
+		return u'%s | %s | %s | %s' %(self.bank, self.currency, self.buy, self.sell)

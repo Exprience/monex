@@ -102,6 +102,9 @@ class ManagerLoginView(FormView):
 		if user and Manager.objects.filter(username = user.username):
 			self.request.user = Manager.objects.get(username = user.username)
 			login(self.request, user)
+			url = self.request.GET.get('next', None)
+			if url:
+				return HttpResponseRedirect(url)
 		return super(ManagerLoginView, self).form_valid(form)
 
 	@staticmethod
@@ -111,6 +114,7 @@ class ManagerLoginView(FormView):
 
 class ManagerLoginRequired(object):
 
+	@method_decorator(login_required(login_url = reverse_lazy('manager_login')))
 	def dispatch(self, request, *args, **kwargs):
 		user = request.user
 		if user.is_authenticated():
