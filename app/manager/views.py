@@ -122,23 +122,30 @@ class ManagerLoginView(FormView):
 
 class ManagerLoginRequired(object):
 	get_perm = 'permission_denied'
+	model = None
 
 	@method_decorator(login_required(login_url = reverse_lazy('manager_login')))
 	def dispatch(self, request, *args, **kwargs):
 		user = request.user
 		if user.is_authenticated():
 			if Manager.objects.filter(username = user.username):
-				print self.get_permissions(self.get_perm)
-				if self.get_permissions(self.get_perm):
+				if self.get_permissions(self.get_perm, self.model):
 					return super(ManagerLoginRequired, self).dispatch(request, *args, **kwargs)
 				else:
 					raise PermissionDenied
 		return HttpResponseRedirect(reverse_lazy('manager_login'))
 
-	def get_permissions(self, value):
+	def get_permissions(self, perm, model = None):
+		perm_list = []
 		user = self.request.user
+		if model:
+			for i in self.model._meta.default_permissions:
+				i += "_"+self.model._meta.model_name
+				perm_list.append(i)
+		else:
+			perm_list.append(perm)
 		for i in user.groups.all():
-			if i.permissions.filter(codename = value):
+			if i.permissions.filter(codename__in = perm_list):
 				return True
 		return False
 
@@ -205,12 +212,10 @@ class ManagerCompetitionRankUpdateView(PopupUpdate, ManagerLoginRequired, Update
 ''' Төгсгөл тэмцээний crud view '''
 
 class ManagerNewsView(ManagerLoginRequired, ListView):
-	get_perm = 'add_medee'
 	model = Medee
 	template_name = 'manager/news/news_list.html'
 
 class ManagerNewsCreateView(ManagerLoginRequired, CreateView):
-	get_perm = 'add_medee'
 	model = Medee
 	form_class = NewsForm
 	template_name = 'manager/news/news_form.html'
@@ -226,27 +231,25 @@ class ManagerNewsCreateView(ManagerLoginRequired, CreateView):
 		return super(ManagerNewsCreateView, self).form_valid(form)
 
 class ManagerNewsUpdateView(ManagerLoginRequired, UpdateView):
-	get_perm = 'add_medee'
 	model = Medee
 	form_class = NewsForm
 	template_name = 'manager/news/news_form.html'
 	success_url = reverse_lazy('manager_news')
 
 class ManagerNewsCategoryCreateView(PopupCreate, ManagerLoginRequired, CreateView):
-	get_perm = 'add_medee'
 	model = MedeeAngilal
 	form_class = NewsCategoryForm
 	success_url = reverse_lazy('manager_news')
 	template_name = "manager/news/news_category_form.html"
 
 class ManagerNewsCategoryUpdateView(PopupUpdate, ManagerLoginRequired, UpdateView):
-	get_perm = 'add_medee'
 	model = MedeeAngilal
 	form_class = NewsCategoryForm
 	success_url = reverse_lazy('manager_news')
 	template_name = "manager/news/news_category_form.html"
 
 class ManagerAboutView(ManagerLoginRequired, TemplateView):
+	model = BidniiTuhai
 	template_name = 'manager/about/about.html'
 
 	def get_context_data(self, *args, **kwargs):
@@ -255,6 +258,7 @@ class ManagerAboutView(ManagerLoginRequired, TemplateView):
 		return context
 
 class ManagerAboutCreateView(ManagerLoginRequired, FormView):
+	model = BidniiTuhai
 	form_class = AboutForm
 	template_name = 'manager/about/about_create.html'
 	success_url = reverse_lazy('manager_about')
@@ -371,6 +375,7 @@ class ManagerAdminUserUpdateView(ManagerLoginRequired, UpdateView):
 # End Temtseen crud
 
 class ManagerCompetitionRegisterView(ManagerLoginRequired, ListView):
+	model = CompetitionRegister
 	queryset = CompetitionRegister.objects.filter(status = False)
 	template_name = 'manager/competition/competition_register.html'
 
@@ -382,4 +387,5 @@ def manager_competition_register_view(request, id = 0):
 
 
 class ManagerFinanceView(ManagerLoginRequired, TemplateView):
+	get_perm = 'add_medee'
 	template_name = 'manager/finance/finance.html'
