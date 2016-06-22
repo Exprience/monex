@@ -1,6 +1,25 @@
-@font-face {
+/*@font-face {
   font-family: 'ubuntu';
   src: url("../../../fonts/ubuntu/Ubuntu-B.ttf");
+}*/
+@font-face {
+  font-family: 'ubuntu';
+  src: url("../../../fonts/ubuntu/Ubuntu-B.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ubuntu-c';
+  src: url("../../../fonts/ubuntu/Ubuntu-C.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'ubuntu-m';
+  src: url("../../../fonts/ubuntu/Ubuntu-M.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 /* 1 - Google Font End 
@@ -4915,5 +4934,7 @@ table.text-center th {
     white-space: normal !important;
   }
 }
-
+.table {
+  font-family: 'ubuntu-c';
+}
 

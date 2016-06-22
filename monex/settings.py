@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'simple_history',
     'django_filters',
     'captcha',
+    'django.contrib.admindocs',
 )
 
 

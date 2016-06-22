@@ -85,6 +85,7 @@ class Web(NotManager):
 		#context['surgalt'] = Surgalt.objects.all()[:4]
 		context['menu_num'] = self.menu_num
 		context['banks'] = Bank.objects.filter(name__in = bank_list)
+		context['companys'] = Company.objects.all()
 		return context
 
 

@@ -4,10 +4,11 @@ from django.db import models
 from app.user.models import Bank
 from redactor.fields import RedactorField
 from app.manager.models import Manager
-from datetime import datetime
+from datetime import datetime, timedelta, date
 
 __all__ = ['MedeeAngilal', 'Medee', 'SudalgaaAngilal', 'Sudalgaa', 'SurgaltAngilal',
-			'Surgalt', 'BidniiTuhai', 'HolbooBarih', 'EconomicCalendar', 'Currency', 'CurrencyValue']
+	'Surgalt', 'BidniiTuhai', 'HolbooBarih', 'EconomicCalendar', 'Currency', 'CurrencyValue',
+	'Company', 'Stock']
 
 # Мэдээ
 class MedeeAngilal(models.Model):
@@ -135,6 +136,7 @@ class Currency(models.Model):
 	def __unicode__(self):
 		return unicode(self.bill)
 
+
 class CurrencyValue(models.Model):
 	bank = models.ForeignKey(Bank, verbose_name = u'Банк')
 	currency = models.ForeignKey(Currency, verbose_name = 'Валют')
@@ -147,3 +149,59 @@ class CurrencyValue(models.Model):
 
 	def __unicode__(self):
 		return u'%s | %s | %s | %s' %(self.bank, self.currency, self.buy, self.sell)
+
+
+class Company(models.Model):
+	
+	type_choice = (
+		('0', u'ХК'),
+		('1', u'ХХК'),
+		)
+
+	name = models.CharField(max_length = 100, null = True, verbose_name = u'Нэр')
+	symbol = models.CharField(max_length = 10, verbose_name = u'Симбол')
+	icon = models.ImageField(null = True)
+	company_type = models.CharField(max_length = 5, choices = type_choice)
+
+	class Meta:
+		verbose_name_plural = u'Компани'
+
+	def get_stock(self):
+		return self.stock_set.get(stock_date__startswith = date.today())
+
+	def get_change(self):
+		stock = self.stock_set.get(stock_date__startswith = date.today())
+		stock_previous = self.stock_set.get(stock_date__startswith = date.today()-timedelta(1))
+		if stock_previous:
+			return stock.stock_close - stock_previous.stock_close
+		else:
+			return u'Бичлэг байхгүй байна'
+
+	def get_change_perncent(self):
+		stock = self.stock_set.get(stock_date__startswith = date.today())
+		stock_previous = self.stock_set.get(stock_date__startswith = date.today()-timedelta(1))
+		if stock_previous:
+			return (stock.stock_close - stock_previous.stock_close) * 100 / stock_previous.stock_close
+		else:
+			return u'Бичлэг байхгүй байна'
+
+	def __unicode__(self):
+		return u"%s | %s" %(self.name, self.symbol)
+
+
+class Stock(models.Model):
+	company = models.ForeignKey(Company, verbose_name = u'Компани')
+	stock_open = models.FloatField(verbose_name = u'Нээлтийн ханш')
+	stock_high = models.FloatField(verbose_name = u'Дээд ханш')
+	stock_low = models.FloatField(verbose_name = u'Доод ханш')
+	stock_last = models.FloatField(verbose_name = u'Сүүлийн ханш')
+	stock_close = models.FloatField(verbose_name = u'Хаалтийн ханш')
+	stock_buy = models.FloatField(verbose_name = u'Авах ханш')
+	stock_sell = models.FloatField(verbose_name = u'Зарах ханш')
+	stock_date = models.DateTimeField(auto_now_add = True, verbose_name = u'Он сар')
+
+	class Meta:
+		verbose_name_plural = u'Хувьцаа'
+
+	def __unicode__(self):
+		return u'%s | %s | %s' %(self.company.name, self.stock_date, self.stock_buy)

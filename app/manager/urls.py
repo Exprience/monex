@@ -72,4 +72,7 @@ urlpatterns = [
 	
 	url(r'competition/register/$', ManagerCompetitionRegisterView.as_view(), name = 'manager_competition_register'),
 	url(r'competition/register/(?P<id>[0-9]+)/$', manager_competition_register_view, name = 'manager_competition_register_def'),
+
+
+	url(r'finance/$', ManagerFinanceView.as_view(), name = 'manager_finance'),
 ]

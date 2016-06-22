@@ -26,6 +26,7 @@
                 <th>№</th>
                 <th>Нэвтрэх нэр</th>
                 <th>Э-мэйл</th>
+                <th>Хандах эрх</th>
                 <th>Бүртгэгдсэн огноо</th>
                 <th>Сүүлд нэвтэрсэн огноо</th>
                 <th>Түүх</th>
@@ -38,6 +39,11 @@
                 <td>{{ forloop.counter }}</td>
                 <td>{{ o.username }}</td>
                 <td>{{ o.email }}</td>
+                <td>
+                  {% for g in o.groups.all %}
+                  {{ g }}
+                  {% endfor %}
+                </td>
                 <td>{{ o.date_joined|date:"Y-m-d H:i:s" }}</td>
                 <td>{{ o.last_login|date:"Y-m-d H:i:s" }}</td>
                 <td><a href="#history_{{ o.id }}" data-toggle="modal" class="text-sm">Түүх</a></td>
@@ -75,7 +81,6 @@
             <tr>
               <th>Нэвтрэх нэр</th>
               <th>Э-мэйл</th>
-              <th>Хандах эрх</th>
               <th>Хэн</th>
               <th>Хэзээ</th>
               <th>Төлөв</th>
@@ -86,11 +91,6 @@
             <tr>
               <td>{{ i.username }}</td>
               <td>{{ i.email }}</td>
-              <td>
-                {% for g in i.groups.all %}
-                {{ g }}
-                {% endfor %}
-              </td>
               <td>{{ i.history_user }}</td>
               <td>{{ i.history_date|date:"Y-m-d H:i:s" }}</td>
               <td>

@@ -9,7 +9,8 @@ from django.utils.html import escape
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
+from django.core.mail import send_mail, send_mass_mail
+from django.core.exceptions import PermissionDenied
 
 from .forms import ManagerLoginForm, ManagerForm, ManagerUpdateForm
 from .models import Manager
@@ -17,7 +18,7 @@ from app.competition.models import CompetitionRank, Competition, CompetitionRegi
 from app.competition.forms import *
 from app.web.models import *
 from app.web.forms import *
-from app.user.models import *
+from app.user.models import SystemUser
 
 
 from django_modalview.generic.base import ModalTemplateView
@@ -35,7 +36,7 @@ __all__ = ['ManagerLoginView','ManagerHomeView', 'ManagerRankCreateView',
 	'ManagerCompetitionRankUpdateView', 'ManagerLessonCategoryUpdateView', 'ManagerLessonCategoryCreateView',
 	'ManagerResearchCategoryUpdateView', 'ManagerResearchCategoryCreateView', 'ManagerCompetitionRegisterView',
 	'manager_competition_register_view', 'ManagerAdminUserListView', 'ManagerAdminUserCreateView',
-	'ManagerAdminUserUpdateView']
+	'ManagerAdminUserUpdateView', 'ManagerFinanceView']
 
 
 class PopupCreate(object):
@@ -120,23 +121,39 @@ class ManagerLoginView(FormView):
 		return HttpResponseRedirect(reverse_lazy('manager_login'))
 
 class ManagerLoginRequired(object):
+	get_perm = 'permission_denied'
 
 	@method_decorator(login_required(login_url = reverse_lazy('manager_login')))
 	def dispatch(self, request, *args, **kwargs):
 		user = request.user
 		if user.is_authenticated():
-			if Manager.objects.filter(username = user.username):	
-				return super(ManagerLoginRequired, self).dispatch(request, *args, **kwargs)
+			if Manager.objects.filter(username = user.username):
+				print self.get_permissions(self.get_perm)
+				if self.get_permissions(self.get_perm):
+					return super(ManagerLoginRequired, self).dispatch(request, *args, **kwargs)
+				else:
+					raise PermissionDenied
 		return HttpResponseRedirect(reverse_lazy('manager_login'))
 
-class ManagerHomeView(ManagerLoginRequired, TemplateView):
+	def get_permissions(self, value):
+		user = self.request.user
+		for i in user.groups.all():
+			if i.permissions.filter(codename = value):
+				return True
+		return False
+
+class ManagerLoginNotPermissions(ManagerLoginRequired):
+
+	def get_permissions(self, *args, **kwargs):
+		return True
+
+class ManagerHomeView(ManagerLoginNotPermissions, TemplateView):
 	template_name = 'manager/home.html'
 
-# Temtseenii angilal crud
+
 class ManagerRankListView(ManagerLoginRequired, ListView):
 	model = CompetitionRank
 	template_name = 'manager/rank/rank_list.html'
-
 
 class ManagerRankCreateView(ManagerLoginRequired, CreateView):
 	model = CompetitionRank
@@ -144,13 +161,12 @@ class ManagerRankCreateView(ManagerLoginRequired, CreateView):
 	template_name = 'manager/rank/rank_form.html'
 	success_url = reverse_lazy('manager_rank_list')
 
-
 class ManagerRankUpdateView(ManagerLoginRequired, UpdateView):
 	model = CompetitionRank
 	form_class = CompetitionRankForm
 	template_name = 'manager/rank/rank_form.html'
 	success_url = reverse_lazy('manager_rank_list')
-# End temtseenii angilal crud
+
 
 ''' Тэмцээний crud view '''
 class ManagerCompetitionListView(ManagerLoginRequired, ListView):
@@ -189,28 +205,42 @@ class ManagerCompetitionRankUpdateView(PopupUpdate, ManagerLoginRequired, Update
 ''' Төгсгөл тэмцээний crud view '''
 
 class ManagerNewsView(ManagerLoginRequired, ListView):
+	get_perm = 'add_medee'
 	model = Medee
 	template_name = 'manager/news/news_list.html'
 
 class ManagerNewsCreateView(ManagerLoginRequired, CreateView):
+	get_perm = 'add_medee'
 	model = Medee
 	form_class = NewsForm
 	template_name = 'manager/news/news_form.html'
 	success_url = reverse_lazy('manager_news')
 
+	def form_valid(self, form):
+		news = form.save()
+		mails = []
+		for i in SystemUser.objects.all():
+			mails.append(i.email)
+		message = ('no reply', news.title, 'uuganaaaaaa@gmail.com', mails)
+		send_mass_mail((message,))
+		return super(ManagerNewsCreateView, self).form_valid(form)
+
 class ManagerNewsUpdateView(ManagerLoginRequired, UpdateView):
+	get_perm = 'add_medee'
 	model = Medee
 	form_class = NewsForm
 	template_name = 'manager/news/news_form.html'
 	success_url = reverse_lazy('manager_news')
 
 class ManagerNewsCategoryCreateView(PopupCreate, ManagerLoginRequired, CreateView):
+	get_perm = 'add_medee'
 	model = MedeeAngilal
 	form_class = NewsCategoryForm
 	success_url = reverse_lazy('manager_news')
 	template_name = "manager/news/news_category_form.html"
 
 class ManagerNewsCategoryUpdateView(PopupUpdate, ManagerLoginRequired, UpdateView):
+	get_perm = 'add_medee'
 	model = MedeeAngilal
 	form_class = NewsCategoryForm
 	success_url = reverse_lazy('manager_news')
@@ -349,3 +379,7 @@ def manager_competition_register_view(request, id = 0):
 	competition_register.status = True
 	competition_register.save()
 	return HttpResponseRedirect(reverse_lazy('manager_competition_register'))
+
+
+class ManagerFinanceView(ManagerLoginRequired, TemplateView):
+	template_name = 'manager/finance/finance.html'

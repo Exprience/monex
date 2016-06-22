@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="{% static 'assets/admin/dist/css/AdminLTE.css' %}">
   <link rel="stylesheet" href="{% static 'assets/admin/dist/css/skins/_all-skins.min.css' %}">
 
-
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <script src="{% static 'assets/js/jQuery-2.2.0.min.js' %}"></script>
   <script src="{% static 'assets/assets/bootstrap/js/bootstrap.min.js ' %}"></script>
   <script src="{% static 'assets/admin/dist/js/app.min.js' %}"></script>
@@ -93,7 +93,7 @@
           </div>
         </form>
         <ul class="sidebar-menu">
-          <li class="treeview">
+          <li class="active">
             <a href="{% url 'manager_home' %}">
               <i class="fa fa-circle-o text-aqua"></i> <span>Нүүр</span>
             </a>
@@ -146,6 +146,12 @@
               <li><a href="{% url 'manager_research' %}"><i class="fa fa-circle-o"></i> Судалгаа</a></li>
               <li><a href="{% url 'manager_about' %}"><i class="fa fa-circle-o"></i> Бидний тухай</a></li>
             </ul>
+          </li>
+          <li>
+            <a href="{% url 'manager_finance' %}">
+              <i class="fa fa-circle-o text-aqua"></i>
+              <span>Санхүү</span>
+            </a>
           </li>
         </ul>
       </section>
@@ -236,6 +242,21 @@
     });
     $(function() {
       $.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
+    });
+    
+    $(function() {
+      var pgurl = window.location.pathname;
+      $("ul.sidebar-menu a").each(function(){
+        if($(this).attr("href") == pgurl){
+          if($(this).parent().parent('ul').hasClass('treeview-menu')){
+            $(this).parent().parent().parent('li').addClass("active").siblings().removeClass('active');
+            $(this).parent('li').addClass("active").siblings().removeClass('active');
+          }
+          else{
+            $(this).parent('li').addClass("active").siblings().removeClass('active');
+          }
+        }
+      })
     });
   </script>
 </body>

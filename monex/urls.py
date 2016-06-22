@@ -51,6 +51,8 @@ urlpatterns = [
     
     url(r'^captcha/', include('captcha.urls')),
 
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

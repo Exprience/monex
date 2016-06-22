@@ -29,6 +29,43 @@
     <div class="row">
       {% block content %}
       {% endblock %}
+      {% block stock %}
+      <div class="col-md-9">
+        <aside class="widget">
+          <h3 class="widget-title">{% trans 'Хувьцаа/ТОП 20' %}</h3>
+          <table class="table table-bordered table-striped table-hover text-sm wall">
+            <thead>
+              <tr>
+                <th>{% trans 'Хувьцаа' %}</th>
+                <th>{% trans 'Авах' %}</th>
+                <th>{% trans 'Зарах' %}</th>
+                <th>{% trans 'Дээд' %}</th>
+                <th>{% trans 'Доод' %}</th>
+                <th>{% trans 'Сүүлийн ханш' %}</th>
+                <th>{% trans 'Өөрчлөлт' %}</th>
+                <th>{% trans '% Өөрчлөлт' %}</th>
+                <th>{% trans 'Сүүлд шинэчлэгдсэн' %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for company in companys %}
+              <tr>
+                <td>{{ company.symbol }} <img src="/media/{{ company.icon }}" width="25" height="25"></td>
+                <td>{{ company.get_stock.stock_buy }}</td>
+                <td>{{ company.get_stock.stock_sell }}</td>
+                <td>{{ company.get_stock.stock_high }}</td>
+                <td>{{ company.get_stock.stock_low }}</td>
+                <td>{{ company.get_stock.stock_last }}</td>
+                <td>{{ company.get_change }}</td>
+                <td>{{ company.get_change_percent }}</td>
+                <td>{{ company.get_stock.stock_date|date:"Y-m-d H:i:s" }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </aside>
+      </div>
+      {% endblock %}
       {% block rightcontent %}
       <div class="col-md-3">
         <div class="wall">
@@ -77,11 +114,26 @@
                   {% endfor %}
                 </div>
               </aside>
-
+              {% comment %}
               <aside class="widget">
-                <h3 class="widget-title">{% trans 'Хувьцаа' %}</h3>
-                {% comment %}<iframe src="http://mse.mn/content/list/2/0#"></iframe>{% endcomment %}
+                <h3 class="widget-title">{% trans 'Хувьцаа/ТОП 20' %}</h3>
+                <table class="table table-bordered table-striped table-hover text-sm">
+                  <thead>
+                    <tr>
+                      <th>{% trans 'Хувьцаа' %}</th>
+                      <th>{% trans 'Авах' %}</th>
+                      <th>{% trans 'Зарах' %}</th>
+                      <th>{% trans 'Дээд' %}</th>
+                      <th>{% trans 'Доод' %}</th>
+                      <th>{% trans 'Сүүлийн ханш' %}</th>
+                      <th>{% trans 'Өөрчлөлт' %}</th>
+                      <th>{% trans '% Өөрчлөлт' %}</th>
+                      <th>{% trans 'Сүүлд шинэчлэгдсэн' %}</th>
+                    </tr>
+                  </thead>
+                </table>
               </aside>
+              {% endcomment %}
               
               <aside class="widget">
                 <h3 class="widget-title">Хамгийн их уншисан</h3><!-- /.widget-title -->

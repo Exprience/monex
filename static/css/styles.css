@@ -1,6 +1,22 @@
 @font-face {
   font-family: 'ubuntu';
-  src: url("../fonts/ubuntu/Ubuntu-B.ttf");
+  src: url("../fonts/ubuntu/Ubuntu-B.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ubuntu-c';
+  src: url("../fonts/ubuntu/Ubuntu-C.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ubuntu-m';
+  src: url("../fonts/ubuntu/Ubuntu-M.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 /* 2 - General styles

@@ -5,5 +5,4 @@ from simple_history.models import HistoricalRecords
 
 class Manager(User):
 	manager_status = models.BooleanField(default = False)
-	history = HistoricalRecords()
-	
+	history = HistoricalRecords()	

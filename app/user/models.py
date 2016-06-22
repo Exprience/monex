@@ -18,8 +18,8 @@ class Bank(models.Model):
 		return unicode(self.name)
 
 	def get_currency(self):
-		return self.currencyvalue_set.filter(date__startswith = datetime.now().date())
-		#return self.currencyvalue_set.all()
+		#return self.currencyvalue_set.filter(date__startswith = datetime.now().date())
+		return self.currencyvalue_set.all()
 
 
 class SystemUser(User):
