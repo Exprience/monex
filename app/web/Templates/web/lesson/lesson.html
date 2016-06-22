@@ -1,7 +1,6 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
 {% block content %}
-<div class="col-md-9">
 	<div class="wall">
 		<h2 class="title">Сургалт</h2>
 		<div class="wall">
@@ -69,7 +68,6 @@
 	    </div>
 		</div>
 	</div>
-</div>
 {% endblock %}
 {% block extrajs %}
 <script type="text/javascript">
@@ -92,8 +90,6 @@ function lesson_filter(id, form_id, load_id){
 </script>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("ul.nav-tabs li:nth-child(1)").addClass( "active" );
-		$('div.tab-content .tab-pane:nth-child(1)').addClass( "active" );
 		lesson_filter('#filter_button', '#lesson_form', '#lesson_filter');
 	});
 </script>

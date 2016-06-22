@@ -40,9 +40,11 @@
                 <td>{{ o.username }}</td>
                 <td>{{ o.email }}</td>
                 <td>
-                  {% for g in o.groups.all %}
-                  {{ g }}
-                  {% endfor %}
+                  <ul>
+                    {% for g in o.groups.all %}
+                    <li>{{ g }}</li>
+                    {% endfor %}
+                  </ul>
                 </td>
                 <td>{{ o.date_joined|date:"Y-m-d H:i:s" }}</td>
                 <td>{{ o.last_login|date:"Y-m-d H:i:s" }}</td>

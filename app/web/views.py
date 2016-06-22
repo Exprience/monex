@@ -70,8 +70,6 @@ class NotManager(object):
 
 class Web(NotManager):
 
-	menu_num = 0
-
 	def get_context_data(self, *args, **kwargs):
 		bank_list = [u'Голомт банк', u'Хаан банк', u'Худалдаа хөгжилийн банк', u'Төрийн банк']
 		context = super(Web, self).get_context_data(*args, **kwargs)
@@ -83,7 +81,6 @@ class Web(NotManager):
 		context['medee_most'] = Medee.objects.all().order_by('-view')[:5]
 		#context['sudalgaa'] = Sudalgaa.objects.all().order_by('-id')[:5]
 		#context['surgalt'] = Surgalt.objects.all()[:4]
-		context['menu_num'] = self.menu_num
 		context['banks'] = Bank.objects.filter(name__in = bank_list)
 		context['companys'] = Company.objects.all()
 		return context
@@ -91,7 +88,6 @@ class Web(NotManager):
 
 class Home(NotManager, CreateView):
 	template_name = 'web/home/home_example.html'
-	menu_num = 1
 	form_class = RegisterForm
 	success_url = reverse_lazy('home')
 
@@ -121,7 +117,6 @@ class Home(NotManager, CreateView):
 
 class About(Web, TemplateView):
 	template_name = 'web/about.html'
-	menu_num = 2
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(About, self).get_context_data(*args, **kwargs)
@@ -131,13 +126,11 @@ class About(Web, TemplateView):
 
 class News(Web, ListView):
 	template_name = 'web/news/news.html'
-	menu_num = 4
 	model = Medee
 
 
 class NewsSelf(Web, TemplateView):
 	template_name = 'web/news/news_self.html'
-	menu_num = 4
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(NewsSelf, self).get_context_data(*args, **kwargs)
@@ -149,7 +142,6 @@ class NewsSelf(Web, TemplateView):
 
 class Research(SystemUserLoginRequired, Web, TemplateView):
 	template_name = 'web/research/research.html'
-	menu_num = 5
 
 	def get_context_data(self, **kwargs):
 		context = super(Research, self).get_context_data(**kwargs)
@@ -181,7 +173,6 @@ class ResearchFilter(Research):
 
 class Lesson(Web, ListView):
 	template_name = 'web/lesson/lesson.html'
-	menu_num = 6
 	model = Surgalt
 
 	def get_context_data(self, *args, **kwargs):
@@ -218,7 +209,6 @@ class Contact(Web, TemplateView):
 
 
 class WebCompetitionCalendar(Web, ListView):
-	menu_num = 3
 	template_name = 'web/competition/competition.html'
 	model = Competition
 
@@ -255,12 +245,10 @@ class WebCompetitionCalendarFilter(WebCompetitionCalendar):
 
 
 class Contact(Web, TemplateView):
-	menu_num = 9
 	template_name = 'web/contact.html'
 
 
 class Calendar(Web, TemplateView):
-	menu_num = 7
 	template_name = 'web/calendar/calendar.html'
 
 	def get_context_data(self, *args, **kwargs):

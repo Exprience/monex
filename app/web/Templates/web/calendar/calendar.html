@@ -2,25 +2,23 @@
 {% load i18n %}
 {% load static %}
 {% block content %}
-<div class="col-md-8">
-	<div class="wall">
-		<form action="{% url 'calendar' %}" id="filter_form" method="get" accept-charset="utf-8">
-			<input id="filter" type="hidden" name="filter" value="0">
-			<input type="hidden" name="start" id="id_start" value="">
-			<input type="hidden" name="end" id="id_end" value="">
-		</form>
-		<div class="buttons">
-			<button id="filter1" class="btn-sm btn-success">{% trans 'Өчигдөр' %}</button>
-			<button id="filter2" class="btn-sm btn-primary">{% trans 'Өнөөдөр' %}</button>
-			<button id="filter3" class="btn-sm btn-info">{% trans 'Маргааш' %}</button>
-			<button id="filter4" class="btn-sm btn-warning">{% trans 'Ирэх долоо хоног' %}</button>
-			<button id="filter5" class="btn-sm btn-danger" date="daterange">
-				<i class="fa fa-calendar"></i>
-			</button>
-		</div>
-		<div id="calendar_filter">
-		{% include 'web/calendar/calendar_filter.html' %}
-		</div>
+<div class="wall">
+	<form action="{% url 'calendar' %}" id="filter_form" method="get" accept-charset="utf-8">
+		<input id="filter" type="hidden" name="filter" value="0">
+		<input type="hidden" name="start" id="id_start" value="">
+		<input type="hidden" name="end" id="id_end" value="">
+	</form>
+	<div class="buttons">
+		<button id="filter1" class="btn-sm btn-success">{% trans 'Өчигдөр' %}</button>
+		<button id="filter2" class="btn-sm btn-primary">{% trans 'Өнөөдөр' %}</button>
+		<button id="filter3" class="btn-sm btn-info">{% trans 'Маргааш' %}</button>
+		<button id="filter4" class="btn-sm btn-warning">{% trans 'Ирэх долоо хоног' %}</button>
+		<button id="filter5" class="btn-sm btn-danger" date="daterange">
+			<i class="fa fa-calendar"></i>
+		</button>
+	</div>
+	<div id="calendar_filter">
+	{% include 'web/calendar/calendar_filter.html' %}
 	</div>
 </div>
 {% endblock %}
@@ -71,8 +69,6 @@ $(function () {
 });
 
 $(document).ready(function(){
-	$("ul.nav-tabs li:nth-child(1)").addClass( "active" );
-	$('div.tab-content .tab-pane:nth-child(1)').addClass( "active" );
 	form_submit('#filter_form', '#calendar_filter', '{% url "calendar_filter" %}')
 });
 </script>

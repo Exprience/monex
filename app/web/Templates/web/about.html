@@ -1,16 +1,14 @@
 {% extends 'web/base.html' %}
 {% block content %}
-<div class="col-md-9">
-	<div class="wall">
-		<h2 class="title">Бидний тухай</h2>
-		{{ about.body|safe }}<br>
-	</div>
-	
-	<div class="wall">
-		<h2 class="title">Видео</h2>
-		<a class="youtube" href="{{ about.video_url }}">
-			<img src="{{ about.image }}" width="100%"/>
-		</a>
-	</div>
+<div class="wall">
+	<h2 class="title">Бидний тухай</h2>
+	{{ about.body|safe }}<br>
+</div>
+
+<div class="wall">
+	<h2 class="title">Видео</h2>
+	<a class="youtube" href="{{ about.video_url }}">
+		<img src="{{ about.image }}" width="100%"/>
+	</a>
 </div>
 {% endblock %}

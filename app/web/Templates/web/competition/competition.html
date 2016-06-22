@@ -2,40 +2,37 @@
 {% load i18n %}
 {% load static %}
 {% block content %}
-<div class="col-md-9">
-	<div class="wall">
-		<h2 class="title">Тэмцээн</h2>
-    <form id="competition_form" method="get">
-      <input id="id_filter_type" type="hidden" name="filter_type" value="0">
-      <input type="hidden" name="start" id="id_start">
-      <input type="hidden" name="end" id="id_end">  
-    </form>
-    <div class="buttons">
-      <button id="filter0" type="button" class="btn-sm btn-danger">{% trans 'Бүгд' %}</button>
-      {% if user.is_authenticated %}
-      <button id="filter1" type="button" class="btn-sm btn-warning">{% trans 'Миний тэмцээн' %}</button>
-      {% endif %}
-      <button id="filter2" type="button" class="btn-sm btn-success">{% trans 'Бүртгэл эхэлсэн тэмцээн' %}</button>
-      <button id="filter3" type="button" class="btn-sm btn-info">{% trans 'Эхэлсэн тэмцээн' %}</button>
-      <button id="filter4" type="button" class="btn-sm btn-primary">{% trans 'Дууссан тэмцээн' %}</button>
-      <button id="filter5" type="button" class="btn-sm btn-danger" date="daterange"><i class="fa fa-calendar"></i></button>
-    </div>
-    <ul class="nav nav-tabs text-sm">
-      <li class="active"><a href="#table-competition" data-toggle="tab">Хүснэгт</a></li>
-      <li><a href="#calendar-competition" data-toggle="tab">Календарь</a></li>
-    </ul>
-    <div class="tab-content text-sm">
-      <div class="tab-pane active" id="table-competition">
-        <div id="competition_filter">
-          {% include 'web/competition/competition_filter.html' %}
-        </div>
-      </div>
-      <div class="tab-pane text-sm" id="calendar-competition">
-        <div id="calendar" class="calendar" style="height: 1000px;"></div>
+<div class="wall">
+	<h2 class="title">Тэмцээн</h2>
+  <form id="competition_form" method="get">
+    <input id="id_filter_type" type="hidden" name="filter_type" value="0">
+    <input type="hidden" name="start" id="id_start">
+    <input type="hidden" name="end" id="id_end">  
+  </form>
+  <div class="buttons">
+    <button id="filter0" type="button" class="btn-sm btn-danger">{% trans 'Бүгд' %}</button>
+    {% if user.is_authenticated %}
+    <button id="filter1" type="button" class="btn-sm btn-warning">{% trans 'Миний тэмцээн' %}</button>
+    {% endif %}
+    <button id="filter2" type="button" class="btn-sm btn-success">{% trans 'Бүртгэл эхэлсэн тэмцээн' %}</button>
+    <button id="filter3" type="button" class="btn-sm btn-info">{% trans 'Эхэлсэн тэмцээн' %}</button>
+    <button id="filter4" type="button" class="btn-sm btn-primary">{% trans 'Дууссан тэмцээн' %}</button>
+    <button id="filter5" type="button" class="btn-sm btn-danger" date="daterange"><i class="fa fa-calendar"></i></button>
+  </div>
+  <ul class="nav nav-tabs text-sm">
+    <li class="active"><a href="#table-competition" data-toggle="tab">Хүснэгт</a></li>
+    <li><a href="#calendar-competition" data-toggle="tab">Календарь</a></li>
+  </ul>
+  <div class="tab-content text-sm">
+    <div class="tab-pane active" id="table-competition">
+      <div id="competition_filter">
+        {% include 'web/competition/competition_filter.html' %}
       </div>
     </div>
-    
-	</div>
+    <div class="tab-pane text-sm" id="calendar-competition">
+      <div id="calendar" class="calendar" style="height: 1000px;"></div>
+    </div>
+  </div>    
 </div>
 {% comment %}
 {% for o in object_list %}

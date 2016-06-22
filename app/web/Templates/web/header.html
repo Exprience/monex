@@ -59,23 +59,19 @@
       <div class="col-md-12">
         <nav id="menu" class="menu collapse navbar-collapse">
           <ul id="headernavigation" class="menu-list nav navbar-nav">
-            <li class="{% if menu_num == 1 %}active{% endif %}"><a href="{% url 'home' %}">Нүүр</a></li>
-            <li class="{% if menu_num == 2 %}active{% endif %}"><a href="{% url 'about' %}">Бидний тухай</a></li>
-            <li class="{% if menu_num == 3 %}active{% endif %}"><a href="{% url 'competition_calendar' %}">Тэмцээн</a></li>
-            <li class="{% if menu_num == 4 %}active{% endif %}">
-              <a href="{% url 'news' %}">Мэдээлэл</a>
-            </li>
+            <li class=""><a href="{% url 'home' %}">Нүүр</a></li>
+            <li class=""><a href="{% url 'about' %}">Бидний тухай</a></li>
+            <li class=""><a href="{% url 'competition_calendar' %}">Тэмцээн</a></li>
+            <li class=""><a href="{% url 'news' %}">Мэдээлэл</a></li>
             {% if user.is_authenticated %}
-            <li class="{% if menu_num == 5 %}active{% endif %}">
-              <a href="{% url 'research' %}">Судалгаа</a>
-            </li>
+            <li><a href="{% url 'research' %}">Судалгаа</a></li>
             {% endif %}
-            <li class="{% if menu_num == 6 %}active{% endif %}">
-              <a href="{% url 'lesson' %}">Сургалт</a>
-            </li>
-            <li class="{% if menu_num == 7 %}active{% endif %}"><a href="{% url 'calendar' %}">Э/З календарь</a></li>
-            <li class="{% if menu_num == 8 %}active{% endif %}"><a href="{% url 'room' %}">М-чат</a></li>
-            <li class="{% if menu_num == 9 %}active{% endif %}"><a href="{% url 'contact' %}">Холбоо барих</a></li>
+            <li><a href="{% url 'lesson' %}">Сургалт</a></li>
+            <li><a href="{% url 'calendar' %}">Э/З календарь</a></li>
+            <li><a href="{% url 'room' %}">М-чат</a></li>
+            {% comment %}
+            <li><a href="{% url 'contact' %}">Холбоо барих</a></li>
+            {% endcomment %}
           </ul><!-- /.menu-list -->
         </nav><!-- /.menu-list -->
       </div>

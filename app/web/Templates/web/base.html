@@ -27,10 +27,10 @@
   {% block header %}{% include 'web/header.html' %}{% endblock %}
   <div class="container">
     <div class="row">
-      {% block content %}
-      {% endblock %}
-      {% block stock %}
       <div class="col-md-9">
+        {% block content %}
+        {% endblock %}
+        {% block stock %}
         <aside class="widget">
           <h3 class="widget-title">{% trans 'Хувьцаа/ТОП 20' %}</h3>
           <table class="table table-bordered table-striped table-hover text-sm wall">
@@ -64,10 +64,10 @@
             </tbody>
           </table>
         </aside>
+        {% endblock %}
       </div>
-      {% endblock %}
-      {% block rightcontent %}
       <div class="col-md-3">
+        {% block rightcontent %}
         <div class="wall">
           <div id="blog-sidebar" class="blog-sidebar widget-area" role="complementary">
             <div class="sidebar-content">
@@ -193,8 +193,8 @@
             </div>
           </div>
         </div>
+        {% endblock %}  
       </div>
-      {% endblock %}  
     </div>
   </div>
   {% block footer %}
@@ -225,6 +225,7 @@
 <script type="text/javascript" src="{% static 'django_modalview/js/jquery.form.js' %}"></script>
 {% endblock %}
 {% block extrajs %}
+
 {% endblock %}
 <style type="text/css">
   iframe {

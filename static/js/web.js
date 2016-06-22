@@ -83,3 +83,21 @@ function form_submit(form_id, load_id, load_url){
     });
   });
 }
+
+$("ul.nav-tabs li:nth-child(1)").addClass( "active" );
+$('div.tab-content .tab-pane:nth-child(1)').addClass( "active" );
+
+$(function() {
+  var pgurl = window.location.pathname;
+  $("ul.menu-list a").each(function(){
+    if($(this).attr("href") == pgurl){
+      if($(this).parent().parent('ul').hasClass('treeview-menu')){
+        $(this).parent().parent().parent('li').addClass("active").siblings().removeClass('active');
+        $(this).parent('li').addClass("active").siblings().removeClass('active');
+      }
+      else{
+        $(this).parent('li').addClass("active").siblings().removeClass('active');
+      }
+    }
+  })
+});

@@ -1,74 +1,72 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
 {% block content %}
-<div class="col-md-9">
-	<div class="wall">
-		<div class="row">
-			<h2 class="title">{% trans 'Судалгаа' %}</h2>
-			<form id="research_form" class="text-sm" method="get">
-				<div class="row">
-					<div class="col-md-4 col-md-offset-3">
-						<div class="form-group-sm has-feedback">
-		       		<input type="text" name="name" class="form-control" placeholder="{% trans 'Судалгааны нэр:' %}">
-		       	</div>	
-					</div>
-					<div class="col-md-4">
-						<div class="form-group-sm has-feedback">
-		       		<input type="text" name="author_name" class="form-control" placeholder="{% trans 'Судлаачийн нэр:' %}">
-		       	</div>	
-					</div>
-	       	<div class="col-md-1">
-						<button id="filter_button" type="submit" class="btn btn-flat btn-sm">{% trans 'Шүүх' %}</button>     		
-	       	</div>
+<div class="wall">
+	<div class="row">
+		<h2 class="title">{% trans 'Судалгаа' %}</h2>
+		<form id="research_form" class="text-sm" method="get">
+			<div class="row">
+				<div class="col-md-4 col-md-offset-3">
+					<div class="form-group-sm has-feedback">
+	       		<input type="text" name="name" class="form-control" placeholder="{% trans 'Судалгааны нэр:' %}">
+	       	</div>	
 				</div>
-			</form>
-			{% if research_category %}
-			<div id="research_filter" class="tabs-left">
-				<ul class="nav nav-tabs text-sm" style="width:20%;">
-					{% for i in research_category %}
-					<li>
-						<a href="#tabs_{{ i.id }}" data-toggle="tab">{{ i }}</a>
-					</li>
-					{% endfor %}
-				</ul>
-				<div class="tab-content">
-					{% for i in research_category %}
-         	<div class="tab-pane" id="tabs_{{ i.id }}">
-						<div style="margin-bottom:10px;"></div>
-         		<table class="table table-bordered table-hover table-striped text-sm" style="width:77.5%;">
-         			<thead>
-         				<tr>
-         					<th>{% trans '№' %}</th>
-         					<th>{% trans 'Cудалгааны нэр' %}</th>
-         					<th>{% trans 'Судлаачийн нэр' %}</th>
-         					<th>{% trans 'Огноо' %}</th>
-         					<th>{% trans 'Үзэх' %}</th>
-         				</tr>
-         			</thead>
-         			<tbody>
-         				{% for s in i.research_list %}
-         				<tr>
-         					<td>{{ forloop.counter }}</td>
-         					<td>{{ s.name }}</td>
-         					<td>{{ s.author_name }}</td>
-         					<td>{{ s.date|date:"Y-m-d H:i" }}</td>
-         					<td>
-         						<a href="/media/{{ s.pdf_file }}" target="_blank">
-         							<button class="btn btn-info btn-xs">{% trans 'Үзэх' %}</button>
-         						</a>
-         					</td>
-         				</tr>
-         				{% endfor %}		
-         			</tbody>
-         		</table>
-         	</div>
-					{% endfor %}
-        </div>
+				<div class="col-md-4">
+					<div class="form-group-sm has-feedback">
+	       		<input type="text" name="author_name" class="form-control" placeholder="{% trans 'Судлаачийн нэр:' %}">
+	       	</div>	
+				</div>
+       	<div class="col-md-1">
+					<button id="filter_button" type="submit" class="btn btn-flat btn-sm">{% trans 'Шүүх' %}</button>     		
+       	</div>
 			</div>
-			{% else %}
-			{% trans 'Өгөгдөл байхгүй байна' %}
-			{% endif %}
+		</form>
+		{% if research_category %}
+		<div id="research_filter" class="tabs-left">
+			<ul class="nav nav-tabs text-sm" style="width:20%;">
+				{% for i in research_category %}
+				<li>
+					<a href="#tabs_{{ i.id }}" data-toggle="tab">{{ i }}</a>
+				</li>
+				{% endfor %}
+			</ul>
+			<div class="tab-content">
+				{% for i in research_category %}
+       	<div class="tab-pane" id="tabs_{{ i.id }}">
+					<div style="margin-bottom:10px;"></div>
+       		<table class="table table-bordered table-hover table-striped text-sm" style="width:77.5%;">
+       			<thead>
+       				<tr>
+       					<th>{% trans '№' %}</th>
+       					<th>{% trans 'Cудалгааны нэр' %}</th>
+       					<th>{% trans 'Судлаачийн нэр' %}</th>
+       					<th>{% trans 'Огноо' %}</th>
+       					<th>{% trans 'Үзэх' %}</th>
+       				</tr>
+       			</thead>
+       			<tbody>
+       				{% for s in i.research_list %}
+       				<tr>
+       					<td>{{ forloop.counter }}</td>
+       					<td>{{ s.name }}</td>
+       					<td>{{ s.author_name }}</td>
+       					<td>{{ s.date|date:"Y-m-d H:i" }}</td>
+       					<td>
+       						<a href="/media/{{ s.pdf_file }}" target="_blank">
+       							<button class="btn btn-info btn-xs">{% trans 'Үзэх' %}</button>
+       						</a>
+       					</td>
+       				</tr>
+       				{% endfor %}		
+       			</tbody>
+       		</table>
+       	</div>
+				{% endfor %}
+      </div>
 		</div>
+		{% else %}
+		{% trans 'Өгөгдөл байхгүй байна' %}
+		{% endif %}
 	</div>
 </div>
 {% endblock %}
