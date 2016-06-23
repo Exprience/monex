@@ -42,7 +42,7 @@
 	      //alert(xhr.length);
 	      var x = ''
 	      for(i=0;i<xhr.length;i++){
-	        x += '<p>'+ xhr[i].user+ ' : ' + xhr[i].msg +'</p><br/>';
+	        x += '<p>'+ xhr[i].user+ ' : ' + xhr[i].msg +'</p>';
 	        //$('#message-body').html('<p style="font-weight:bold;">'+ xhr[i].user+ ' : ' + xhr[i].msg +'</p><br/>');
 	      }
 	      $('#message-body').html(x);
@@ -57,7 +57,7 @@
 		var interval = 1000; // 1 secs
 		setInterval(aaa, interval);
 		$("#message-body").animate({
-  		scrollTop: $('#message-body')[0].scrollHeight - $('#message-body')[0].clientHeight - 40
+  		scrollTop: $('#message-body')[0].scrollHeight - $('#message-body')[0].clientHeight
 		}, 1000);
 	});
 	

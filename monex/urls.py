@@ -45,6 +45,8 @@ urlpatterns = [
 
     url(r'^competition/', include('app.competition.urls')),
 
+    url(r'^online_support/', include('app.online_support.urls')),
+
     url(r'^admin/', include(admin.site.urls)),
     
     url(r'^redactor/', include('redactor.urls')),

@@ -81,6 +81,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'app/competition/Templates'),
             os.path.join(BASE_DIR, 'app/web/Templates'),
             os.path.join(BASE_DIR, 'app/chat/Templates'),
+            os.path.join(BASE_DIR, 'app/online_support/Templates'),
             ],
         'APP_DIRS': True,
         'OPTIONS': {
