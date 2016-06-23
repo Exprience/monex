@@ -1,33 +1,39 @@
 {% extends 'web/base.html' %}
-{% load static %}
 {% block content %}
-<div class="col-md-8">
-	<div class="wall">
-		<h3 class="title">{{ messages.0.room.name }}</h3>
-		<a class="btn btn-default" href="{% url 'room' %}"><i class="fa fa-arrow-circle-left"></i> Буцах</a><br>
-		<section id="message-body">
-			{% for message in messages %}
-			<p style="{% if message.user == user %}font-weight: bold;{% endif %}">
-				{{ message.user }} : {{ message }}
-			</p><br>
-			{% endfor %}
-		</section>
-	</div>
-	<div class="wall">
-		<form class="form-horizontal" id="message-form" method="post">{% csrf_token %}
-			{{ form }}
-			<input type="submit" class="btn btn-success" value="Илгээх">
-		</form>
-	</div>
+<div class="wall">
+	<h3 class="title">
+		<a class="btn btn-default" href="{% url 'room' %}"><i class="fa fa-arrow-circle-left"></i> Буцах </a>
+		{{ messages.0.room.name }}
+	</h3>
+	<section id="message-body">
+		{% for message in messages %}
+		<p>
+			{{ message.user }} : {{ message }}
+		</p>
+		{% endfor %}
+	</section>
+</div>
+<div class="wall">
+	<form class="" id="message-form" method="post">{% csrf_token %}
+		<div style="width:90%;">{{ form }}</div>
+		<input style="margin-top:-35px;" type="submit" class="btn btn-success pull-right" value="Илгээх">
+	</form>
 </div>
 {% endblock %}
+{% block stock %}
+{% endblock %}
 {% block rightcontent %}
-	<div class="col-md-8">
-		<div class="wall"></div>
-	</div>
 {% endblock %}
 {% block extrajs %}
 <script type="text/javascript">
+	
+	$('#message-form').submit(function(){
+		$('#id_content').val('');
+		$("#message-body").animate({
+  		scrollTop: $('#message-body')[0].scrollHeight - $('#message-body')[0].clientHeight + 40
+		}, 1000);
+	})
+
 	var aaa = function(){
 	  $.ajax({
 	    type : 'GET',
@@ -36,7 +42,7 @@
 	      //alert(xhr.length);
 	      var x = ''
 	      for(i=0;i<xhr.length;i++){
-	        x += '<p style="font-weight:bold;">'+ xhr[i].user+ ' : ' + xhr[i].msg +'</p><br/>';
+	        x += '<p>'+ xhr[i].user+ ' : ' + xhr[i].msg +'</p><br/>';
 	        //$('#message-body').html('<p style="font-weight:bold;">'+ xhr[i].user+ ' : ' + xhr[i].msg +'</p><br/>');
 	      }
 	      $('#message-body').html(x);
@@ -46,26 +52,23 @@
 	    }
 	  });
 	};
-	var interval = 1000; // 1 secs
-	setInterval(aaa, interval);
+	
+	$(document).ready(function(){
+		var interval = 1000; // 1 secs
+		setInterval(aaa, interval);
+		$("#message-body").animate({
+  		scrollTop: $('#message-body')[0].scrollHeight - $('#message-body')[0].clientHeight - 40
+		}, 1000);
+	});
+	
 </script>
-<script>
-  $(document).ready(function() {
-  	$('#message-body').niceScroll({
-  			height: 100,
-        cursorcolor: "#3498db",
-        zindex: '99999',
-        cursorminheight: 60,
-        scrollspeed: 80,
-        cursorwidth: 7,
-        autohidemode: true,
-        background: "#aaa",
-        cursorborder: 'none',
-        cursoropacitymax: .7,
-        cursorborderradius: 0,
-        horizrailenabled: false
-      });
-    });
-</script>
+<style type="text/css">
+	#message-body {
+		border:1px solid black;
+		height: 300px;
+		padding:10px;
+		overflow:auto;
+	}
+</style>
 {% endblock %}
 {% block footer %}{% endblock %}

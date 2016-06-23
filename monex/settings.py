@@ -42,6 +42,8 @@ INSTALLED_APPS = (
     'app.web',
     'app.chat',
     'app.competition',
+    'app.online_support',
+    
     'redactor',
     'bootstrap3_datetime',
     'pagination_bootstrap',
