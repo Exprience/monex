@@ -167,7 +167,8 @@ class Company(models.Model):
 		verbose_name_plural = u'Компани'
 
 	def get_stock(self):
-		return self.stock_set.get(stock_date__startswith = date.today())
+		return self.stock_set.first()
+		#return self.stock_set.get(stock_date__startswith = date.today())
 
 	def get_change(self):
 		stock = self.stock_set.get(stock_date__startswith = date.today())

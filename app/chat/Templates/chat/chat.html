@@ -1,7 +1,6 @@
 {% extends 'web/base.html' %}
 {% load static %}
 {% block content %}
-<script src="{% static 'assets/js/jQuery-2.2.0.min.js' %}"></script>
 <div class="col-md-8">
 	<div class="wall">
 		<h3 class="title">{{ messages.0.room.name }}</h3>
@@ -21,6 +20,13 @@
 		</form>
 	</div>
 </div>
+{% endblock %}
+{% block rightcontent %}
+	<div class="col-md-8">
+		<div class="wall"></div>
+	</div>
+{% endblock %}
+{% block extrajs %}
 <script type="text/javascript">
 	var aaa = function(){
 	  $.ajax({
@@ -61,10 +67,5 @@
       });
     });
 </script>
-{% endblock %}
-{% block rightcontent %}
-	<div class="col-md-8">
-		<div class="wall"></div>
-	</div>
 {% endblock %}
 {% block footer %}{% endblock %}

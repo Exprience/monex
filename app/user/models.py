@@ -6,10 +6,16 @@ from datetime import datetime
 
 __all__ = ['SystemUser']
 
+class BankManager(models.Manager):
+
+	def currency_bank(self):
+		bank_list = [u'Голомт банк', u'Хаан банк', u'Худалдаа хөгжилийн банк', u'Төрийн банк']
+		return self.filter(name__in = bank_list)
 
 class Bank(models.Model):
 	name = models.CharField(max_length = 200)
 	icon = models.ImageField(null = True)
+	objects = BankManager()
 
 	class Meta:
 		verbose_name_plural = u'Банк'

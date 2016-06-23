@@ -71,7 +71,7 @@ class NotManager(object):
 class Web(NotManager):
 
 	def get_context_data(self, *args, **kwargs):
-		bank_list = [u'Голомт банк', u'Хаан банк', u'Худалдаа хөгжилийн банк', u'Төрийн банк']
+		
 		context = super(Web, self).get_context_data(*args, **kwargs)
 		#context['corausel'] = Medee.objects.all().order_by('created_at')[:5]
 		context['news_category'] = MedeeAngilal.objects.all()
@@ -81,7 +81,7 @@ class Web(NotManager):
 		context['medee_most'] = Medee.objects.all().order_by('-view')[:5]
 		#context['sudalgaa'] = Sudalgaa.objects.all().order_by('-id')[:5]
 		#context['surgalt'] = Surgalt.objects.all()[:4]
-		context['banks'] = Bank.objects.filter(name__in = bank_list)
+		context['banks'] = Bank.objects.currency_bank()
 		context['companys'] = Company.objects.all()
 		return context
 

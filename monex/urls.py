@@ -37,13 +37,13 @@ urlpatterns = [
 
 	url(r'^', include('app.web.urls')),
     
-    #url(r'^manager/', include('app.manager.urls')),
-    
     url(r'^user/', include('app.user.urls')),
 
     url(r'^manager/', include('app.manager.urls')),
 
     url(r'^chat/', include('app.chat.urls')),
+
+    url(r'^competition/', include('app.competition.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
     
@@ -52,7 +52,6 @@ urlpatterns = [
     url(r'^captcha/', include('captcha.urls')),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -1,0 +1,130 @@
+{% load static %}
+{% load i18n %}
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Monex</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'assets/assets/bootstrap/css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/admin/dist/css/AdminLTE.css' %}">
+</head>
+<body class="hero-strip">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <aside>
+          <ul class="nav nav-tabs text-sm">
+            <li><a href="#currency" data-toggle="tab"><h3>{% trans 'Валют' %}</h3></a></li>
+            <li><a href="#stock" data-toggle="tab"><h3>{% trans 'Хувьцаа' %}</h3></a></li>
+          </ul>
+          <div class="tab-content text-sm">
+            <div class="tab-pane" id="currency">
+              <ul class="nav nav-tabs text-sm">
+                {% for bank in banks %}
+                <li>
+                  <a href="#bank_{{ bank.id }}" data-toggle="tab">
+                    <img src="/media/{{ bank.icon }}"/ width="24" height="24">
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+              <div class="tab-content text-sm">
+                {% for bank in banks %}
+                <div class="tab-pane" id="bank_{{ bank.id }}">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th colspan="3">
+                          <h5 style="margin-top:5px;">{{ bank }}</h5>
+                        </th>
+                      </tr>
+                      <tr>
+                        <th>{% trans 'Валют' %}</th>
+                        <th>{% trans 'Авах' %}</th>
+                        <th>{% trans 'Зарах' %}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for c in bank.get_currency %}
+                        <tr>
+                          <td>
+                            <img src="/media/{{c.currency.icon}}" width="20" height="20"> {{ c.currency.bill }}
+                          </td>
+                          <td>{{ c.buy }}</td>
+                          <td>{{ c.sell }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="tab-pane" id="stock">
+              <table class="table table-bordered text-sm wall">
+                <thead>
+                  <tr>
+                    <th>{% trans 'Хувьцаа' %}</th>
+                    <th>{% trans 'Авах' %}</th>
+                    <th>{% trans 'Зарах' %}</th>
+                    <th>{% trans 'Дээд' %}</th>
+                    <th>{% trans 'Доод' %}</th>
+                    <th>{% trans 'Сүүлийн ханш' %}</th>
+                    <th>{% trans 'Өөрчлөлт' %}</th>
+                    <th>{% trans '% Өөрчлөлт' %}</th>
+                    <th>{% trans 'Сүүлд шинэчлэгдсэн' %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for company in companys %}
+                  <tr>
+                    <td>{{ company.symbol }} <img src="/media/{{ company.icon }}" width="25" height="25"></td>
+                    <td>{{ company.get_stock.stock_buy }}</td>
+                    <td>{{ company.get_stock.stock_sell }}</td>
+                    <td>{{ company.get_stock.stock_high }}</td>
+                    <td>{{ company.get_stock.stock_low }}</td>
+                    <td>{{ company.get_stock.stock_last }}</td>
+                    <td>{{ company.get_change }}</td>
+                    <td>{{ company.get_change_percent }}</td>
+                    <td>{{ company.get_stock.stock_date|date:"Y-m-d H:i:s" }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <div class="col-md-6 text-center">
+        <h2>Монголын хамгийн анхны форекс платформ</h2>
+        <p>Тун удахгүй</p>
+      </div>  
+    </div>
+  </div>
+</body>
+</html>
+<script src="{% static 'assets/js/jQuery-2.2.0.min.js' %}"></script>
+<script src="{% static 'assets/assets/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/js/web.js' %}"></script>
+
+<style type="text/css">
+  .hero-strip {
+  background: #333844 url("{% static 'assets/Sedna/img/polygonal-bg.jpg' %}") no-repeat center center;
+  }
+  .hero-strip h2 {
+    color: #fff;
+  }
+  .hero-strip p {
+    color: #fff;
+  }
+  .hero-strip table {
+    margin-top: 10px;
+    color: #fff;
+  }
+  .hero-strip h3 {
+    color: black;
+  }
+</style>

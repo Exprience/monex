@@ -85,14 +85,14 @@ class RegisterForm(forms.ModelForm):
 			#'password' : forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}),
 		}
 
-	#def clean_email(self):
-	#	email = self.cleaned_data.get('email')
-	#	username = self.cleaned_data.get('username')
-	#	if email and User.objects.filter(email=email).exclude(username=username).count():
-	#		raise forms.ValidationError(u'Э-мэйл хаяг давхардсан байна.')
-	#	elif not email:
-	#		raise forms.ValidationError(u'Энэ талбарыг бөглөнө үү.')
-	#	return email
+	def clean_email(self):
+		email = self.cleaned_data.get('email')
+		username = self.cleaned_data.get('username')
+		if email and User.objects.filter(email=email).exclude(username=username).count():
+			raise forms.ValidationError(u'Э-мэйл хаяг давхардсан байна.')
+		elif not email:
+			raise forms.ValidationError(u'Энэ талбарыг бөглөнө үү.')
+		return email
 		
 
 	#def clean(self):

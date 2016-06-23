@@ -59,10 +59,12 @@
       <div class="col-md-12">
         <nav id="menu" class="menu collapse navbar-collapse">
           <ul id="headernavigation" class="menu-list nav navbar-nav">
-            <li class=""><a href="{% url 'home' %}">Нүүр</a></li>
-            <li class=""><a href="{% url 'about' %}">Бидний тухай</a></li>
-            <li class=""><a href="{% url 'competition_calendar' %}">Тэмцээн</a></li>
-            <li class=""><a href="{% url 'news' %}">Мэдээлэл</a></li>
+            <li><a href="{% url 'home' %}">Нүүр</a></li>
+            {% comment %}
+            <li><a href="{% url 'about' %}">Бидний тухай</a></li>
+            {% endcomment %}
+            <li><a href="{% url 'competition_calendar' %}">Тэмцээн</a></li>
+            <li><a href="{% url 'news' %}">Мэдээлэл</a></li>
             {% if user.is_authenticated %}
             <li><a href="{% url 'research' %}">Судалгаа</a></li>
             {% endif %}

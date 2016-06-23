@@ -1,10 +1,8 @@
 {% extends 'web/base.html' %}
 
 {% block content %}
-<div class="col-md-8">
-	<div class="wall">
-		<h3 class="title">{{ news_self.title }}</h3>
-		{{ news_self.body|safe }}
-	</div>
+<div class="wall">
+	<h3 class="title">{{ news_self.title }}</h3>
+	{{ news_self.body|safe }}
 </div>
 {% endblock %}
