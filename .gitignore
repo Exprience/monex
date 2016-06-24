@@ -1,8 +1,8 @@
 *.pyc
-app/competition/migrations/*
-app/manager/migrations/*
-app/user/migrations/*
-app/web/migrations/*
-app/chat/migrations/*
-app/online_support/migrations/*
-media/*
+app/competition/migrations/
+app/manager/migrations/
+app/user/migrations/
+app/web/migrations/
+app/chat/migrations/
+app/online_support/migrations/
+media/
