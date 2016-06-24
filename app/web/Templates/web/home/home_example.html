@@ -286,41 +286,7 @@
   <script src="{% static 'assets/Sedna/bower_components/jquery-waypoints/lib/jquery.waypoints.min.js' %}"></script>
   <script src="{% static 'assets/js/bootstrap-notify.min.js' %}"></script>
 
-  <!-- chatjs files-->
-  <script src="/static/assets/chat/ChatJs/js/jquery.autosize.js"></script>
-  <script src="/static/assets/chat/ChatJs/js/jquery.chatjs.utils.js"></script>
-  <script src="/static/assets/chat/ChatJs/js/jquery.chatjs.adapter.servertypes.js"></script>
-  <script src="/static/assets/chat/ChatJs/js/jquery.chatjs.adapter.js"></script>
-  <script src="/static/assets/chat/ChatJs/js/jquery.chatjs.adapter.demo.js"></script>
-  <script src="/static/assets/chat/ChatJs/js/jquery.chatjs.window.js"></script>
-  <script src="/static/assets/chat/ChatJs/js/jquery.chatjs.messageboard.js"></script>
-  <script src="/static/assets/chat/ChatJs/js/jquery.chatjs.userlist.js"></script>
-  <script src="/static/assets/chat/ChatJs/js/jquery.chatjs.pmwindow.js"></script>
-  <script src="/static/assets/chat/ChatJs/js/jquery.chatjs.friendswindow.js"></script>
-  <script src="/static/assets/chat/ChatJs/js/jquery.chatjs.controller.js"></script>
-  <link rel="stylesheet" href="/static/assets/chat/ChatJs/css/jquery.chatjs.css"/>
-
   <script type="text/javascript">
-    $(function () {
-      $.chat({
-        // your user information
-        userId: 1,
-        // id of the room. The friends list is based on the room Id
-        roomId: 1,
-
-        friendsTitleText : 'Онлайн туслах',
-        // text displayed when the other user is typing
-        typingText: ' is typing...',
-        // title for the rooms window
-        roomsTitleText: 'Rooms',
-        // title for the 'available rooms' rab
-        availableRoomsText: 'Available rooms',
-        // text displayed when there's no other users in the room
-        emptyRoomText: "There's no one around here. You can still open a session in another browser and chat with yourself :)",
-        // the adapter you are using
-        adapter: new DemoAdapter()
-      });
-    });
     jQuery(document).ready(function() {
       $(".video").click(function() {
         $.fancybox({
