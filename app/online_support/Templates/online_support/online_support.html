@@ -1,0 +1,85 @@
+{% load i18n %}
+{% load static %}
+{% if managers %}
+<div id="online-messages" style="height:300px; overflow:auto;">
+  {% for m in messages %}
+    {% if m.manager_message %}
+    <div class="pull-left">{{ m.support.manager.username }}:{{ m.manager_message }}</div><br>
+    {% endif %}
+    {% if m.system_user_message %}
+    <div class="pull-right">{{ m.system_user_message }}:{{ user }}</div><br>
+    {% endif %}
+  {% endfor %}
+</div>
+<form id="support-message-form" action="{{ online_support }}" class="row" method="post">{% csrf_token %}
+  <div class="col-md-8">
+    {% for f in form %}
+    <fieldset class="form-group">
+    	{{ f }}
+    </fieldset>
+    {% endfor %}
+  </div>
+  <div class="col-md-4">
+    <button type="submit" class="btn btn-info btn-flat btn-sm">{% trans 'Илгээх' %}</button>
+  </div>
+</form>
+{% else %}
+{% trans 'Онлайн оператор байхгүй байна.' %}
+{% endif %}
+<script src="{% static 'assets/js/jQuery-2.2.0.min.js' %}"></script>
+<script type="text/javascript">
+  var formAjaxSubmit = function(form, body) {
+    $(form).submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: $(this).attr('method'),
+        url: '/online_support/', //$(this).attr('action'),
+        data: $(this).serialize(),
+        success: function (xhr, ajaxOptions, thrownError) {
+          $(body).append('<div class="pull-right">'+ xhr.user+ ' : ' + xhr.msg +'</div><br/>');
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        }
+      });
+    });
+  };
+  formAjaxSubmit('#support-message-form', '#online-messages');
+
+  var aaa = function(){
+    $.ajax({
+      type : 'GET',
+      url : '/online_support/support/',
+      success: function (xhr, ajaxOptions, thrownError) {
+        //alert(xhr.length);
+        var x = ''
+        for(i=0;i<xhr.length;i++){
+          if(xhr[i].manager_msg){
+            x += '<div class="pull-left">'+ xhr[i].manager+ ' : ' + xhr[i].manager_msg +'</div><br>';
+          }
+          else{
+            x += '<div class="pull-right">'+ xhr[i].user_msg + ' : ' + xhr[i].user +'</div><br>'; 
+          }
+        }
+        $('#online-messages').html(x);
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+      }
+    });
+  };
+  
+  $(document).ready(function(){
+    var interval = 1000; // 1 secs
+    setInterval(aaa, interval);
+    $("#online-messages").animate({
+      scrollTop: $('#online-messages')[0].scrollHeight - $('#online-messages')[0].clientHeight
+    }, 1000);
+  });
+  
+
+  $('#support-message-form').submit(function(){
+    $('#id_system_user_message').val('');
+    $("#online-messages").animate({
+      scrollTop: $('#online-messages')[0].scrollHeight - $('#online-messages')[0].clientHeight + 40
+    }, 1000);
+  })
+</script>

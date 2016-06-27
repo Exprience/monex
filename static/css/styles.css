@@ -1415,3 +1415,24 @@ h4.title {
   border-color: #ddd #ddd #ddd transparent;
   *border-left-color: #ffffff;
 }
+
+
+#online-support {
+  position: fixed;
+  bottom: 0px;
+  right: 20px;
+  width: 300px;
+  z-index: 1000;
+  background: #FFF;
+}
+#online-header {
+  border: 1px solid black;
+}
+#online-body {
+  border: 1px solid black;
+  width: 300px;
+  display: none;
+}
+#online-footer{
+	display: none;
+}

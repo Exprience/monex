@@ -1,21 +1,21 @@
-from threading import current_thread
-
+# -*- coding:utf-8 -*-
 from django.contrib.sessions.models import Session
 from django.utils import timezone
 
-from app.manager.models import Manager
 
+from app.manager.models import Manager
+from django.utils.translation import ugettext as _
 _requests = {}
 
 def get_username():
-	t = current_thread()
+	t = 'request_user'
 	if t not in _requests:
 		return None
 	return _requests[t]
 
 class RequestMiddleware(object):
 	def process_request(self, request):
-		_requests[current_thread()] = request
+		_requests['request_user'] = request
 
 
 def get_all_logged_in_users():
@@ -26,4 +26,4 @@ def get_all_logged_in_users():
 		data = session.get_decoded()
 		uid_list.append(data.pop('_auth_user_id', None))
 
-	return Manager.objects.filter(id__in=uid_list)
+	return Manager.objects.filter(id__in = uid_list, groups__name = _(u'Оператор'))

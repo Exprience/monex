@@ -39,6 +39,7 @@ var formAjaxSubmit = function(form, body) {
 
 formAjaxSubmit('#message-form', '#message-body');
 
+
 //$('#bagts-button').click(function(){
 //  if($('#bagts-button').hasClass('marginer')){
 //    $('#bagts-button').removeClass('marginer');
@@ -101,3 +102,20 @@ $(function() {
     }
   })
 });
+
+
+/* online-support */
+$('#online-header').click(function(){
+  if($(this).hasClass('active')){
+    $(this).removeClass('active');
+    $('#online-body').slideUp("slow", function(){
+    });
+  }
+  else{
+    $(this).addClass('active');
+    $('#online-body').slideDown("slow", function(){});
+    $('#online-body').load('/online_support/', function(){
+    });
+  }
+});
+/* end online-support */

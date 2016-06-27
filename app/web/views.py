@@ -25,6 +25,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
+from app.competition.token import competition_register_token as c
 
 __all__ = ['Home', 'About', 'News', 'Research', 'Lesson', 'Contact', 'NewsSelf',
 'WebCompetitionCalendar', 'Calendar', 'h404', 'BagtsView', 'WebCompetitionRegisterView', 'CalendarFilter',
@@ -91,6 +92,13 @@ class Home(NotManager, CreateView):
 	form_class = RegisterForm
 	success_url = reverse_lazy('home')
 
+	#def dispatch(self, request, *args, **kwargs):
+		#from datetime import datetime
+		#a = datetime.now()
+		#print c.check_token(1 ,2 , 3, a, 'MQ-Mg-Mw-NTY1Mw')
+		#print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+		#return super(Home, self).dispatch(request, *args, **kwargs)
+	
 	def get_context_data(self, *args, **kwargs):
 		context = super(Home, self).get_context_data(*args, **kwargs)
 		context['news_first'] = Medee.objects.first()
@@ -319,6 +327,7 @@ class WebCompetitionRegisterView(SystemUserLoginRequired, ModalFormView):
 			object.competition = Competition.objects.get(id = self.kwargs.pop('id', None))
 			object.auto_increment()
 			object.save()
+			#competition_register_token(object.user.id, object.account, )
 			self.response = ModalResponse('Амжилттай хадгалагдлаа', 'success')
 			return super(WebCompetitionRegisterView, self).form_valid(form)
 		else:

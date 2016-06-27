@@ -2,5 +2,5 @@ from django.conf.urls import url
 from .views import *
 
 urlpatterns = [
-	url(r'^$', CompetitionHome.as_view(), name = 'competition_home'),
+	url(r'^(?P<token>.+)/$', CompetitionHome.as_view(), name = 'competition_home'),
 ]

@@ -1,0 +1,108 @@
+{% extends 'manager/base.html' %}
+{% load i18n %}
+{% block content %}
+<section class="content-header">
+  <h1>{% trans 'Онлайн туслах' %}</h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url 'manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li class="active">{% trans 'Онлайн туслах' %}</li>
+  </ol>
+</section>
+<section class="content">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="space10"></div>
+      <div class="box">
+        <div id="manager_message_body" class="box-body" style="height:400px; overflow:auto;">
+        	{% for message in object_list %}
+        	{% if message.manager_message %}
+        	<div class="pull-left">
+        		{{ message.support.manager.username }} : {{ message.manager_message }}
+        	</div><br>
+        	{% endif %}
+        	{% if message.system_user_message %}
+        	<div class="pull-right">
+        		{{ message.system_user_message }} : {{ message.support.system_user.username }}
+        	</div><br>
+        	{% endif %}
+        	{% endfor %}
+        </div>
+      </div>
+      <form id="manager_message_form" method="post">{% csrf_token %}
+      	<div class="row">
+      		<div class="col-xs-10">
+      			{% for f in form %}
+      			<fieldset class="form-group">
+      				{{ f }}
+      			</fieldset>
+	      		{% endfor %}
+      		</div>
+      		<div class="col-xs-1">
+      			<input type="submit" class="btn btn-primary btn-flat">
+      		</div>
+      	</div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+	var aaa = function(){
+	  $.ajax({
+	    type : 'GET',
+	    url : '/manager/support/message/all/{{ object_list.0.support.system_user.id }}',
+	    success: function (xhr, ajaxOptions, thrownError) {
+	      //alert(xhr.length);
+	      var x = ''
+	      for(i=0;i<xhr.length;i++){
+	      	if(xhr[i].manager_msg){
+	      		x += '<div class="pull-left">'+ xhr[i].manager+ ' : ' + xhr[i].manager_msg +'</div><br>';
+	      	}
+	      	else{
+	      		x += '<div class="pull-right">'+ xhr[i].user_msg + ' : ' + xhr[i].user +'</div><br>';	
+	      	}
+	      }
+	      $('#manager_message_body').html(x);
+
+	    },
+	    error: function (xhr, ajaxOptions, thrownError) {
+	    }
+	  });
+	};
+	
+	$(document).ready(function(){
+		var interval = 1000; // 1 secs
+		setInterval(aaa, interval);
+		$("#manager_message_body").animate({
+  		scrollTop: $('#manager_message_body')[0].scrollHeight - $('#manager_message_body')[0].clientHeight
+		}, 1000);
+	});
+
+
+	var formAjaxSubmit = function(form, body) {
+    $(form).submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: $(this).attr('method'),
+        url: '/manager/support/message/{{ object_list.0.support.system_user.id }}/', //$(this).attr('action'),
+        data: $(this).serialize(),
+        success: function (xhr, ajaxOptions, thrownError) {
+          $(body).append('<p style="font-weight:bold;">'+ xhr.user+ ' : ' + xhr.msg +'</p><br/>');
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        }
+      });
+    });
+  };
+
+  formAjaxSubmit('#manager_message_form', '#manager_message_body');
+
+  $('#manager_message_form').submit(function(){
+    $('#id_manager_message').val('');
+    $("#manager_message_body").animate({
+      scrollTop: $('#manager_message_body')[0].scrollHeight - $('#manager_message_body')[0].clientHeight + 40
+    }, 1000);
+  })
+</script>
+{% endblock %}

@@ -75,4 +75,8 @@ urlpatterns = [
 
 
 	url(r'finance/$', ManagerFinanceView.as_view(), name = 'manager_finance'),
+
+	url(r'support/message/(?P<id>[0-9]+)/$', ManagerSupportMessageView.as_view(), name = 'manager_support_message'),
+	url(r'support/message/all/(?P<id>[0-9]+)/$', manager_support_message_view, name = 'manager_support_message_all'),
+
 ]

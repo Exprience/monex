@@ -1,4 +1,7 @@
 # -*- coding:utf-8 -*-
+
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import  authenticate, login, logout
 from django.utils.decorators import method_decorator
@@ -19,7 +22,8 @@ from app.competition.forms import *
 from app.web.models import *
 from app.web.forms import *
 from app.user.models import SystemUser
-
+from app.online_support.models import Support, SupportMessage
+from app.online_support.forms import SupportManagerMessageForm
 
 from django_modalview.generic.base import ModalTemplateView
 from django_modalview.generic.edit import ModalFormView, ModalCreateView, ModalUpdateView
@@ -36,7 +40,8 @@ __all__ = ['ManagerLoginView','ManagerHomeView', 'ManagerRankCreateView',
 	'ManagerCompetitionRankUpdateView', 'ManagerLessonCategoryUpdateView', 'ManagerLessonCategoryCreateView',
 	'ManagerResearchCategoryUpdateView', 'ManagerResearchCategoryCreateView', 'ManagerCompetitionRegisterView',
 	'manager_competition_register_view', 'ManagerAdminUserListView', 'ManagerAdminUserCreateView',
-	'ManagerAdminUserUpdateView', 'ManagerFinanceView']
+	'ManagerAdminUserUpdateView', 'ManagerFinanceView', 'ManagerSupportMessageView',
+	'manager_support_message_view']
 
 
 class PopupCreate(object):
@@ -149,12 +154,23 @@ class ManagerLoginRequired(object):
 				return True
 		return False
 
+class ManagerMessage(object):
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(ManagerMessage, self).get_context_data(*args, **kwargs)
+		context['messages'] = SupportMessage.objects.filter(
+			support__manager__id = self.request.user.id,
+			read_at = None,
+			manager_message = None
+			).order_by('-support_date')
+		return context
+
 class ManagerLoginNotPermissions(ManagerLoginRequired):
 
 	def get_permissions(self, *args, **kwargs):
 		return True
 
-class ManagerHomeView(ManagerLoginNotPermissions, TemplateView):
+class ManagerHomeView(ManagerMessage, ManagerLoginNotPermissions, TemplateView):
 	template_name = 'manager/home.html'
 
 
@@ -389,3 +405,54 @@ def manager_competition_register_view(request, id = 0):
 class ManagerFinanceView(ManagerLoginRequired, TemplateView):
 	get_perm = 'add_medee'
 	template_name = 'manager/finance/finance.html'
+
+
+class ManagerSupportMessageView(ManagerLoginRequired, CreateView):
+
+	model = SupportMessage
+	form_class = SupportManagerMessageForm
+	template_name = 'manager/support_message/support_message_list.html'
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(ManagerSupportMessageView, self).get_context_data(*args, **kwargs)
+		context['object_list'] = SupportMessage.objects.filter(
+			support__system_user__id = self.kwargs['id'],
+			support__manager__id = self.request.user.id
+		)
+		return context
+
+	def form_valid(self, form):
+		manager = Manager.objects.get(id = self.request.user.id)
+		system_user = SystemUser.objects.get(id = self.kwargs['id'])
+		if not Support.objects.filter(manager = manager, system_user = system_user):
+			message = Support.objects.create(manager = manager, system_user = system_user)
+		else:
+			message = Support.objects.get(manager = manager, system_user = system_user)
+		model = form.save(commit = False)
+		model.support = message
+		model.save()
+		res = {
+			'id': model.id,
+			'msg': model.manager_message,
+			'user': model.support.manager.username,
+			'time': model.support_date.strftime('%I:%M:%S %p').lstrip('0')
+			}
+		data = json.dumps(res)
+		return HttpResponse(data,content_type="application/json")
+
+def manager_support_message_view(request, id = 0):
+	messages = SupportMessage.objects.filter(
+		support__manager__id = request.user.id,
+		support__system_user__id = id
+		)
+	c = []
+	for m in messages:
+		c.append({
+			'manager': m.support.manager.username ,
+			'user': m.support.system_user.username,
+			'manager_msg': m.manager_message,
+			'user_msg': m.system_user_message,
+			'time': m.support_date.strftime('%I:%M:%S %p').lstrip('0')
+		}) 
+	data = json.dumps(c)
+	return HttpResponse(data, content_type="application/json")

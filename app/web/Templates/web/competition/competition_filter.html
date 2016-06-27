@@ -9,6 +9,7 @@
       <th>{% trans 'Төлөв' %}</th>
       <th>{% trans 'Шагналын сан' %}</th>
       <th></th>
+      <th>Тоглох</th>
     </tr>
   </thead>
   <tbody>
@@ -30,6 +31,10 @@
         <span class="label label-pill label-warning">{% trans 'Бүртгэлтэй байна' %}</span>
         {% endif %}
       </td>
+      <td>
+        {% if o.if_registered %}
+        <a href="{{ o.get_url }}">Тоглох</a></td>
+        {% endif %}
     </tr>
     {% else %}
     <tr>
@@ -58,6 +63,11 @@
             {% trans 'Бүртгүүлэх' %}
           </a>
           {% endif %}
+        {% endif %}
+      </td>
+      <td>
+        {% if o.if_registered %}
+        <a href="{{ o.get_url }}">Тоглох</a>
         {% endif %}
       </td>
     </tr>

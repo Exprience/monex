@@ -210,6 +210,19 @@
   {% endif %}
 
   {% endblock %}
+
+  {% block support %}
+  {% if user.is_authenticated %}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="online-support" class="online-support">
+        <div id="online-header">Онлайн туслах</div>
+        <div id="online-body"></div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endblock %}
 </body>
 {% block js %}
 <!--JS--> 

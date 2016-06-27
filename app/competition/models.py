@@ -1,10 +1,11 @@
 # -*- coding:utf-8 -*-
-import threading
 from django.db import models
 from app.user.models import SystemUser
 from simple_history.models import HistoricalRecords
 from datetime import datetime
-from app.web.get_username import get_username 
+from app.web.get_username import get_username
+from .token import competition_register_token as c
+from django.core.urlresolvers import reverse
 # Create your models here.
 
 # Тэмцээний model үүсгэх
@@ -33,6 +34,11 @@ class Competition(models.Model):
 	competition_status = models.CharField(choices = competition_select, max_length = 10, default = '0', verbose_name = 'Төлөв')
 	history = HistoricalRecords()
 
+	@property
+	def user(self):
+		request_user = get_username().user
+		return request_user
+
 	def started(self):
 		if self.competition_status in ['1', '2']:
 			return True
@@ -45,11 +51,19 @@ class Competition(models.Model):
 		return self.history.first()
 
 	def if_registered(self):
-		user = get_username().user
+		user = self.user
 		for i in self.competitionregister_set.all():
 			if i.user.id == user.id:
 				return True
 		return False
+
+	def get_url(self):
+		if self.if_registered():
+			register = CompetitionRegister.objects.get(user__id = self.user.id, competition__id = self.id)
+			url = c.encode(self.user.id, self.id, register.id, register.registered_date)
+			return reverse('competition_home', args = [url])
+		else:
+			return False
 		
 	@classmethod
 	def registered_competition(self, user):
@@ -68,8 +82,12 @@ class CompetitionRegister(models.Model):
 	competition = models.ForeignKey(Competition)
 	status = models.BooleanField(default = False)
 	account = models.IntegerField()
-	barimt = models.ImageField(verbose_name = u'Баримт')
+	barimt = models.FileField(verbose_name = u'Баримт')
+	registered_date = models.DateTimeField(auto_now_add = True)
 	history = HistoricalRecords()
+
+	class Meta:
+		unique_together = (('user', 'competition'),)
 
 	def auto_increment(self):
 		a = CompetitionRegister.objects.count()
@@ -80,6 +98,7 @@ class CompetitionRegister(models.Model):
 
 	def __unicode__(self):
 		return unicode(self.user)
+
 
 
 # temtseen uusgeh model duusav
