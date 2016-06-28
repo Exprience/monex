@@ -77,7 +77,7 @@
 	    $(form_id).submit(function(event){
 	    	event.preventDefault();
 	      $.ajax({
-	        url: "{% url 'research_filter' %}",
+	        url: "{% url 'web:research_filter' %}",
 	        method: 'GET',
 	        data: $(this).serialize()
 	      }).done(function(response){
@@ -89,8 +89,8 @@
 	  });
 	}
 	$(document).ready(function(){
-		$("ul.nav-tabs li:nth-child(1)").addClass( "active" );
-		$('div.tab-content .tab-pane:nth-child(1)').addClass( "active" );
+		//$("ul.nav-tabs li:nth-child(1)").addClass( "active" );
+		//$('div.tab-content .tab-pane:nth-child(1)').addClass( "active" );
 		research_filter('#filter_button', '#research_form', '#research_filter');
 	});
 </script>

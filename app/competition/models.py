@@ -61,7 +61,7 @@ class Competition(models.Model):
 		if self.if_registered():
 			register = CompetitionRegister.objects.get(user__id = self.user.id, competition__id = self.id)
 			url = c.encode(self.user.id, self.id, register.id, register.registered_date)
-			return reverse('competition_home', args = [url])
+			return reverse('competition:competition_home', args = [url])
 		else:
 			return False
 		

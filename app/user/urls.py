@@ -1,11 +1,11 @@
 from django.conf.urls import url
-from .views import Login, RegisterView, login
+import views as v #import Login, RegisterView, login, Home
 
 app_name = 'user'
 
 urlpatterns = [
-	url(r'^$', Login.as_view(), name = 'home'),
-	url(r'^login/$', Login.as_view(), name = 'login'),
-    url(r'^register/$', RegisterView.as_view(), name = 'register'),
-    url(r'^logout/$', Login.logout, name = 'logout'),
+	url(r'^$', v.Home.as_view(), name = 'home'),
+	url(r'^login/$', v.Login.as_view(), name = 'login'),
+    url(r'^register/$', v.RegisterView.as_view(), name = 'register'),
+    url(r'^logout/$', v.Login.logout, name = 'logout'),
 ]

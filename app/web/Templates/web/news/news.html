@@ -37,7 +37,7 @@
          		{% for m in i.medee_set.all %}
          		<div class="wall-wall">
 							<span class="service-image"><img src="{{ m.img_url }}" alt="{{ m.img_url }}"></span>
-				    	<span class="accordion-title"><a href="{% url 'news_self' m.id %}">{{ m.title|truncatechars:60 }}</a></span>
+				    	<span class="accordion-title"><a href="{% url 'web:news_self' m.id %}">{{ m.title|truncatechars:60 }}</a></span>
 				    	<p>{{ m.remove_html|truncatechars:200|safe }}</p>
 				    </div>
 				    <hr>

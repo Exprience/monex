@@ -55,9 +55,9 @@ class SystemUserLoginRequired(object):
 			if SystemUser.objects.filter(username = request.user.username):
 				return super(SystemUserLoginRequired, self).dispatch(request, *args, **kwargs)
 			else:
-				return HttpResponseRedirect(reverse_lazy('login'))
+				return HttpResponseRedirect(reverse_lazy('web:login'))
 		else:
-			return HttpResponseRedirect(reverse_lazy('login'))
+			return HttpResponseRedirect(reverse_lazy('web:login'))
 
 
 class NotManager(object):
@@ -66,7 +66,7 @@ class NotManager(object):
 		if not Manager.objects.filter(username = request.user.username):
 			return super(NotManager, self).dispatch(request, *args, **kwargs)
 		else:
-			return HttpResponseRedirect(reverse_lazy('login'))
+			return HttpResponseRedirect(reverse_lazy('user:login'))
 
 
 class Web(NotManager):

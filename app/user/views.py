@@ -3,7 +3,7 @@
 from django import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.views.generic import FormView, TemplateView, UpdateView, CreateView
+from django.views import generic as g
 #from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
@@ -15,25 +15,28 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 
-__all__ = ['Login', 'RegisterView', 'register_confirm']
+__all__ = ['Home' ,'Login', 'RegisterView', 'register_confirm']
 
 
 #class SuccessMessage(SuccessMessageMixin):
 #	success_message = 'Таны мэдээлэл амжилттай хадгалагдлаа'
 
-class Login(FormView):
+class Home(g.TemplateView):
+	template_name = 'user/home/home.html'
+
+class Login(g.FormView):
 	form_class = LoginForm
 	template_name = "user/login.html"
-	success_url = reverse_lazy('home')
+	success_url = reverse_lazy('web:home')
 
 	def dispatch(self, request, *args, **kwargs):
-		if SystemUser.objects.filter(username = request.user.username):
-			return HttpResponseRedirect(reverse_lazy('home'))
+		if SystemUser.objects.filter(id = request.user.id):
+			return HttpResponseRedirect(reverse_lazy('web:home'))
 		return super(Login, self).dispatch(request, *args, **kwargs)
 
 	def form_valid(self, form):
 		user = authenticate(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
-		if user and SystemUser.objects.filter(username = user.username):
+		if user and SystemUser.objects.filter(id = user.id):
 			login(self.request, user)
 			url = self.request.GET.get('next', None)
 			if url:
@@ -45,10 +48,10 @@ class Login(FormView):
 	@staticmethod
 	def logout(request):
 		logout(request)
-		return HttpResponseRedirect(reverse_lazy('home'))
+		return HttpResponseRedirect(reverse_lazy('web:home'))
 
 
-class RegisterView(CreateView):
+class RegisterView(g.CreateView):
 	form_class = RegisterForm
 	template_name = "user/register.html"
 	success_url = reverse_lazy('register_confirm')

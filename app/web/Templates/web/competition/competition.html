@@ -186,7 +186,7 @@
     });
   });
   $(document).ready(function(){
-    form_submit('#competition_form', '#competition_filter', '{% url "competition_calendar_filter" %}')
+    form_submit('#competition_form', '#competition_filter', '{% url "web:competition_calendar_filter" %}')
   });
 </script>
 {% endblock %}

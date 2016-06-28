@@ -12,8 +12,9 @@
   <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
   <link rel="stylesheet" href="{% static 'manager/dist/css/AdminLTE.css' %}">
   <link rel="stylesheet" href="{% static 'manager/dist/css/skins/_all-skins.css' %}">
-
+  {% comment %}
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  {% endcomment %}
   <script src="{% static 'js/jQuery-2.2.0.min.js' %}"></script>
   <script src="{% static 'assets/bootstrap/js/bootstrap.min.js ' %}"></script>
   <script src="{% static 'manager/dist/js/app.min.js' %}"></script>
@@ -41,7 +42,7 @@
   <div class="wrapper">
     {% block header %}
     <header class="main-header">
-      <a href="{% url 'manager_home' %}" class="logo">
+      <a href="{% url 'manager:manager_home' %}" class="logo">
         <span class="logo-mini"><b>M</b>EX</span>
         <span class="logo-lg"><b>MONEX</b></span>
       </a>
@@ -62,7 +63,7 @@
                   <ul class="menu">
                     {% for m in messages %}
                     <li>
-                      <a href="{% url 'manager_support_message' m.support.system_user.id %}">
+                      <a href="{% url 'manager:manager_support_message' m.support.system_user.id %}">
                         <h4>
                           {{ m.support.system_user.username }}
                           <small><i class="fa fa-clock-o"></i> {{ m.support_date|date:"Y-m-d H-i-s" }}</small>
@@ -107,7 +108,7 @@
               <ul class="dropdown-menu">
                 <li><a href="">Миний мэдээлэл</a></li>
                 <li><a href="{% url 'password_change' %}">Нууц үг солих</a></li>
-                <li><a href="{% url 'manager_logout' %}">Системээс гарах</a></li>
+                <li><a href="{% url 'manager:manager_logout' %}">Системээс гарах</a></li>
               </ul>
             </li>
           </ul>
@@ -130,7 +131,7 @@
         </form>
         <ul class="sidebar-menu">
           <li class="active">
-            <a href="{% url 'manager_home' %}">
+            <a href="{% url 'manager:manager_home' %}">
               <i class="fa fa-circle-o text-aqua"></i> <span>Нүүр</span>
             </a>
           </li>
@@ -141,12 +142,12 @@
               <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-              <li><a href="{% url 'manager_rank_list' %}"><i class="fa fa-circle-o"></i> Ангилал</a></li>
-              <li><a href="{% url 'manager_competition' %}"><i class="fa fa-circle-o"></i> Үүсгэх</a></li>
+              <li><a href="{% url 'manager:manager_rank_list' %}"><i class="fa fa-circle-o"></i> Ангилал</a></li>
+              <li><a href="{% url 'manager:manager_competition' %}"><i class="fa fa-circle-o"></i> Үүсгэх</a></li>
             </ul>
           </li>
           <li>
-            <a href="{% url 'manager_competition_register' %}">
+            <a href="{% url 'manager:manager_competition_register' %}">
               <i class="fa fa-circle-o text-aqua"></i>
               <span>Тэмцээний бүртгэл</span>
             </a>
@@ -159,12 +160,12 @@
             </a>
             <ul class="treeview-menu">
               <li>
-                <a href="{% url 'manager_admin_user_list' %}">
+                <a href="{% url 'manager:manager_admin_user_list' %}">
                   <i class="fa fa-circle-o"></i> Админ хэрэглэгчид
                 </a>
               </li>
               <li>
-                <a href="{% url 'manager_user_list' %}">
+                <a href="{% url 'manager:manager_user_list' %}">
                   <i class="fa fa-circle-o"></i> Системийн хэрэглэгчид
                 </a>
               </li>
@@ -177,14 +178,14 @@
               <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-              <li><a href="{% url 'manager_news' %}"><i class="fa fa-circle-o"></i> Мэдээлэл</a></li>
-              <li><a href="{% url 'manager_lesson' %}"><i class="fa fa-circle-o"></i> Сургалт</a></li>
-              <li><a href="{% url 'manager_research' %}"><i class="fa fa-circle-o"></i> Судалгаа</a></li>
-              <li><a href="{% url 'manager_about' %}"><i class="fa fa-circle-o"></i> Бидний тухай</a></li>
+              <li><a href="{% url 'manager:manager_news' %}"><i class="fa fa-circle-o"></i> Мэдээлэл</a></li>
+              <li><a href="{% url 'manager:manager_lesson' %}"><i class="fa fa-circle-o"></i> Сургалт</a></li>
+              <li><a href="{% url 'manager:manager_research' %}"><i class="fa fa-circle-o"></i> Судалгаа</a></li>
+              <li><a href="{% url 'manager:manager_about' %}"><i class="fa fa-circle-o"></i> Бидний тухай</a></li>
             </ul>
           </li>
           <li>
-            <a href="{% url 'manager_finance' %}">
+            <a href="{% url 'manager:manager_finance' %}">
               <i class="fa fa-circle-o text-aqua"></i>
               <span>Санхүү</span>
             </a>

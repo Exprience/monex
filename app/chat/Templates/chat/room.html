@@ -1,7 +1,7 @@
 {% extends 'web/base.html' %}
 {% block content %}
 <div class="wall">
-	<h2 class="title">Форум <a href="{% url 'manager_news_create' %}"><i class="fa fa-plus-circle"></i></a></h2>
+	<h2 class="title">Форум <a href="#"><i class="fa fa-plus-circle"></i></a></h2>
 	<div class="wall">
 		<form class="form-horizontal"  method="post">{% csrf_token %}
 			{% for f in form %}
@@ -15,7 +15,7 @@
 	</div>
 	<ul>
 		{% for room in rooms %}
-		<li><a href="{% url 'chat' room.id %}">{{ room }}</a></li><br>
+		<li><a href="{% url 'chat:chat' room.id %}">{{ room }}</a></li><br>
 		{% endfor %}
 	</ul>
 </div>

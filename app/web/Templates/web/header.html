@@ -18,7 +18,7 @@
         <div class="top-social">
           <ul>
           {% if not user.is_authenticated %}
-            <li><a href="{% url 'login' %}" class="top-icon-word fa fa-user"> Нэвтрэх</a></li>
+            <li><a href="{% url 'user:login' %}" class="top-icon-word fa fa-user"> Нэвтрэх</a></li>
           {% else %}
           <div class="dropdown">
             <a href="javascript:;" data-toggle="dropdown">{{ user }}
@@ -26,7 +26,7 @@
             <ul class="dropdown-menu">
               <li><a href="#">Минии мэдээлэл</a></li>
               <li><a href="{% url 'password_change' %}">Нууц үг солих</a></li>
-              <li><a href="{% url 'logout' %}">Системээс гарах</a></li>
+              <li><a href="{% url 'user:logout' %}">Системээс гарах</a></li>
             </ul>
           </div>
           {% endif %}
@@ -59,20 +59,20 @@
       <div class="col-md-12">
         <nav id="menu" class="menu collapse navbar-collapse">
           <ul id="headernavigation" class="menu-list nav navbar-nav">
-            <li><a href="{% url 'home' %}">Нүүр</a></li>
+            <li><a href="{% url 'web:home' %}">Нүүр</a></li>
             {% comment %}
-            <li><a href="{% url 'about' %}">Бидний тухай</a></li>
+            <li><a href="{% url 'web:about' %}">Бидний тухай</a></li>
             {% endcomment %}
-            <li><a href="{% url 'competition_calendar' %}">Тэмцээн</a></li>
-            <li><a href="{% url 'news' %}">Мэдээлэл</a></li>
+            <li><a href="{% url 'web:competition_calendar' %}">Тэмцээн</a></li>
+            <li><a href="{% url 'web:news' %}">Мэдээлэл</a></li>
             {% if user.is_authenticated %}
-            <li><a href="{% url 'research' %}">Судалгаа</a></li>
+            <li><a href="{% url 'web:research' %}">Судалгаа</a></li>
             {% endif %}
-            <li><a href="{% url 'lesson' %}">Сургалт</a></li>
-            <li><a href="{% url 'calendar' %}">Э/З календарь</a></li>
-            <li><a href="{% url 'room' %}">М-чат</a></li>
+            <li><a href="{% url 'web:lesson' %}">Сургалт</a></li>
+            <li><a href="{% url 'web:calendar' %}">Э/З календарь</a></li>
+            <li><a href="{% url 'chat:room' %}">М-чат</a></li>
             {% comment %}
-            <li><a href="{% url 'contact' %}">Холбоо барих</a></li>
+            <li><a href="{% url 'web:contact' %}">Холбоо барих</a></li>
             {% endcomment %}
           </ul><!-- /.menu-list -->
         </nav><!-- /.menu-list -->

@@ -50,7 +50,7 @@
 					              </span>
 					              {% if user.is_authenticated %}
 					              <span class="author-name">
-					                <a href="{% url 'lesson_mail' user.id m.id %}" data-modal="modalview">
+					                <a href="{% url 'web:lesson_mail' user.id m.id %}" data-modal="modalview">
 					                	<button class="btn btn-xs btn-warning">{% trans 'Мэйл илгээх' %}</button>
 					                </a>
 					              </span>
@@ -76,7 +76,7 @@ function lesson_filter(id, form_id, load_id){
     $(form_id).submit(function(event){
       event.preventDefault();
       $.ajax({
-        url: "{% url 'lesson_filter' %}",
+        url: "{% url 'web:lesson_filter' %}",
         method: 'GET',
         data: $(this).serialize()
       }).done(function(response){

@@ -6,7 +6,7 @@
 <section class="content-header">
   <h1>{% trans 'Тэмцээний ангилал' %}</h1>
   <ol class="breadcrumb">
-    <li><a href="{% url 'manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
     <li class="active">{% trans 'Тэмцээний ангилал' %}</li>
   </ol>
 </section>
@@ -18,8 +18,8 @@
         <div class="box-header">
           <h3 class="box-title">
             {% trans 'Тэмцээний ангилал' %}
-            <a href="{% url 'manager_rank_create' %}"><i class="fa fa-plus-circle"></i></a>
-            <a data-modal="modalview" class='btn btn-primary btn-flat' href='{% url "mymodal"%}'>
+            <a href="{% url 'manager:manager_rank_create' %}"><i class="fa fa-plus-circle"></i></a>
+            <a data-modal="modalview" class='btn btn-primary btn-flat' href='{% url "manager:mymodal"%}'>
               {% trans 'Ангилал' %} <i class="fa fa-plus-circle"></i>
             </a>
           </h3>
@@ -47,8 +47,10 @@
                 <td><a href="#shagnal_{{ o.id }}" data-toggle="modal">Шагналын сан</a></td>
                 <td><a href="#history_{{ o.id }}" data-toggle="modal">Түүх</a></td>
                 <td>
-                  <a href="{% url 'manager_rank_update' o.id %}"><i class="fa fa-edit"></i></a>
-                  <a href="{% url 'mymodal_update' o.id %}" data-modal="modalview"><i class="fa fa-edit"></i></a>
+                  <a href="{% url 'manager:manager_rank_update' o.id %}" class="btn btn-flat btn-primary btn-xs">
+                    <i class="fa fa-edit"></i> Засварлах
+                  </a>
+                  <a href="{% url 'manager:mymodal_update' o.id %}" data-modal="modalview"><i class="fa fa-edit"></i></a>
                 </td>
               </tr>
               {% endfor %}

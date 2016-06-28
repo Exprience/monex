@@ -1,7 +1,7 @@
 {% extends 'manager/base.html' %}
 {% load static %}
 {% block content %}
-	<a id="my_modal_runner" class='btn btn-primary btn-flat' href='{% url "mymodal"%}'>Display modal </a>
+	<a id="my_modal_runner" class='btn btn-primary btn-flat' href='{% url "manager:mymodal"%}'>Display modal </a>
   <script type="text/javascript">
    	$(function(){
 	    $('#my_modal_runner').DjangoModalRunner();

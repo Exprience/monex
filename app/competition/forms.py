@@ -29,7 +29,7 @@ class RelAdd(RelatedFieldWidgetWrapper):
 		self.attrs['style'] = 'width:90%;' #= {'class' : 'form-control'}
 
 	def get_related_url(self, info, action, *args):
-		return reverse("manager_%s_%s_%s" % (info + (action,)), args = args)
+		return reverse("manager:manager_%s_%s_%s" % (info + (action,)), args = args)
 
 
 class CompetitionRankForm(forms.ModelForm):

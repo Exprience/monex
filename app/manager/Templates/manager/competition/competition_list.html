@@ -6,7 +6,7 @@
 <section class="content-header">
   <h1>{% trans 'Тэмцээн' %}</h1>
   <ol class="breadcrumb">
-    <li><a href="{% url 'manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
     <li class="active">{% trans 'Тэмцээн' %}</li>
   </ol>
 </section>
@@ -18,7 +18,7 @@
         <div class="box-header">
           <h3 class="box-title">
             {% trans 'Тэмцээн' %}
-            <a href="{% url 'manager_competition_create' %}"><i class="fa fa-plus-circle"></i></a>
+            <a href="{% url 'manager:manager_competition_create' %}"><i class="fa fa-plus-circle"></i></a>
           </h3>
         </div>
         <div class="box-body">
@@ -66,7 +66,9 @@
                 <td><a href="#history_{{ o.id }}" data-toggle="modal">Түүх</a></td>
                 <td>{{ o.rank.shagnal }}</td>
                 <td>
-                  <a href="{% url 'manager_competition_update' o.id %}"><i class="fa fa-edit"></i></a>
+                  <a href="{% url 'manager:manager_competition_update' o.id %}" class="btn btn-flat btn-primary btn-xs">
+                    <i class="fa fa-edit"></i> Засварлах
+                  </a>
                 </td>
               </tr>
               {% endif %}

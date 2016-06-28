@@ -140,7 +140,7 @@
                 {% for m in medee_most %}
                 <div class="wall-wall-most">
                   <span class="service-image"><img src="{{ m.img_url }}"></span>
-                  <span class="accordion-title"><a href="{% url 'news_self' m.id %}"><h5>{{ m.title|truncatechars:50 }}</h5></a></span>
+                  <span class="accordion-title"><a href="{% url 'web:news_self' m.id %}"><h5>{{ m.title|truncatechars:50 }}</h5></a></span>
                   <p>{{ m.remove_html|safe|truncatechars:60 }}</p>
                 </div>
                 {% endfor %}
@@ -180,7 +180,7 @@
                 <h3 class="widget-title">Mэдээ ангилал</h3>
                 <ul class="category-list">
                   {% for i in news_category %}
-                  <li><a href="{% url 'news' i.id %}">{{ i.name }}</a></li>
+                  <li><a href="{% url 'web:news' i.id %}">{{ i.name }}</a></li>
                   {% endfor %}
                 </ul>
               </aside>
@@ -206,7 +206,7 @@
     </span>
   </div>
   {% if user.is_authenticated %}
-  <a href="{% url 'bagts' %}" data-modal="modalview" class="btn btn-primary btn-flat" id="bagts-button">Багц</a>
+  <a href="{% url 'web:bagts' %}" data-modal="modalview" class="btn btn-primary btn-flat" id="bagts-button">Багц</a>
   {% endif %}
 
   {% endblock %}

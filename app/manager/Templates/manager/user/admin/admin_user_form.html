@@ -4,8 +4,8 @@
 <section class="content-header">
   <h1>{% trans 'Админ хэрэглэгч' %}</h1>
   <ol class="breadcrumb">
-    <li><a href="{% url 'manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
-    <li><a href="{% url 'manager_admin_user_list' %}">{% trans 'Админ хэрэглэгч' %}</a></li>
+    <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li><a href="{% url 'manager:manager_admin_user_list' %}">{% trans 'Админ хэрэглэгч' %}</a></li>
     <li class="active">
       {% if object %}
       {% trans 'Админ хэрэглэгч засварлах' %}

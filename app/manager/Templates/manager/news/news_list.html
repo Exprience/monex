@@ -6,7 +6,7 @@
 <section class="content-header">
   <h1>{% trans 'Мэдээ' %}</h1>
   <ol class="breadcrumb">
-    <li><a href="{% url 'manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
     <li class="active">{% trans 'Мэдээ' %}</li>
   </ol>
 </section>
@@ -18,7 +18,7 @@
         <div class="box-header">
           <h3 class="box-title">
             {% trans 'Мэдээ' %}
-            <a href="{% url 'manager_news_create' %}"><i class="fa fa-plus-circle"></i></a>
+            <a href="{% url 'manager:manager_news_create' %}"><i class="fa fa-plus-circle"></i></a>
           </h3>
         </div>
         <div class="box-body">
@@ -39,7 +39,11 @@
                 <td>{{ o.angilal }}</td>
                 <td>{{ o.title }}</td>
                 <td>{{ o.created_at|date:"Y:m:d   f" }}</td>
-                <td><a href="{% url 'manager_news_update' o.id %}"><i class="fa fa-edit"></i></a></td>
+                <td>
+                  <a href="{% url 'manager:manager_news_update' o.id %}" class="btn btn-flat btn-primary btn-xs">
+                    <i class="fa fa-edit"></i> Засварлах
+                  </a>
+                </td>
               </tr>
               <!-- Modal -->
               <div class="modal fade" id="shagnal{{ o.id }}">

@@ -2,10 +2,10 @@
 {% load i18n %}
 {% block content %}
 <section class="content-header">
-  <h1>{% trans 'Сургалт' %}{% if object %}asdfasdf{% endif %}</h1>
+  <h1>{% trans 'Сургалт' %}</h1>
   <ol class="breadcrumb">
-    <li><a href="{% url 'manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
-    <li><a href="{% url 'manager_lesson' %}">{% trans 'Сургалт' %}</a></li>
+    <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li><a href="{% url 'manager:manager_lesson' %}">{% trans 'Сургалт' %}</a></li>
     <li class="active">
     	{% if object %}
     	{% trans 'Сургалт засварлах' %}

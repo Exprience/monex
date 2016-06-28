@@ -6,7 +6,7 @@
 <section class="content-header">
   <h1>{% trans 'Бүртгэл' %}</h1>
   <ol class="breadcrumb">
-    <li><a href="{% url 'manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
     <li class="active">{% trans 'Бүртгэл' %}</li>
   </ol>
 </section>
@@ -41,7 +41,7 @@
                 <td>
                   <a href="#shagnal{{ o.id }}" data-toggle="modal">{% trans 'Зураг' %}</a>
                 </td>
-                <td><a href="{% url 'manager_competition_register_def' o.id %}">{% trans 'Бүртгэх' %}</a></td>
+                <td><a href="{% url 'manager:manager_competition_register_def' o.id %}">{% trans 'Бүртгэх' %}</a></td>
               </tr>
               <div class="modal fade" id="shagnal{{ o.id }}">
                 <div class="modal-dialog modal-lg">
@@ -54,7 +54,7 @@
                       <img src="/media/{{ o.barimt }}" height="300" width="700">
                     </div>
                     <div class="modal-footer">
-                    	<a href="{% url 'manager_competition_register_def' o.id %}" class="btn btn-success btn-flat">{% trans 'Бүртгэх' %}</a>
+                    	<a href="{% url 'manager:manager_competition_register_def' o.id %}" class="btn btn-success btn-flat">{% trans 'Бүртгэх' %}</a>
                       <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">
                       	{% trans 'Хаах' %}
                       </button>

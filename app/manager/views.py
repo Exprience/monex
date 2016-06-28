@@ -100,14 +100,14 @@ class MyModalUpdate(ModalUpdateView):
 class ManagerLoginView(FormView):
 	form_class = ManagerLoginForm
 	template_name = 'manager/login.html'
-	success_url = reverse_lazy('manager_home')
+	success_url = reverse_lazy('manager:manager_home')
 
 	def get_success_url(self):
-		return reverse_lazy('manager_home')
+		return reverse_lazy('manager:manager_home')
 
 	def dispatch(self, request, *args, **kwargs):
 		if Manager.objects.filter(username = request.user.username):
-			return HttpResponseRedirect(reverse_lazy('manager_home'))
+			return HttpResponseRedirect(reverse_lazy('manager:manager_home'))
 		return super(ManagerLoginView, self).dispatch(request, *args, **kwargs)
 
 	def form_valid(self, form):
@@ -123,7 +123,7 @@ class ManagerLoginView(FormView):
 	@staticmethod
 	def logout(request):
 		logout(request)
-		return HttpResponseRedirect(reverse_lazy('manager_login'))
+		return HttpResponseRedirect(reverse_lazy('manager:manager_login'))
 
 class ManagerLoginRequired(object):
 	get_perm = 'permission_denied'
@@ -138,7 +138,7 @@ class ManagerLoginRequired(object):
 					return super(ManagerLoginRequired, self).dispatch(request, *args, **kwargs)
 				else:
 					raise PermissionDenied
-		return HttpResponseRedirect(reverse_lazy('manager_login'))
+		return HttpResponseRedirect(reverse_lazy('manager:manager_login'))
 
 	def get_permissions(self, perm, model = None):
 		perm_list = []
@@ -407,7 +407,7 @@ def manager_competition_register_view(request, id = 0):
 	#	)
 	from notifications.signals import notify
 	notify.send(request.user, recipient=request.user, verb='you reached level 10')
-	return HttpResponseRedirect(reverse_lazy('manager_competition_register'))
+	return HttpResponseRedirect(reverse_lazy('manager:manager_competition_register'))
 
 class ManagerFinanceView(ManagerLoginRequired, TemplateView):
 	get_perm = 'add_medee'

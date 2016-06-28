@@ -3,7 +3,7 @@
 {% load static %}
 {% block content %}
 <div class="wall">
-	<form action="{% url 'calendar' %}" id="filter_form" method="get" accept-charset="utf-8">
+	<form action="{% url 'web:calendar' %}" id="filter_form" method="get" accept-charset="utf-8">
 		<input id="filter" type="hidden" name="filter" value="0">
 		<input type="hidden" name="start" id="id_start" value="">
 		<input type="hidden" name="end" id="id_end" value="">
@@ -69,7 +69,7 @@ $(function () {
 });
 
 $(document).ready(function(){
-	form_submit('#filter_form', '#calendar_filter', '{% url "calendar_filter" %}')
+	form_submit('#filter_form', '#calendar_filter', '{% url "web:calendar_filter" %}')
 });
 </script>
 {% endblock %}
