@@ -399,13 +399,19 @@ def manager_competition_register_view(request, id = 0):
 	competition_register = CompetitionRegister.objects.get(id = id)
 	competition_register.status = True
 	competition_register.save()
+	#send_mail(
+	#	'no-reply',
+	#	'Тэмцээнд нэвтрэх нэр: %s' %(competition_register.account),
+	#	'uuganaaaaaa@gmail.com',
+	#	[competition_register.user.email]
+	#	)
+	from notifications.signals import notify
+	notify.send(request.user, recipient=request.user, verb='you reached level 10')
 	return HttpResponseRedirect(reverse_lazy('manager_competition_register'))
-
 
 class ManagerFinanceView(ManagerLoginRequired, TemplateView):
 	get_perm = 'add_medee'
 	template_name = 'manager/finance/finance.html'
-
 
 class ManagerSupportMessageView(ManagerLoginRequired, CreateView):
 

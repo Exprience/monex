@@ -97,7 +97,7 @@ class CompetitionRegister(models.Model):
 			self.account = 10000001 + a
 
 	def __unicode__(self):
-		return unicode(self.user)
+		return unicode(self.user.username)
 
 
 

@@ -35,17 +35,17 @@ urlpatterns = [
         {'template_name' : 'user/password_confirm.html', 'set_password_form': UserSetPasswordForm },
         name ='password_confirm'),
 
-	url(r'^', include('app.web.urls')),
+	url(r'^', include('app.web.urls', namespace = 'web')),
     
-    url(r'^user/', include('app.user.urls')),
+    url(r'^user/', include('app.user.urls', namespace = 'user')),
 
-    url(r'^manager/', include('app.manager.urls')),
+    url(r'^manager/', include('app.manager.urls', namespace = 'manager')),
 
-    url(r'^chat/', include('app.chat.urls')),
+    url(r'^chat/', include('app.chat.urls', namespace = 'chat')),
 
-    url(r'^competition/', include('app.competition.urls')),
+    url(r'^competition/', include('app.competition.urls', namespace = 'competition')),
 
-    url(r'^online_support/', include('app.online_support.urls')),
+    url(r'^online_support/', include('app.online_support.urls', namespace = 'online_support')),
 
     url(r'^admin/', include(admin.site.urls)),
     
@@ -54,6 +54,8 @@ urlpatterns = [
     url(r'^captcha/', include('captcha.urls')),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+
+    url('^inbox/notifications/', include('notifications.urls', namespace='notifications')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
