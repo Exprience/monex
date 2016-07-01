@@ -1,4 +1,5 @@
 {% extends 'manager/base.html' %}
+{% load static %}
 {% load i18n %}
 {% block content %}
 {% comment %}
@@ -66,4 +67,11 @@
 		$('#mymodal .modal-body').html(body);
 	});
 </script>
+{% endblock %}
+{% block extrajs %}
+<!--Redactor django-->
+<link href="{% static 'redactor/css/redactor.css' %}" type="text/css" media="all" rel="stylesheet" />
+<script src="{% static 'redactor/jquery.redactor.init.js' %}"></script>
+<script src="{% static 'redactor/redactor.js' %}"></script>
+<script src="{% static 'redactor/langs/en.js' %}"></script>
 {% endblock %}

@@ -1,0 +1,92 @@
+{% load notifications_tags %}
+<header class="main-header">
+  <a href="{% url 'manager:manager_home' %}" class="logo">
+    <span class="logo-mini"><b>M</b>EX</span>
+    <span class="logo-lg"><b>MONEX</b></span>
+  </a>
+  <nav class="navbar navbar-static-top" role="navigation">
+    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+      <span class="sr-only">Toggle navigation</span>
+    </a>
+    <div class="navbar-custom-menu">
+      <ul class="nav navbar-nav">
+        <li class="dropdown messages-menu">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-envelope-o"></i>
+            <span class="label label-success">{{ messages.count }}</span>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="header">Нийт {{ messages.count }} мессеж ирсэн байна</li>
+            <li>
+              <ul class="menu">
+                {% for m in messages %}
+                <li>
+                  <a href="{% url 'manager:manager_support_message' m.support.system_user.id %}">
+                    <h4>
+                      {{ m.support.system_user.username }}
+                      <small><i class="fa fa-clock-o"></i> {{ m.support_date|date:"Y-m-d H-i-s" }}</small>
+                    </h4>
+                    <p>{{ m.system_user_message }}</p>
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+            </li>
+            <li class="footer"><a href="#">Бүх мессежийг унших</a></li>
+          </ul>
+        </li>
+        <li class="dropdown notifications-menu">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-bell-o"></i>
+            <span class="label label-warning">{% live_notify_badge classes="special-badge" %}</span>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="header">Танд {% live_notify_badge classes="special-badge" %} мэдэгдэл ирсэн байна</li>
+            <li>
+              {% live_notify_list classes="menu" %}
+              {% comment %}
+              <ul class="menu">
+                {% for n in user.notifications.unread %}
+                <li>
+                  <a href="{% url 'notifications:mark_as_read' n.slug %}">
+                    <i class="fa fa-users text-aqua"></i> {{ n.slug }}
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+              {% endcomment %}
+            </li>
+            <li class="footer"><a href="#">Бүгдийг үзэх</a></li>
+          </ul> 
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="hidden-xs">{{ user }} {{ user.manager_status }}</span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="">Миний мэдээлэл</a></li>
+            <li><a href="{% url 'password_change' %}">Нууц үг солих</a></li>
+            <li><a href="{% url 'manager:manager_logout' %}">Системээс гарах</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+<script type="text/javascript">
+  function my_special_notification_callback(data) {
+    var x = '';
+    for (var i=0; i < data.unread_list.length; i++) {
+      msg = data.unread_list[i];
+      console.log(msg);
+      x += '<li><a><i class="fa fa-users text-aqua"></i> '+ msg.actor +'</a></li>'
+    }
+    $('#live_notify_list').html(x);
+  }
+  
+  function special_fill_notification_badge(data) {
+    var x = '<span class"special-badge">'+ data.unread_count +'</span>'
+    $('.special-badge').html(data.unread_count);
+  }
+</script>
+{% register_notify_callbacks callbacks='my_special_notification_callback,special_fill_notification_badge' %}

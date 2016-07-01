@@ -20,6 +20,11 @@ urlpatterns = [
 		name = 'manager_competition_competitionrank_change'),
 	url(r'^competition/rank/create/$', ManagerCompetitionRankCreateView.as_view(),
 		name = 'manager_competition_competitionrank_add'),
+	url(r'^competition/history/(?P<id>[0-9]+)/$', ManagerCompetitionHistoryView.as_view(),
+		name = 'competition_history'),
+
+	url(r'^competition/filter/$', ManagerCompetitionFilter.as_view(),
+		name = 'manager_competition_filter'),
 	
 	
 	url(r'^login/$', ManagerLoginView.as_view(), name = 'manager_login'),
@@ -66,8 +71,8 @@ urlpatterns = [
 	url(r'^admin/users/update/(?P<pk>[0-9]+)/$', ManagerAdminUserUpdateView.as_view(), name = 'manager_admin_user_update'),
 
 
-	url(r'^mymodal/$', MyModal.as_view(), name='mymodal'),
-	url(r'^mymodal/update/(?P<pk>[0-9]+)/$', MyModalUpdate.as_view(), name='mymodal_update'),
+	url(r'^rank/create/modal/$', RankCreateModalView.as_view(), name='mymodal'),
+	url(r'^rank/update/modal/(?P<pk>[0-9]+)/$', RankUpdateModalView.as_view(), name='mymodal_update'),
 
 	
 	url(r'competition/register/$', ManagerCompetitionRegisterView.as_view(), name = 'manager_competition_register'),

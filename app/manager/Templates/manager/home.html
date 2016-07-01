@@ -1,7 +1,59 @@
 {% extends 'manager/base.html' %}
 {% load static %}
 {% block content %}
-	<a id="my_modal_runner" class='btn btn-primary btn-flat' href='{% url "manager:mymodal"%}'>Display modal </a>
+	<section class="content">
+    <div class="row">
+      <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-aqua">
+          <div class="inner">
+            <h3>150</h3>
+            <p>Нийт тэмцээн</p>
+          </div>
+          <div class="icon">
+            <i class="ion ion-bag"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-green">
+          <div class="inner">
+            <h3>53<sup style="font-size: 20px">%</sup></h3>
+            <p>Одоо явагдаж байгаа тэмцээн</p>
+          </div>
+          <div class="icon">
+            <i class="ion ion-stats-bars"></i>
+          </div>
+        </div>
+      </div>
+      <!-- ./col -->
+      <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+          <div class="inner">
+            <h3>44</h3>
+            <p>Нийт хэрэглэгч</p>
+          </div>
+          <div class="icon">
+            <i class="ion ion-person-add"></i>
+          </div>
+        </div>
+      </div>
+      <!-- ./col -->
+      <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-red">
+          <div class="inner">
+            <h3>65</h3>
+            <p>Тэмцээнд бүртгэгдсэн хэрэглэгч</p>
+          </div>
+          <div class="icon">
+            <i class="ion ion-pie-graph"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a id="my_modal_runner" class='btn btn-primary btn-flat' href='{% url "manager:mymodal"%}'>Display modal </a>
+  </section>
   <script type="text/javascript">
    	$(function(){
 	    $('#my_modal_runner').DjangoModalRunner();

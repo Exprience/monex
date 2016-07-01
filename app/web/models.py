@@ -6,6 +6,7 @@ from app.user.models import Bank
 from redactor.fields import RedactorField
 from app.manager.models import Manager
 from datetime import datetime, timedelta, date
+from get_username import get_username
 
 __all__ = ['MedeeAngilal', 'Medee', 'SudalgaaAngilal', 'Sudalgaa', 'SurgaltAngilal',
 	'Surgalt', 'BidniiTuhai', 'HolbooBarih', 'EconomicCalendar', 'Currency', 'CurrencyValue',
@@ -38,6 +39,10 @@ class Medee(models.Model):
 	def __unicode__(self):
 		return unicode(self.angilal)
 
+	def save(self, *args, **kwargs):
+		self.created_by = Manager.objects.get(id = get_username().user.id)
+		return super(Medee, self).save(*args, **kwargs)
+		
 	def img_url(self):
 		path = re.compile(r'<img [^>]*src="([^"]+)')
 		url = path.findall(self.body)

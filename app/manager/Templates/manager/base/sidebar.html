@@ -1,0 +1,76 @@
+<aside class="main-sidebar">
+  <section class="sidebar">
+    <form action="" method="get" class="sidebar-form">
+      <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Хайх...">
+        <span class="input-group-btn">
+          <button type="submit" id="search-btn" class="btn btn-flat">
+            <i class="fa fa-search"></i>
+          </button>
+        </span>
+      </div>
+    </form>
+    <ul class="sidebar-menu">
+      <li class="active">
+        <a href="{% url 'manager:manager_home' %}">
+          <i class="fa fa-circle-o text-aqua"></i> <span>Нүүр</span>
+        </a>
+      </li>
+      <li class="treeview">
+        <a href="#">
+          <i class="fa fa-circle-o text-aqua"></i>
+          <span>Тэмцээн</span>
+          <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu">
+          <li><a href="{% url 'manager:manager_rank_list' %}"><i class="fa fa-circle-o"></i> Ангилал</a></li>
+          <li><a href="{% url 'manager:manager_competition' %}"><i class="fa fa-circle-o"></i> Тэмцээн үүсгэх</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="{% url 'manager:manager_competition_register' %}">
+          <i class="fa fa-circle-o text-aqua"></i>
+          <span>Тэмцээний бүртгэл</span>
+        </a>
+      </li>
+      <li class="treeview">
+        <a href="#">
+          <i class="fa fa-circle-o text-aqua"></i>
+          <span>Хэрэглэгчид</span>
+          <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu">
+          <li>
+            <a href="{% url 'manager:manager_admin_user_list' %}">
+              <i class="fa fa-circle-o"></i> Админ хэрэглэгчид
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'manager:manager_user_list' %}">
+              <i class="fa fa-circle-o"></i> Системийн хэрэглэгчид
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="treeview">
+        <a href="#">
+          <i class="fa fa-circle-o text-aqua"></i>
+          <span>Мэдээ</span>
+          <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu">
+          <li><a href="{% url 'manager:manager_news' %}"><i class="fa fa-circle-o"></i> Мэдээлэл</a></li>
+          <li><a href="{% url 'manager:manager_lesson' %}"><i class="fa fa-circle-o"></i> Сургалт</a></li>
+          <li><a href="{% url 'manager:manager_research' %}"><i class="fa fa-circle-o"></i> Судалгаа</a></li>
+          <li><a href="{% url 'manager:manager_about' %}"><i class="fa fa-circle-o"></i> Бидний тухай</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="{% url 'manager:manager_finance' %}">
+          <i class="fa fa-circle-o text-aqua"></i>
+          <span>Санхүү</span>
+        </a>
+      </li>
+    </ul>
+  </section>
+</aside>

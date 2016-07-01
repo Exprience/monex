@@ -1,85 +1,115 @@
 {% extends 'manager/base.html' %}
 {% load i18n %}
 {% block content %}
+{% comment %}
 {% load pagination_tags %}
-{% autopaginate object_list 20 %}
+{% autopaginate object_list 2 %}
+{% endcomment %}
+<form id="competition_form" method="get">
+  <input id="id_filter_type" type="hidden" name="filter_type" value="0">
+  <input type="hidden" name="start" id="id_start">
+  <input type="hidden" name="end" id="id_end">  
+</form>
+<style type="text/css">
+  .buttons button{
+    margin-left: -3px;
+    margin-right: -3px;
+    margin-bottom: 10px;
+    border-radius: 0;
+    border: 1px;
+  }
+  .buttons a{
+    margin-left: -3px;
+    margin-right: -3px;
+    margin-bottom: 10px;
+    border-radius: 0;
+    border: 1px;
+  }
+</style>
 <section class="content-header">
-  <h1>{% trans 'Тэмцээн' %}</h1>
+  <h1>
+    {% trans 'Тэмцээн' %}
+    <a href="{% url 'manager:manager_competition_create' %}">
+      <i class="fa fa-plus-circle"></i>
+    </a>
+  </h1>
   <ol class="breadcrumb">
     <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
     <li class="active">{% trans 'Тэмцээн' %}</li>
   </ol>
 </section>
+
 <section class="content">
+  <div class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="info-box">
+        <span class="info-box-icon bg-red"><i class="ion ion-ios-people-outline"></i></span>
+        <div class="info-box-content">
+          <span class="info-box-text text-sm">Нийт тэмцээн</span>
+          <span class="info-box-number">{{ object_list.count }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="info-box">
+        <span class="info-box-icon bg-green"><i class="ion ion-ios-people-outline"></i></span>
+        <div class="info-box-content">
+          <span class="info-box-text text-sm">Бүртгэл эхэлсэн</span>
+          <span class="info-box-number">{{ register_count }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix visible-sm-block"></div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="info-box">
+        <span class="info-box-icon bg-aqua"><i class="ion ion-ios-people-outline"></i></span>
+
+        <div class="info-box-content">
+          <span class="info-box-text text-sm">Эхэлсэн тэмцээн</span>
+          <span class="info-box-number">{{ start_count }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="info-box">
+        <span class="info-box-icon bg-blue"><i class="ion ion-ios-people-outline"></i></span>
+        <div class="info-box-content">
+          <span class="info-box-text text-sm">Дууссан тэмцээн</span>
+          <span class="info-box-number">{{ end_count }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-xs-12">
       <div class="space10"></div>
       <div class="box">
         <div class="box-header">
-          <h3 class="box-title">
-            {% trans 'Тэмцээн' %}
-            <a href="{% url 'manager:manager_competition_create' %}"><i class="fa fa-plus-circle"></i></a>
-          </h3>
+          <div class="buttons">
+            <button id="filter5" type="button" class="btn btn-sm btn-danger" date="daterange">
+              <i class="fa fa-calendar"></i>
+            </button>
+            <button id="filter2" type="button" class="btn btn-sm btn-success">
+              {% trans 'Бүртгэл эхэлсэн тэмцээн' %}
+            </button>
+            <button id="filter3" type="button" class="btn btn-sm btn-info">
+              {% trans 'Эхэлсэн тэмцээн' %}
+            </button>
+            <button id="filter4" type="button" class="btn btn-sm btn-primary">
+              {% trans 'Дууссан тэмцээн' %}
+            </button>
+            <button id="filter0" type="button" class="btn btn-sm btn-danger">
+              {% trans 'Бүгд' %}
+            </button>
+          </div>
         </div>
-        <div class="box-body">
-          <table id="example2" class="table table-bordered table-hover table-striped">
-            <thead>
-              <tr>
-                <th>{% trans '№' %}</th>
-                <th>{% trans 'Ангилал' %}</th>
-                <th>{% trans 'Эхлэх огноо' %}</th>
-                <th>{% trans 'Дуусах огноо' %}</th>
-                <th>{% trans 'Төлөв' %}</th>
-                <th>{% trans 'Түүх' %}</th>
-                <th>{% trans 'Шагналын сан' %}</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for o in object_list %}
-              {% if o.started %}
-              <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ o.last_ranked.name }}</td>
-                <td>{{ o.historys.start|date:"Y-m-d H:i:s" }}</td>
-                <td>{{ o.historys.end|date:"Y-m-d H:i:s" }}</td>
-                <td>
-                  <span class='label label-pill label-{% if o.competition_status == "0" %}success{% elif o.competition_status == "1" %}info{% else %}primary{% endif %}'>
-                  {{ o.historys.get_competition_status_display }}
-                  </span>
-                </td>
-                <td><a href="#history_{{ o.id }}" data-toggle="modal">Түүх</a></td>
-                <td>{{ o.last_ranked.shagnal }}</td>
-                <td></td>
-              </tr>
-              {% else %}
-              <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ o.rank.name }}</td>
-                <td>{{ o.start|date:"Y-m-d H:i:s" }}</td>
-                <td>{{ o.end|date:"Y-m-d H:i:s" }}</td>
-                <td>
-                  <span class='label label-pill label-{% if o.competition_status == "0" %}success{% elif o.competition_status == "1" %}info{% else %}primary{% endif %}'>
-                  {{ o.historys.get_competition_status_display }}
-                </span>
-                </td>
-                <td><a href="#history_{{ o.id }}" data-toggle="modal">Түүх</a></td>
-                <td>{{ o.rank.shagnal }}</td>
-                <td>
-                  <a href="{% url 'manager:manager_competition_update' o.id %}" class="btn btn-flat btn-primary btn-xs">
-                    <i class="fa fa-edit"></i> Засварлах
-                  </a>
-                </td>
-              </tr>
-              {% endif %}
-              {% endfor %}
-            </tbody>
-          </table>
+        <div id="competition_filter" class="box-body">
+          {% include 'manager/competition/competition_filter.html' %}
         </div>
         <div class="box-footer">
-          <div class="pull-right">
-            {% paginate %}
-          </div>
+          {% comment %}
+          {% paginate %}
+          {% endcomment %}
         </div>
       </div>
     </div>
@@ -95,7 +125,7 @@
       </div>
       <div class="modal-body">
         {% if o.history.all %}
-        <table class="table table-bordered table-hover table-striped">
+        <table class="table table-bordered table-hover table-striped text-sm">
           <thead>
             <tr>
               <th>{% trans '№' %}</th>
@@ -140,4 +170,50 @@
   </div>
 </div>
 {% endfor %}
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+  function form_submit(form_id, load_id, load_url){
+    $(form_id).submit(function(event){
+      event.preventDefault();
+      $.ajax({
+        url: load_url,
+        method: 'GET',
+        data: $(this).serialize()
+      }).done(function(response){
+        $(load_id).html(response)
+        managerDatatable('#competition_table');
+      });
+    });
+  }
+
+  $('#filter0').click(function(){
+    $('#id_filter_type').val(0)
+    $('#competition_form').submit();
+  });
+  $('#filter1').click(function(){
+    $('#id_filter_type').val(1)
+    $('#competition_form').submit();
+  });
+  $('#filter2').click(function(){
+    $('#id_filter_type').val(2)
+    $('#competition_form').submit();
+  });
+  $('#filter3').click(function(){
+    $('#id_filter_type').val(3)
+    $('#competition_form').submit();
+  });
+  $('#filter4').click(function(){
+    $('#id_filter_type').val(4)
+    $('#competition_form').submit();
+  });
+  
+  $(document).ready(function(){
+    managerDatatable('#competition_table');
+    managerDaterange('#filter5');
+    form_submit('#competition_form', '#competition_filter', '{% url "manager:manager_competition_filter" %}');
+    $('ul.pagination').addClass('pagination-sm pull-right');
+    $('.daterangepicker.dropdown-menu').addClass('text-sm');
+  });
+</script>
 {% endblock %}

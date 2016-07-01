@@ -1,0 +1,45 @@
+@font-face {
+  font-family: 'ubuntu-b';
+  src: url("../fonts/Ubuntu-B.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ubuntu-c';
+  src: url("../fonts/Ubuntu-C.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'ubuntu-m';
+  src: url("../fonts/Ubuntu-M.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'ubuntu-l';
+  src: url("../fonts/Ubuntu-L.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'ubuntu-l';
+}
+
+.sidebar-menu > li > a {
+  font-family: 'ubuntu-b';
+}
+
+table tr th {
+  font-family: 'ubuntu-b';
+}
+
+.daterangepicker {
+  font-size: 12px;
+}
+
+select {
+  display: inline;
+}
