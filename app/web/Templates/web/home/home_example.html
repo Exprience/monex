@@ -36,7 +36,7 @@
             <nav>
               <ul class="primary-nav">
                 {% if user.is_authenticated %}
-                <li><a href="#">Хянах самбар</a></li>
+                <li><a href="{% url 'user:home' %}">Хянах самбар</a></li>
                 {% endif %}
                 <li><a href="#categorys">Мэдээлэл</a></li>
                 <li><a href="#categorys">Судалгаа</a></li>
