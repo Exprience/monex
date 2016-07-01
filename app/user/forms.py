@@ -1,14 +1,17 @@
 # -*- coding:utf-8 -*-
 
 from django import forms
-from .models import SystemUser
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate
 from django.contrib.auth import forms as f
 from django.contrib.auth.models import User
 from django.contrib import messages
-from app.web.get_username import get_username
+
+
+from app.web.get_username import get_username as gu
+
+import models as m
 
 __all__ = ['RegisterForm', 'LoginForm', 'ProfileUpdateForm']
 
@@ -50,7 +53,7 @@ class UserPasswordChangeForm(f.PasswordChangeForm):
 		self.fields['new_password2'].widget.attrs['placeholder'] = 'Шинэ нууц үг давтах'
 
 	def save(self, *args, **kwargs):
-		messages.success(get_username(), u'Нууц үг амжилттай шинэчлэгдлээ')
+		messages.success(gu(), u'Нууц үг амжилттай шинэчлэгдлээ')
 		return super(UserPasswordChangeForm, self).save(*args, **kwargs)
 
 class UserSetPasswordForm(f.SetPasswordForm):
@@ -63,7 +66,7 @@ class UserSetPasswordForm(f.SetPasswordForm):
 		self.fields['new_password2'].widget.attrs['class'] = u'form-control'
 
 	def save(self, *args, **kwargs):
-		messages.success(get_username(), u'Нууц үг амжилттай хадгалагдлаа')
+		messages.success(gu(), u'Нууц үг амжилттай хадгалагдлаа')
 		return super(UserSetPasswordForm, self).save(*args, **kwargs)
 
 class LoginForm(forms.Form):
@@ -86,7 +89,7 @@ class LoginForm(forms.Form):
 			if not user:
 				raise forms.ValidationError(_(u'Хэрэглэгчийн нэр эсвэл нууц үг буруу байна'), code='invalid')
 			else:
-				if not SystemUser.objects.filter(username = user.username):
+				if not m.SystemUser.objects.filter(username = user.username):
 					raise forms.ValidationError(_(u'Хэрэглэгчийн нэр эсвэл нууц үг буруу байна'), code='invalid')
 		return cleaned_data
 
@@ -94,7 +97,7 @@ class RegisterForm(forms.ModelForm):
 	#repeat_password = forms.CharField(label = 'Нууц үг давтах:', widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг давтах'}))
 
 	class Meta:
-		model = SystemUser
+		model = m.SystemUser
 		fields = ['username', 'email']
 
 		#fields = ['username', 'first_name', 'last_name', 'register', 'email', 'phone'] #'bank', 'account', 'password']
