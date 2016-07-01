@@ -2,38 +2,14 @@ from django.conf.urls import include, url, patterns, handler400, handler403, han
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.contrib.auth import views
-from redactor import urls
 from app.user.forms import UserPasswordResetForm, UserPasswordChangeForm, UserSetPasswordForm
-
+from django.contrib.auth import views
 #handler400 = 'my_app.views.bad_request'
 #handler403 = 'my_app.views.permission_denied'
-handler404 = 'app.web.views.h404'
+handler404 = 'app.web.views.handler404'
 #handler500 = 'my_app.views.server_error'
 
 urlpatterns = [
-
-	url(r'^password_reset/$', views.password_reset, {'template_name' : 'user/password/password_reset.html', 'password_reset_form' : UserPasswordResetForm},
-			name='password_reset'),
-    
-    url(r'^password_reset_done/$', views.password_reset_done,
-    	{'template_name' : 'user/password/password_reset_done.html'}, name = 'password_reset_done'),
-    
-    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', views.password_reset_confirm, 
-    	{'template_name' : 'user/password/password_reset_confirm.html' }, name ='password_reset_confirm'),
-    
-    url(r'^reset_done/$', views.password_reset_complete,
-    	{'template_name' : 'user/password/password_reset_complete.html' }, name ='password_reset_complete'),
-
-    url(r'^change_password/$', views.password_change,
-    	{'template_name' : 'user/password/password_change.html', 'password_change_form' : UserPasswordChangeForm }, name="password_change"),
-
-	url(r'^change_password_done/$', views.password_change_done,
-		{'template_name' : 'user/password/password_change_done.html' }, name="password_change_done"),
-
-    url(r'^confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', views.password_reset_confirm, 
-        {'template_name' : 'user/password_confirm.html', 'set_password_form': UserSetPasswordForm },
-        name ='password_confirm'),
 
 	url(r'^', include('app.web.urls', namespace = 'web')),
     
@@ -56,6 +32,35 @@ urlpatterns = [
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     url('^inbox/notifications/', include('notifications.urls', namespace='notifications')),
+
+
+    url(r'^password_reset/$', views.password_reset, {
+        'template_name' : 'user/password/password_reset.html',
+        'password_reset_form' : UserPasswordResetForm,
+        'post_reset_redirect' : 'web:home',
+        }, name='password_reset'),
+    
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', views.password_reset_confirm, {
+        'template_name' : 'user/password/password_reset_confirm.html',
+        'set_password_form': UserSetPasswordForm,
+        'post_reset_redirect' : 'web:home'
+        }, name ='password_reset_confirm'),
+    
+    url(r'^reset_done/$', views.password_reset_complete,
+        {'template_name' : 'user/password/password_reset_complete.html' }, name ='password_reset_complete'),
+
+    url(r'^change_password/$', views.password_change, {
+        'template_name' : 'user/password/password_change.html',
+        'password_change_form' : UserPasswordChangeForm,
+        'post_change_redirect' : 'web:home',
+        }, name="password_change"),
+
+    #url(r'^confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', views.password_reset_confirm, {
+    #    'template_name' : 'user/password/password_reset_confirm.html',
+    #    'set_password_form': UserSetPasswordForm,
+    #    'post_reset_redirect' : 'web:home',
+    #    },
+    #    name ='password_confirm'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -1,22 +1,9 @@
-{% load static %}
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>MONEX</title>
-<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<link rel="stylesheet" href="{% static 'assets/assets/bootstrap/css/bootstrap.css' %}">
-<link rel="stylesheet" href="{% static 'assets/css/font-awesome.min.css' %}">
-<link rel="stylesheet" href="{% static 'assets/admin/dist/css/AdminLTE.css' %}">
-<link rel="stylesheet" href="{% static 'assets/admin/dist/css/skins/_all-skins.min.css' %}">
-<link rel="stylesheet" href="{% static 'assets/admin/plugins/iCheck/square/blue.css' %}">
-<link rel="stylesheet" href="{% static 'assets/admin/plugins/iCheck/square/blue.css' %}">
-<script src="{% static 'assets/js/jQuery-2.2.0.min.js' %}"></script>
-<script src="{% static 'assets/assets/bootstrap/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'assets/admin/plugins/iCheck/icheck.min.js' %}"></script>
-
+{% extends 'user/base/base.html' %}
+{% block content %}
 <body class="hold-transition login-page">
   <div class="login-box">
     <div class="login-logo">
-      <a href="{% url 'manager_login' %}"><b>Monex</b></a>
+      <b>Monex</b>
     </div>
     <div class="login-box-body">
       <p class="login-box-msg">Бүртгүүлэх</p>
@@ -48,17 +35,9 @@
         </div>
       </form>
       <div class="row">
-        <div class="col-xs-8">Бүртгэлтэй бол <a href="{% url 'login' %}">ЭНД</a> дарна уу</div>
+        <div class="col-xs-8">Бүртгэлтэй бол <a href="{% url 'user:login' %}">ЭНД</a> дарна уу</div>
       </div>
     </div>
   </div>
 </body>
-<script>
-  $(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
-      increaseArea: '20%' // optional
-    });
-  });
-</script>
+{% endblock %}

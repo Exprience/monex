@@ -1,5 +1,5 @@
 from django.conf.urls import url
-import views as v #import Login, RegisterView, login, Home
+import views as v
 
 app_name = 'user'
 

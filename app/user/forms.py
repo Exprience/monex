@@ -1,12 +1,14 @@
 # -*- coding:utf-8 -*-
+
 from django import forms
 from .models import SystemUser
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm, SetPasswordForm
+from django.contrib.auth import forms as f
 from django.contrib.auth.models import User
-
+from django.contrib import messages
+from app.web.get_username import get_username
 
 __all__ = ['RegisterForm', 'LoginForm', 'ProfileUpdateForm']
 
@@ -15,14 +17,28 @@ forms.Field.default_error_messages = {
     'required': u"Энэ талбарыг бөглөнө үү.",
 }
 
-class UserPasswordResetForm(PasswordResetForm):
+class UserPasswordResetForm(f.PasswordResetForm):
 
 	def __init__(self, *args, **kwargs):
 		super(UserPasswordResetForm, self).__init__(*args, **kwargs)
 		self.fields['email'].widget.attrs['class'] = 'form-control'
 		self.fields['email'].widget.attrs['placeholder'] = 'Э-мэйл'
 
-class UserPasswordChangeForm(PasswordChangeForm):
+	def save(self, *args, **kwargs):
+		email = self.cleaned_data["email"]
+		messages.success(kwargs['request'],
+			u'Нууц үг шинэчлэгдлээ. %s мэйл хаяг руу орж нууц үгээ шинэчилнэ үү.' %email)
+		return super(UserPasswordResetForm, self).save(*args, **kwargs)
+
+	def clean(self):
+		if self.is_valid():
+			cleaned_data = super(UserPasswordResetForm, self).clean()
+			email = cleaned_data['email']
+			if not User.objects.filter(email = email):
+				raise forms.ValidationError(_(u'Э-мэйл хаяг бүртгэлгүй байна'), code='invalid')
+			return cleaned_data
+
+class UserPasswordChangeForm(f.PasswordChangeForm):
 
 	def __init__(self, *args, **kwargs):
 		super(UserPasswordChangeForm, self).__init__(*args, **kwargs)
@@ -33,12 +49,22 @@ class UserPasswordChangeForm(PasswordChangeForm):
 		self.fields['new_password1'].widget.attrs['placeholder'] = 'Шинэ нууц үг'
 		self.fields['new_password2'].widget.attrs['placeholder'] = 'Шинэ нууц үг давтах'
 
-class UserSetPasswordForm(SetPasswordForm):
+	def save(self, *args, **kwargs):
+		messages.success(get_username(), u'Нууц үг амжилттай шинэчлэгдлээ')
+		return super(UserPasswordChangeForm, self).save(*args, **kwargs)
+
+class UserSetPasswordForm(f.SetPasswordForm):
 
 	def __init__(self, *args , **kwargs):
 		super(UserSetPasswordForm, self).__init__(*args, **kwargs)
 		self.fields['new_password1'].widget.attrs['placeholder'] = u'Нууц үг'
 		self.fields['new_password2'].widget.attrs['placeholder'] = u'Нууц үг давтах'
+		self.fields['new_password1'].widget.attrs['class'] = u'form-control'
+		self.fields['new_password2'].widget.attrs['class'] = u'form-control'
+
+	def save(self, *args, **kwargs):
+		messages.success(get_username(), u'Нууц үг амжилттай хадгалагдлаа')
+		return super(UserSetPasswordForm, self).save(*args, **kwargs)
 
 class LoginForm(forms.Form):
 	username = forms.CharField(label = u"Нэвтрэх нэр:", widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Нэвтрэх нэр'}))
@@ -64,7 +90,6 @@ class LoginForm(forms.Form):
 					raise forms.ValidationError(_(u'Хэрэглэгчийн нэр эсвэл нууц үг буруу байна'), code='invalid')
 		return cleaned_data
 
-
 class RegisterForm(forms.ModelForm):
 	#repeat_password = forms.CharField(label = 'Нууц үг давтах:', widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг давтах'}))
 
@@ -85,14 +110,14 @@ class RegisterForm(forms.ModelForm):
 			#'password' : forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}),
 		}
 
-	def clean_email(self):
-		email = self.cleaned_data.get('email')
-		username = self.cleaned_data.get('username')
-		if email and User.objects.filter(email=email).exclude(username=username).count():
-			raise forms.ValidationError(u'Э-мэйл хаяг давхардсан байна.')
-		elif not email:
-			raise forms.ValidationError(u'Энэ талбарыг бөглөнө үү.')
-		return email
+	#def clean_email(self):
+	#	email = self.cleaned_data.get('email')
+	#	username = self.cleaned_data.get('username')
+	#	if email and User.objects.filter(email=email).exclude(username=username).count():
+	#		raise forms.ValidationError(u'Э-мэйл хаяг давхардсан байна.')
+	#	elif not email:
+	#		raise forms.ValidationError(u'Энэ талбарыг бөглөнө үү.')
+	#	return email
 		
 
 	#def clean(self):
@@ -103,8 +128,6 @@ class RegisterForm(forms.ModelForm):
 	#		if not password == repeat_password:
 	#			raise forms.ValidationError(_(u'Нууц үг зөрүүтэй байна'), code='invalid')
 	#	return cleaned_data
-
-
 
 class ProfileUpdateForm(forms.ModelForm):
 

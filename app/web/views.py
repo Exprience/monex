@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render_to_response
 from django.core.mail import send_mail, BadHeaderError, EmailMessage
-
+from django.template import RequestContext
 from .forms import BagtsForm, LessonMailForm
 from .models import *
 from app.competition.models import *
@@ -27,24 +27,28 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
 from app.competition.token import competition_register_token as c
 
+
 __all__ = ['Home', 'About', 'News', 'Research', 'Lesson', 'Contact', 'NewsSelf',
-'WebCompetitionCalendar', 'Calendar', 'h404', 'BagtsView', 'WebCompetitionRegisterView', 'CalendarFilter',
-'ResearchFilter', 'LessonMailView', 'WebCompetitionCalendarFilter', 'LessonFilter']
+'WebCompetitionCalendar', 'Calendar', 'BagtsView', 'WebCompetitionRegisterView', 'CalendarFilter',
+'ResearchFilter', 'LessonMailView', 'WebCompetitionCalendarFilter', 'LessonFilter','handler404']
 
 
+def handler404(request):
+	template = 'web/handler/404.html'
+	if not SystemUser.objects.filter(id = request.user.id):
+		template = 'manager/handler/404.html'
 
-def h404(request):
-    response = render_to_response('web/404.html', {},
+	response = render_to_response(template, {},
                                   context_instance=RequestContext(request))
-    response.status_code = 404
-    return response
+	response.status_code = 404
+	return response
 
 
-def handler500(request):
-    response = render_to_response('web/500.html', {},
-                                  context_instance=RequestContext(request))
-    response.status_code = 500
-    return response
+#def handler500(request):
+#    response = render_to_response('web/500.html', {},
+#                                  context_instance=RequestContext(request))
+#    response.status_code = 500
+#    return response
 
 
 class SystemUserLoginRequired(object):
