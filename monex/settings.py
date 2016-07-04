@@ -12,8 +12,15 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import local_settings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def get_local(attr_name, default_value=None):
+    if hasattr(local_settings, attr_name):
+        return getattr(local_settings, attr_name)
+    return default_value
 
 
 # Quick-start development settings - unsuitable for production
@@ -24,7 +31,9 @@ SECRET_KEY = 'fuc40=#y)a(ey1&l$0g8)hui_n%n0mtldscmd+o1_za6&*6)lm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True #False
+
 #TEMPLATE_DEBUG = DEBUG
+
 #ALLOWED_HOSTS = ['*']
 
 
@@ -37,6 +46,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'app.user',
     'app.manager',
     'app.web',
@@ -66,6 +76,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+
     'pagination_bootstrap.middleware.PaginationMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'app.web.get_username.RequestMiddleware',
@@ -124,16 +135,63 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'mn'
 
-TIME_ZONE = 'UTC'
+USE_TZ = True
+
+TIME_ZONE = 'Asia/Ulaanbaatar'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
 
+LOGGING_PATH = os.path.join(BASE_DIR, '.store', 'logs')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s] %(message)s'
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+        },
+        'file_app': {
+            'level':'DEBUG',
+            'class':'logging.FileHandler',
+            'formatter':'standard',
+            'filename': os.path.join(LOGGING_PATH, 'app.log'),
+        },
+    },
+    'loggers': get_local('LOGGERS', {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'app': {
+            'handlers': ['file_app'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    }),
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -141,7 +199,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-STATIC_ROOT = '/var/www/monex.com/static' #os.path.join(BASE_DIR, "..", "www", "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),

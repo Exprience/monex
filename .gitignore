@@ -5,3 +5,5 @@ app/user/migrations/
 app/web/migrations/
 app/chat/migrations/
 app/online_support/migrations/
+.store/
+monex/local_settings.py

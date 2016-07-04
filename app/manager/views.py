@@ -482,23 +482,21 @@ class ManagerAdminUserCreateView(ManagerLoginRequired, g.CreateView):
 	model = Manager
 	form_class = ManagerForm
 	template_name = 'manager/user/admin/admin_user_form.html'
-	success_url = reverse_lazy('manager_admin_user_list')
+	success_url = reverse_lazy('manager:manager_admin_user_list')
 
 	def form_valid(self, form):
 		user = form.save()
 		uid = urlsafe_base64_encode(force_bytes(user.pk))
 		token = default_token_generator.make_token(user)
-		text = 'http://127.0.0.1:8000/confirm/%s/%s/' %(uid, token)
+		text = 'http://127.0.0.1:8000/reset/%s/%s/' %(uid, token)
 		send_mail('subject', text, 'uuganaaaaaa@gmail.com', [user.email])
-		context = {}
-		context['email'] = user.email
 		return super(ManagerAdminUserCreateView, self).form_valid(form)
 
 class ManagerAdminUserUpdateView(ManagerLoginRequired, g.UpdateView):
 	model = Manager
 	form_class = ManagerUpdateForm
 	template_name = 'manager/user/admin/admin_user_form.html'
-	success_url = reverse_lazy('manager_admin_user_list')
+	success_url = reverse_lazy('manager:manager_admin_user_list')
 	
 
 
