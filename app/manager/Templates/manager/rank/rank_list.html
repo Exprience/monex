@@ -1,10 +1,13 @@
 {% extends 'manager/base.html' %}
 {% load i18n %}
 {% block content %}
-{% load pagination_tags %}
-{% autopaginate object_list 20 %}
 <section class="content-header">
-  <h1>{% trans 'Тэмцээний ангилал' %}</h1>
+  <h1>
+    {% trans 'Тэмцээний ангилал' %}
+    <a data-modal="modalview" href='{% url "manager:mymodal"%}'>
+      <i class="fa fa-plus-circle"></i>
+    </a>
+  </h1>
   <ol class="breadcrumb">
     <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
     <li class="active">{% trans 'Тэмцээний ангилал' %}</li>
@@ -12,9 +15,83 @@
 </section>
 <section class="content">
   <div class="row">
+    <div class="col-md-4 col-sm-6 col-xs-12">
+      <div class="info-box bg-aqua">
+        <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
+        <div class="info-box-content">
+          <span class="info-box-text text-sm">Хамгийн их хэрэглэгч бүртгүүлсэ тэмцээн</span>
+          <span class="info-box-number">41,410</span>
+          <div class="progress">
+            <div class="progress-bar"></div>
+          </div>
+          <span class="progress-description">
+            70% Increase in 30 Days
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+      <div class="info-box bg-green">
+        <span class="info-box-icon"><i class="fa fa-thumbs-o-up"></i></span>
+        <div class="info-box-content">
+          <span class="info-box-text">Likes</span>
+          <span class="info-box-number">41,410</span>
+          <div class="progress">
+            <div class="progress-bar" style="width: 70%"></div>
+          </div>
+          <span class="progress-description">
+            70% Increase in 30 Days
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+      <div class="info-box bg-yellow">
+        <span class="info-box-icon"><i class="fa fa-calendar"></i></span>
+
+        <div class="info-box-content">
+          <span class="info-box-text">Events</span>
+          <span class="info-box-number">41,410</span>
+
+          <div class="progress">
+            <div class="progress-bar" style="width: 70%"></div>
+          </div>
+              <span class="progress-description">
+                70% Increase in 30 Days
+              </span>
+        </div>
+        <!-- /.info-box-content -->
+      </div>
+      <!-- /.info-box -->
+    </div>
+    {% comment %}
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="info-box bg-red">
+        <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
+
+        <div class="info-box-content">
+          <span class="info-box-text">Comments</span>
+          <span class="info-box-number">41,410</span>
+
+          <div class="progress">
+            <div class="progress-bar" style="width: 70%"></div>
+          </div>
+              <span class="progress-description">
+                70% Increase in 30 Days
+              </span>
+        </div>
+        <!-- /.info-box-content -->
+      </div>
+      <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    {% endcomment %}
+  </div>
+  <div class="row">
     <div class="col-xs-12">
       <div class="space10"></div>
       <div class="box">
+        {% comment %}
         <div class="box-header">
           <h3 class="box-title">
             {% trans 'Тэмцээний ангилал' %}
@@ -24,8 +101,9 @@
             </a>
           </h3>
         </div>
+        {% endcomment %}
         <div class="box-body">
-          <table class="table table-bordered table-striped table-hover">
+          <table id="rank_table" class="table table-bordered table-striped table-hover text-sm">
             <thead>
               <tr>
                 <th>№</th>
@@ -47,10 +125,14 @@
                 <td><a href="#shagnal_{{ o.id }}" data-toggle="modal">Шагналын сан</a></td>
                 <td><a href="#history_{{ o.id }}" data-toggle="modal">Түүх</a></td>
                 <td>
+                  {% comment %}
                   <a href="{% url 'manager:manager_rank_update' o.id %}" class="btn btn-flat btn-primary btn-xs">
                     <i class="fa fa-edit"></i> Засварлах
                   </a>
-                  <a href="{% url 'manager:mymodal_update' o.id %}" data-modal="modalview"><i class="fa fa-edit"></i></a>
+                  {% endcomment %}
+                  <a href="{% url 'manager:mymodal_update' o.id %}" data-modal="modalview" class="btn btn-xs btn-primary btn-flat">
+                    <i class="fa fa-edit"></i> {% trans 'Засварлах' %}
+                  </a>
                 </td>
               </tr>
               {% endfor %}
@@ -59,7 +141,6 @@
         </div>
         <div class="box-footer">
           <div class="pull-right">
-            {% paginate %}
           </div>
         </div>
       </div>
@@ -132,4 +213,12 @@
   </div>
 </div>
 {% endfor %}
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    managerDatatable("#rank_table");
+    $('ul.pagination').addClass('pagination-sm pull-right');
+  });
+</script>
 {% endblock %}

@@ -28,9 +28,12 @@ from django.contrib import messages
 from app.competition.token import competition_register_token as c
 
 
-__all__ = ['Home', 'About', 'News', 'Research', 'Lesson', 'Contact', 'NewsSelf',
-'WebCompetitionCalendar', 'Calendar', 'BagtsView', 'WebCompetitionRegisterView', 'CalendarFilter',
-'ResearchFilter', 'LessonMailView', 'WebCompetitionCalendarFilter', 'LessonFilter','handler404']
+__all__ = [
+	'Home', 'About', 'News', 'Research', 'Lesson', 'Contact', 'NewsSelf',
+	'WebCompetitionCalendar', 'Calendar', 'BagtsView', 'WebCompetitionRegisterView', 'CalendarFilter',
+	'ResearchFilter', 'LessonMailView', 'WebCompetitionCalendarFilter', 'LessonFilter','handler404',
+	'handler500'
+	]
 
 
 def handler404(request):
@@ -44,11 +47,11 @@ def handler404(request):
 	return response
 
 
-#def handler500(request):
-#    response = render_to_response('web/500.html', {},
-#                                  context_instance=RequestContext(request))
-#    response.status_code = 500
-#    return response
+def handler500(request):
+    response = render_to_response('web/handler/404.html', {},
+                                  context_instance=RequestContext(request))
+    response.status_code = 500
+    return response
 
 
 class SystemUserLoginRequired(object):
@@ -116,11 +119,9 @@ class Home(NotManager, CreateView):
 		token = default_token_generator.make_token(user)
 		text = 'http://127.0.0.1:8000/reset/%s/%s/' %(uid, token)
 		send_mail('subject', text, 'uuganaaaaaa@gmail.com', [user.email])
-		context = {}
-		context['email'] = user.email
 		messages.success(self.request,
 			u'Бүртгэл амжилттай хийгдлээ. %s мэйл хаяг руу орж бүртгэлээ баталгаажуулна уу.' %user.email)
-		return super(Home, self).form_valid(form) #render_to_response('user/register_confirm.html', context)
+		return super(Home, self).form_valid(form)
 
 	def form_invalid(self, form):
 		messages.error(self.request, 'Бүртгүүлэх формд алдаа гарлаа')
@@ -148,7 +149,7 @@ class NewsSelf(Web, TemplateView):
 		context = super(NewsSelf, self).get_context_data(*args, **kwargs)
 		context['news_self'] = Medee.objects.get(id = self.kwargs.pop('id', None))
 		context['news_self'].view += 1
-		context['news_self'].save()
+		context['news_self'].save(update_fields=['view'])
 		return context
 
 

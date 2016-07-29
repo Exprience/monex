@@ -3,7 +3,7 @@ from django.db import models
 from app.user.models import SystemUser
 from simple_history.models import HistoricalRecords
 from datetime import datetime
-from app.web.get_username import get_username
+from monex.get_username import get_username
 from .token import competition_register_token as c
 from django.core.urlresolvers import reverse
 # Create your models here.

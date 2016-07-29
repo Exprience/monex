@@ -16,6 +16,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail, send_mass_mail
 from django.core.exceptions import PermissionDenied
 from django.utils.html import format_html
+from django.utils.translation import ugettext as _
 
 from .forms import ManagerLoginForm, ManagerForm, ManagerUpdateForm
 from .models import Manager
@@ -36,7 +37,8 @@ from django_modalview.generic import (
 
 
 
-__all__ = ['ManagerLoginView', 'ManagerHomeView', 'ManagerRankCreateView',
+__all__ = [
+	'ManagerLoginView', 'ManagerHomeView', 'ManagerRankCreateView',
 	'ManagerCompetitionCreateView', 'ManagerRankUpdateView', 'ManagerCompetitionUpdateView',
 	'ManagerRankListView', 'ManagerCompetitionListView', 'ManagerNewsView', 'ManagerNewsCreateView',
 	'ManagerNewsUpdateView', 'ManagerNewsCategoryCreateView', 'ManagerNewsCategoryUpdateView',
@@ -73,7 +75,7 @@ class PopupUpdate(object):
 class ModalView(object):
 	def __init__(self, *args, **kwargs):
 		super(ModalView, self).__init__(*args, **kwargs)
-		self.title = "Тэмцээний ангилал"
+		self.title = u"Тэмцээний ангилал"
 		self.form_class = CompetitionRankForm
 		self.submit_button = mc.ModalButton(value=u'Хадгалах', loading_value = "Уншиж байна...",
 			button_type='success btn-flat')
@@ -86,10 +88,14 @@ class ModalView(object):
 
 class RankCreateModalView(ModalView, me.ModalCreateView):
 
+	def __init__(self, *args, **kwargs):
+		super(RankCreateModalView, self).__init__(*args, **kwargs)
+		self.title = u"Тэмцээний ангилал нэмэх"
+
 	def form_valid(self, form, **kwargs):
 		self.save(form)
 		self.response = mc.ModalResponse("{obj} is created".format(obj=self.object), 'success')
-		return super(MyModal, self).form_valid(form, commit = False, **kwargs)
+		return super(RankCreateModalView, self).form_valid(form, commit = False, **kwargs)
 
 class RankUpdateModalView(ModalView, me.ModalUpdateView):
 
@@ -100,8 +106,8 @@ class RankUpdateModalView(ModalView, me.ModalUpdateView):
 
 	def form_valid(self, form, **kwargs):
 		self.save(form)
-		self.response = mc.ModalResponse("{obj} амжилттай шинэчлэгдлээ".format(obj=self.object), 'success')
-		return super(MyModalUpdate, self).form_valid(form, commit = False, **kwargs)
+		self.response = mc.ModalResponse("{obj} амжилттай шинэчлэгдлээ".format(obj=self.object), 'success btn-flat')
+		return super(RankUpdateModalView, self).form_valid(form, commit = False, **kwargs)
 
 
 

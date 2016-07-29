@@ -30,11 +30,11 @@ def get_local(attr_name, default_value=None):
 SECRET_KEY = 'fuc40=#y)a(ey1&l$0g8)hui_n%n0mtldscmd+o1_za6&*6)lm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True #False
+DEBUG = get_local('DEBUG', False)
 
 #TEMPLATE_DEBUG = DEBUG
 
-#ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -50,7 +50,7 @@ INSTALLED_APPS = (
     'app.user',
     'app.manager',
     'app.web',
-    'app.chat',
+    #'app.chat',
     'app.competition',
     'app.online_support',
     
@@ -61,8 +61,8 @@ INSTALLED_APPS = (
     'simple_history',
     'captcha',
     'django.contrib.admindocs',
-
     'notifications',
+    'app.chat.apps.ChatConfig'
 )
 
 
@@ -79,7 +79,7 @@ MIDDLEWARE_CLASSES = (
 
     'pagination_bootstrap.middleware.PaginationMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
-    'app.web.get_username.RequestMiddleware',
+    'monex.get_username.RequestMiddleware',
 )
 
 ROOT_URLCONF = 'monex.urls'
@@ -124,12 +124,6 @@ DATABASES = {
         	'PORT': '',
     }
 }
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-#}
 
 
 # Internationalization
@@ -145,15 +139,15 @@ USE_I18N = True
 
 USE_L10N = True
 
-
-LOGGING_PATH = os.path.join(BASE_DIR, '.store', 'logs')
-
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'formatters': {
-        'standard': {
-            'format': '%(asctime)s [%(levelname)s] %(message)s'
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
         },
     },
     'filters': {
@@ -162,36 +156,45 @@ LOGGING = {
         }
     },
     'handlers': {
-        'console': {
+        'console':{
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'standard'
+            'formatter': 'simple'
+        },
+        # I always add this handler to facilitate separating loggings
+        'log_file':{
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, '.store/logs/app.log'),
+            'maxBytes': '16777216', # 16megabytes
+            'formatter': 'verbose'
         },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
-        },
-        'file_app': {
-            'level':'DEBUG',
-            'class':'logging.FileHandler',
-            'formatter':'standard',
-            'filename': os.path.join(LOGGING_PATH, 'app.log'),
-        },
+            'include_html': True,
+        }
     },
-    'loggers': get_local('LOGGERS', {
+    'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
         },
-        'app': {
-            'handlers': ['file_app'],
-            'level': 'DEBUG',
+        'apps': { # I keep all my of apps under 'apps' folder, but you can also add them one by one, and this depends on how your virtualenv/paths are set
+            'handlers': ['log_file'],
+            'level': 'INFO',
             'propagate': True,
         },
-    }),
+    },
+    # you can also shortcut 'loggers' and just configure logging for EVERYTHING at once
+    'root': {
+        'handlers': ['console', 'mail_admins'],
+        'level': 'INFO'
+    },
 }
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

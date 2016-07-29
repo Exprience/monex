@@ -8,12 +8,24 @@ $(function(){
     //  location.reload();
     //},
     //on_hide_modal_after_submit: function(){
+    //  location.reload();
     //},
-    //on_submit: function(){
+    on_submit: function(){
+      alert("uuganaa");
+    //  $('#modal-form').submit(function(event){
+    //    event.preventDefault();
+    //    $.ajax({
+    //      url: $(this).attr('action'),
+    //      method: 'post',
+    //      data: $(this).serialize()
+    //    }).done(function(response){
+    //      $('#generic-modal').modal("hide");
+    //    });
+    //  });
       //location.reload();
     //}
     //on_done: function(){
-    //}
+    },
   });
 });
 $(function() {
@@ -112,3 +124,6 @@ function managerDatatable(table_id){
     "autoWidth": false,
   });
 }
+
+
+$(document).ajaxStart(function() { Pace.restart(); });

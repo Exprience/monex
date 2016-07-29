@@ -4,10 +4,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from app.user.forms import UserPasswordResetForm, UserPasswordChangeForm, UserSetPasswordForm
 from django.contrib.auth import views
+
 #handler400 = 'my_app.views.bad_request'
 #handler403 = 'my_app.views.permission_denied'
 handler404 = 'app.web.views.handler404'
-#handler500 = 'my_app.views.server_error'
+handler500 = 'app.web.views.handler500'
 
 urlpatterns = [
 

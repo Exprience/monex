@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from django.contrib.sessions.models import Session
 from django.utils import timezone
-
+from django.http import HttpResponse
 
 from app.manager.models import Manager
 from django.utils.translation import ugettext as _
@@ -14,8 +14,26 @@ def get_username():
 	return _requests[t]
 
 class RequestMiddleware(object):
+
+	#def __init__(self):
+	#	pass
+
 	def process_request(self, request):
 		_requests['request_user'] = request
+
+	#def process_view(self, *args, **kwargs):
+	#	print "Fasdfasdf"
+
+	#def process_exception(self):
+	#	print "fasdfasdfasfdasdfasdfasdfaf"		
+
+	#def process_template_response(self, *args, **kwargs):
+	#	print "~~~~~~~~~~~~~~~~~~~~~~~~~~~`"
+
+	#def process_response(self, *args, **kwargs):
+	#	return HttpResponse("Uuganaa")
+
+
 
 
 def get_all_logged_in_users():

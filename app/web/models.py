@@ -6,9 +6,10 @@ from app.user.models import Bank
 from redactor.fields import RedactorField
 from app.manager.models import Manager
 from datetime import datetime, timedelta, date
-from get_username import get_username
+from monex.get_username import get_username
 
-__all__ = ['MedeeAngilal', 'Medee', 'SudalgaaAngilal', 'Sudalgaa', 'SurgaltAngilal',
+__all__ = [
+	'MedeeAngilal', 'Medee', 'SudalgaaAngilal', 'Sudalgaa', 'SurgaltAngilal',
 	'Surgalt', 'BidniiTuhai', 'HolbooBarih', 'EconomicCalendar', 'Currency', 'CurrencyValue',
 	'Company', 'Stock']
 
@@ -40,7 +41,10 @@ class Medee(models.Model):
 		return unicode(self.angilal)
 
 	def save(self, *args, **kwargs):
-		self.created_by = Manager.objects.get(id = get_username().user.id)
+		try:
+			self.created_by = Manager.objects.get(id = get_username().user.id)
+		except:
+			pass
 		return super(Medee, self).save(*args, **kwargs)
 		
 	def img_url(self):

@@ -43,3 +43,14 @@ table tr th {
 select {
   display: inline;
 }
+
+.errors{
+  font-size: 9px;
+}
+.errorlist {
+  color: red;
+  font-size: 10px;
+}
+.modal {
+  background: none;
+}

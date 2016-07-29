@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
-from app.web.get_username import *
+from monex.get_username import *
 from .forms import SupportUserMessageForm
 from app.manager.models import *
 from .models import SupportMessage, Support

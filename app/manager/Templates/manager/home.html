@@ -53,10 +53,94 @@
       </div>
     </div>
     <a id="my_modal_runner" class='btn btn-primary btn-flat' href='{% url "manager:mymodal"%}'>Display modal </a>
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+      Launch demo modal
+    </button>
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+    <div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Modal Form</h4>
+          </div>
+          <form id="myform" class="form-horizontal" role="form" method="POST">{% csrf_token %}
+            <div class="modal-body">
+              <div class="form-group">
+                <div class="col-md-12">
+                  <label class="control-label popup-label">First Name</label>
+                  <input required type="text" class="form-control" name="firstname" value="">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <label class="control-label popup-label">Last Name</label>
+                  <input required type="text" class="form-control" name="lastname" value="">
+                </div>
+              </div>
+              <div id="error">
+                <div class="alert alert-danger"> <strong>Error!</strong> There Are Too Many Errors</div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" id="submitForm">Submit</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal" id="reset">Cancel / Clear</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="thanks"></div>
+    <script type="text/javascript">
+      $("#submitForm").click(function () {
+         $.ajax({
+          type: "POST",
+          url: "/manager/home/",
+          data: $('#myform').serialize(),
+          success: function (msg) {
+            alert('dfasdfaf');
+            //$("#thanks").html(msg)
+            $("#myModal").modal('hide');
+          },
+          error: function () {
+            $("#error").show();
+          }
+        });
+      });
+    </script>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
   <script type="text/javascript">
    	$(function(){
-	    $('#my_modal_runner').DjangoModalRunner();
+	    $('#my_modal_runner').DjangoModalRunner({
+        //on_submit: function(){
+        //  $("#generic-modal").modal('hide');
+        //},
+      });
 		});
   </script>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+  $("#myModal").draggable({ handle: ".modal-header" });
+  $("#generic-modal").draggable({ handle: ".modal-header" });
+</script>
 {% endblock %}
