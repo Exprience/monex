@@ -45,17 +45,22 @@ class Login(FormView):
 
 
 
-class RegisterView(CreateView):
+class RegisterView(FormView):
 	form_class = RegisterForm
 	template_name = "user/register.html"
 	success_url = reverse_lazy('register_confirm')
 
 	def form_valid(self, form):
-		user = form.save()
-		uid = urlsafe_base64_encode(force_bytes(user.pk))
-		token = default_token_generator.make_token(user)
-		text = 'http://127.0.0.1:8000/confirm/%s/%s/' %(uid, token)
-		send_mail('subject', text, 'uuganaaaaaa@gmail.com', [user.email])
+		username = form.cleaned_data['username']
+		email = form.cleaned_data['email']
+		password = form.cleaned_data['password']
+		repeat_password = form.cleaned_data['repeat_password']
+		
+	#	user = form.save()
+	#	uid = urlsafe_base64_encode(force_bytes1(user.pk))
+	#	token = default_token_generator.make_token(user)
+	#	text = 'http://127.0.0.1:8000/confirm/%s/%s/' %(uid, token)
+	#	send_mail('subject', text, 'uuganaaaaaa@gmail.com', [user.email])
 		context = {}
-		context['email'] = user.email
+	#	context['email'] = user.email
 		return render_to_response('user/register_confirm.html', context)
