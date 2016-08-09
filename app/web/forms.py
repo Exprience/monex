@@ -14,22 +14,22 @@ class BagtsForm(forms.Form):
 	zarsan_une = forms.FloatField(label = u'Зарсан үнэ', widget = forms.TextInput(attrs = {'class':'form-control'}))
 	too = forms.IntegerField(label = u'Ширхэг', widget = forms.TextInput(attrs = {'class':'form-control'}))
 
-class NewsForm(forms.ModelForm):
+class NewsForm(forms.Form):
 	
-	class Meta:
-		model = Medee
-		fields = ['angilal', 'title', 'body']
+	#class Meta:
+	#	model = Medee
+	#	fields = ['angilal', 'title', 'body']
 
-		widgets = {
-			'angilal' : RelAdd(
-				Medee._meta.get_field('angilal').formfield().widget,
-            	Medee._meta.get_field('angilal').rel,
-            	my_admin_site,
-            	can_add_related=True,
-            	can_change_related = True,
-            	),
-			'title' : forms.TextInput(attrs = {'class':'form-control'})
-		}
+	#	widgets = {
+	#		'angilal' : RelAdd(
+	#			Medee._meta.get_field('angilal').formfield().widget,
+    #        	Medee._meta.get_field('angilal').rel,
+    #        	my_admin_site,
+    #        	can_add_related=True,
+    #        	can_change_related = True,
+    #        	),
+	#		'title' : forms.TextInput(attrs = {'class':'form-control'})
+	#	}
 
 class AboutForm(forms.ModelForm):
 
@@ -61,33 +61,33 @@ class LessonForm(forms. ModelForm):
 
 class ResearchForm(forms.ModelForm):
 
-	class Meta:
-		model = Sudalgaa
-		fields = "__all__"
-		widgets = {
-			'angilal' : RelAdd(
-				Sudalgaa._meta.get_field('angilal').formfield().widget,
-            	Sudalgaa._meta.get_field('angilal').rel,
-            	my_admin_site,
-            	can_add_related=True,
-            	can_change_related = True,
-            	),
-			'name' : forms.TextInput(attrs = {'class':'form-control'}),
-			'author_name' : forms.TextInput(attrs = {'class':'form-control'}),
-			'author_email' : forms.TextInput(attrs = {'class' : 'form-control'}),
-			'pdf_file' : forms.FileInput(attrs = {'class':'form-control'}),
+	#class Meta:
+	#	model = Sudalgaa
+	#	fields = "__all__"
+	#	widgets = {
+	#		'angilal' : RelAdd(
+	#			Sudalgaa._meta.get_field('angilal').formfield().widget,
+    #        	Sudalgaa._meta.get_field('angilal').rel,
+    #        	my_admin_site,
+    #        	can_add_related=True,
+    #        	can_change_related = True,
+    #        	),
+	#		'name' : forms.TextInput(attrs = {'class':'form-control'}),
+	#		'author_name' : forms.TextInput(attrs = {'class':'form-control'}),
+	#		'author_email' : forms.TextInput(attrs = {'class' : 'form-control'}),
+	#		'pdf_file' : forms.FileInput(attrs = {'class':'form-control'}),
 
 
-		}
+	#	}
 
-class NewsCategoryForm(forms.ModelForm):
-
-	class Meta:
-		model = MedeeAngilal
-		fields = "__all__"
-		widgets = {
-			'name' : forms.TextInput(attrs = {'class':'form-control'})
-		}
+class NewsCategoryForm(forms.Form):
+	name = forms.TextInput()
+	#class Meta:
+	#	model = MedeeAngilal
+	#	fields = "__all__"
+	#	widgets = {
+	#		'name' : forms.TextInput(attrs = {'class':'form-control'})
+	#	}
 
 class LessonCategoryForm(forms.ModelForm):
 

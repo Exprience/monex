@@ -82,15 +82,14 @@ class Web(NotManager):
 		
 		context = super(Web, self).get_context_data(*args, **kwargs)
 		#context['corausel'] = Medee.objects.all().order_by('created_at')[:5]
-		context['news_category'] = MedeeAngilal.objects.all()
-		context['research_category'] = SudalgaaAngilal.objects.all()
-		context['lesson_category'] = SurgaltAngilal.objects.all()
+		#context['news_category'] = MedeeAngilal.objects.all()
+		#context['research_category'] = SudalgaaAngilal.objects.all()
+		#context['lesson_category'] = SurgaltAngilal.objects.all()
 		#context['medee'] = Medee.objects.all().order_by('-id')[:5]
-		context['medee_most'] = Medee.objects.all().order_by('-view')[:5]
+		#context['medee_most'] = Medee.objects.all().order_by('-view')[:5]
 		#context['sudalgaa'] = Sudalgaa.objects.all().order_by('-id')[:5]
 		#context['surgalt'] = Surgalt.objects.all()[:4]
-		context['banks'] = Bank.objects.currency_bank()
-		context['companys'] = Company.objects.all()
+		context['menu_num'] = self.menu_num
 		return context
 
 
@@ -136,10 +135,16 @@ class About(Web, TemplateView):
 		context['about'] = BidniiTuhai.objects.last()
 		return context
 
+<<<<<<< HEAD
 
 class News(Web, ListView):
 	template_name = 'web/news/news.html'
 	model = Medee
+=======
+class News(Web, TemplateView):
+	template_name = 'web/news/news.html'
+	menu_num = 4
+>>>>>>> 30592ad73f0f5fc416aee5b490ca7c540fcddf6e
 
 
 class NewsSelf(Web, TemplateView):
@@ -147,7 +152,7 @@ class NewsSelf(Web, TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(NewsSelf, self).get_context_data(*args, **kwargs)
-		context['news_self'] = Medee.objects.get(id = self.kwargs.pop('id', None))
+		#context['news_self'] = Medee.objects.get(id = self.kwargs.pop('id', None))
 		context['news_self'].view += 1
 		context['news_self'].save(update_fields=['view'])
 		return context

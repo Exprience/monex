@@ -120,9 +120,9 @@ DATABASES = {
        		'NAME': 'monex',
        		'USER': 'monex',
        		'PASSWORD': 'monex_1',
-       		'HOST': 'localhost',
+       		'HOST': '127.0.0.1',
         	'PORT': '',
-    }
+            }
 }
 
 
