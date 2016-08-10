@@ -8,4 +8,5 @@ urlpatterns = [
 	url(r'^login/$', v.Login.as_view(), name = 'login'),
     url(r'^register/$', v.RegisterView.as_view(), name = 'register'),
     url(r'^logout/$', v.Login.logout, name = 'logout'),
+    url(r'^password_reset/$', v.ResetPasswordView.as_view(), name= 'password_reset'),
 ]
