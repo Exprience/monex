@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.views import generic as g
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
-from .forms import RegisterForm,  LoginForm
+from .forms import RegisterForm,  LoginForm, UserPasswordResetForm, UserPasswordChangeForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, FormView
@@ -16,7 +16,7 @@ from django.shortcuts import render_to_response
 import models as m
 import forms as f
 
-__all__ = ['Home' ,'Login', 'RegisterView']
+__all__ = ['Home' ,'Login', 'RegisterView', 'ResetPasswordView']
 
 class Home(g.TemplateView):
 	template_name = 'user/base/home.html'
@@ -71,6 +71,7 @@ class RegisterView(FormView):
 	#	context['email'] = user.email
 		return render_to_response('user/register/register_confirm.html', context)
 
-#class ResetPasswordView(FormView)
-#	form class = UserPasswordResetForm
-#	template_name= 
+class ResetPasswordView(FormView):
+	form_class = UserPasswordResetForm
+	template_name = "user/password/password_reset.html"
+	success_url = reverse_lazy('web:home')
