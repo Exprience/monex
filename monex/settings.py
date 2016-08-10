@@ -55,12 +55,8 @@ INSTALLED_APPS = (
     'app.online_support',
     
     'redactor',
-    'bootstrap3_datetime',
-    'pagination_bootstrap',
     'django_modalview',
     'captcha',
-    'django.contrib.admindocs',
-    'notifications',
     'app.chat.apps.ChatConfig'
 )
 
@@ -76,7 +72,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 
-    'pagination_bootstrap.middleware.PaginationMiddleware',
     'monex.get_username.RequestMiddleware',
 )
 
@@ -116,7 +111,7 @@ DATABASES = {
 	'default': {
       	'ENGINE': 'django.db.backends.sqlite3',
        	'NAME': 'monex.sqlite',
-        }
+    }
 }
 
 

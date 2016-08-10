@@ -31,10 +31,6 @@ urlpatterns = [
     
     url(r'^captcha/', include('captcha.urls')),
 
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    url('^inbox/notifications/', include('notifications.urls', namespace='notifications')),
-
     #url(r'^password_reset/$', v.ResetPasswordView.as_view(), name= 'password_reset'),
 
     url(r'^password_reset/$', views.password_reset, {
