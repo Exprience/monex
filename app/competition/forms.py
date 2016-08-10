@@ -9,7 +9,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 from django.contrib.admin.sites import AdminSite
 
-from bootstrap3_datetime.widgets import DateTimePicker
 
 from .models import CompetitionRank, Competition, CompetitionRegister
 
@@ -56,8 +55,8 @@ class CompetitionForm(forms.ModelForm):
             	can_change_related=True,
             	can_add_related=True,
             	), 
-			'start' : DateTimePicker(options={"format": "YYYY-MM-DD HH:mm", "pickSeconds": False}),
-			'end' : DateTimePicker(options={"format": "YYYY-MM-DD HH:mm", "pickSeconds": False}),
+			#'start' : DateTimePicker(options={"format": "YYYY-MM-DD HH:mm", "pickSeconds": False}),
+			#'end' : DateTimePicker(options={"format": "YYYY-MM-DD HH:mm", "pickSeconds": False}),
 		}
 
 class CompetitionRegisterForm(forms.ModelForm):
