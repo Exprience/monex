@@ -70,3 +70,6 @@ class RegisterView(FormView):
 		context = {}
 	#	context['email'] = user.email
 		return render_to_response('user/register/register_confirm.html', context)
+
+class ResetPasswordView(FormView)
+form class = 
