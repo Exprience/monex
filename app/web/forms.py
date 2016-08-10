@@ -15,6 +15,7 @@ class BagtsForm(forms.Form):
 	too = forms.IntegerField(label = u'Ширхэг', widget = forms.TextInput(attrs = {'class':'form-control'}))
 
 class NewsForm(forms.Form):
+	title = forms.CharField(label = u'Garchig', widget = forms.TextInput(attrs = {'class':'form-control'}))
 	
 	#class Meta:
 	#	model = Medee
@@ -30,7 +31,6 @@ class NewsForm(forms.Form):
     #        	),
 	#		'title' : forms.TextInput(attrs = {'class':'form-control'})
 	#	}
-
 class AboutForm(forms.ModelForm):
 
 	class Meta:
@@ -60,7 +60,8 @@ class LessonForm(forms. ModelForm):
 			}
 
 class ResearchForm(forms.ModelForm):
-
+	name = forms.CharField(label = u'нэр', widget = forms.TextInput(attrs = {'class':'form-control'}))
+	
 	#class Meta:
 	#	model = Sudalgaa
 	#	fields = "__all__"

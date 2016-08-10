@@ -58,7 +58,6 @@ INSTALLED_APPS = (
     'bootstrap3_datetime',
     'pagination_bootstrap',
     'django_modalview',
-    'simple_history',
     'captcha',
     'django.contrib.admindocs',
     'notifications',
@@ -78,7 +77,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 
     'pagination_bootstrap.middleware.PaginationMiddleware',
-    'simple_history.middleware.HistoryRequestMiddleware',
     'monex.get_username.RequestMiddleware',
 )
 
@@ -116,13 +114,9 @@ WSGI_APPLICATION = 'monex.wsgi.application'
 
 DATABASES = {
 	'default': {
-       		'ENGINE': 'django.db.backends.mysql',
-       		'NAME': 'monex',
-       		'USER': 'monex',
-       		'PASSWORD': 'monex_1',
-       		'HOST': '127.0.0.1',
-        	'PORT': '',
-            }
+      	'ENGINE': 'django.db.backends.sqlite3',
+       	'NAME': 'monex.sqlite',
+        }
 }
 
 

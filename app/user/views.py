@@ -4,15 +4,15 @@ from django.http import HttpResponseRedirect
 from django.views import generic as g
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
-
+from .forms import RegisterForm,  LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
+from django.views.generic import TemplateView, FormView
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-
+from django.shortcuts import render_to_response
 import models as m
 import forms as f
 
@@ -53,7 +53,7 @@ class Login(g.FormView):
 
 class RegisterView(FormView):
 	form_class = RegisterForm
-	template_name = "user/register.html"
+	template_name = "user/register/register.html"
 	success_url = reverse_lazy('register_confirm')
 
 	def form_valid(self, form):
@@ -69,4 +69,4 @@ class RegisterView(FormView):
 	#	send_mail('subject', text, 'uuganaaaaaa@gmail.com', [user.email])
 		context = {}
 	#	context['email'] = user.email
-		return render_to_response('user/register_confirm.html', context)
+		return render_to_response('user/register/register_confirm.html', context)

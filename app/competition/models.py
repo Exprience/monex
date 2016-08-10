@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 from django.db import models
 from app.user.models import SystemUser
-from simple_history.models import HistoricalRecords
 from datetime import datetime
 from monex.get_username import get_username
 from .token import competition_register_token as c
@@ -13,7 +12,6 @@ class CompetitionRank(models.Model):
 	name = models.CharField(max_length = 100, verbose_name = u'Нэр')
 	fee = models.IntegerField(verbose_name = u'Суурь хураамж')
 	shagnal = models.TextField(verbose_name = u'Шагналын сан')
-	history = HistoricalRecords()
 	class Meta:
 		ordering = ['-id']
 
@@ -32,7 +30,7 @@ class Competition(models.Model):
 	end = models.DateTimeField(verbose_name = u'Дуусах огноо')
 	status = models.BooleanField(default = False)
 	competition_status = models.CharField(choices = competition_select, max_length = 10, default = '0', verbose_name = 'Төлөв')
-	history = HistoricalRecords()
+	
 
 	@property
 	def user(self):
@@ -84,8 +82,7 @@ class CompetitionRegister(models.Model):
 	account = models.IntegerField()
 	barimt = models.FileField(verbose_name = u'Баримт')
 	registered_date = models.DateTimeField(auto_now_add = True)
-	history = HistoricalRecords()
-
+	
 	class Meta:
 		unique_together = (('user', 'competition'),)
 

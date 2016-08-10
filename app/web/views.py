@@ -93,7 +93,7 @@ class Web(NotManager):
 		return context
 
 
-class Home(NotManager, CreateView):
+class Home(NotManager, FormView):
 	template_name = 'web/home/home_example.html'
 	form_class = RegisterForm
 	success_url = reverse_lazy('home')
@@ -135,17 +135,9 @@ class About(Web, TemplateView):
 		context['about'] = BidniiTuhai.objects.last()
 		return context
 
-<<<<<<< HEAD
-
-class News(Web, ListView):
-	template_name = 'web/news/news.html'
-	model = Medee
-=======
 class News(Web, TemplateView):
 	template_name = 'web/news/news.html'
 	menu_num = 4
->>>>>>> 30592ad73f0f5fc416aee5b490ca7c540fcddf6e
-
 
 class NewsSelf(Web, TemplateView):
 	template_name = 'web/news/news_self.html'
@@ -153,8 +145,8 @@ class NewsSelf(Web, TemplateView):
 	def get_context_data(self, *args, **kwargs):
 		context = super(NewsSelf, self).get_context_data(*args, **kwargs)
 		#context['news_self'] = Medee.objects.get(id = self.kwargs.pop('id', None))
-		context['news_self'].view += 1
-		context['news_self'].save(update_fields=['view'])
+		context['news_self'].view += 11
+		#context['news_self'].save(update_fields=['view'])
 		return context
 
 
