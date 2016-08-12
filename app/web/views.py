@@ -89,7 +89,7 @@ class Web(NotManager):
 		#context['medee_most'] = Medee.objects.all().order_by('-view')[:5]
 		#context['sudalgaa'] = Sudalgaa.objects.all().order_by('-id')[:5]
 		#context['surgalt'] = Surgalt.objects.all()[:4]
-		context['menu_num'] = self.menu_num
+		#context['menu_num'] = self.menu_num
 		return context
 
 
@@ -183,7 +183,7 @@ class ResearchFilter(Research):
 
 class Lesson(Web, ListView):
 	template_name = 'web/lesson/lesson.html'
-	model = Surgalt
+	#model = Surgalt
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(Lesson, self).get_context_data(*args, **kwargs)
