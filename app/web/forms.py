@@ -4,6 +4,7 @@ from django import forms
 from .models import *
 from app.competition.forms import RelAdd, my_admin_site
 from captcha.fields import CaptchaField, CaptchaTextInput
+from redactor.widgets import RedactorEditor
 
 __all__ = ['BagtsForm', 'NewsForm', 'AboutForm', 'LessonForm', 'ResearchForm', 'NewsCategoryForm',
 			'LessonCategoryForm', 'ResearchCategoryForm']
@@ -16,7 +17,8 @@ class BagtsForm(forms.Form):
 
 class NewsForm(forms.Form):
 	title = forms.CharField(label = u'Garchig', widget = forms.TextInput(attrs = {'class':'form-control'}))
-	
+	body = forms.CharField(widget = RedactorEditor(attrs = {'class':'form-control'}))
+	angilal = forms.ChoiceField()
 	#class Meta:
 	#	model = Medee
 	#	fields = ['angilal', 'title', 'body']
@@ -43,7 +45,7 @@ class AboutForm(forms.ModelForm):
 class LessonForm(forms. ModelForm):
 
 	class Meta:
-		model = Surgalt
+		#model = Surgalt
 		fields = "__all__"
 		widgets = {
 			'angilal' : RelAdd(
@@ -82,7 +84,7 @@ class ResearchForm(forms.ModelForm):
 	#	}
 
 class NewsCategoryForm(forms.Form):
-	name = forms.TextInput()
+	angilal = forms.CharField()
 	#class Meta:
 	#	model = MedeeAngilal
 	#	fields = "__all__"

@@ -69,6 +69,8 @@ class RegisterView(FormView):
 	def form_valid(self, form):
 		username = form.cleaned_data['username']
 		email = form.cleaned_data['email']
+	#	username = form.cleaned_data['username']
+	#	email = form.cleaned_data['email']
 	#	password = form.cleaned_data['password']
 	#	repeat_password = form.cleaned_data['repeat_password']
 		
@@ -80,8 +82,10 @@ class RegisterView(FormView):
 		context = {}
 	#	context['email'] = user.email
 	#	return render_to_response('user/register/register_confirm.html', context)
-
-class ResetPasswordView(FormView):
+		return super(RegisterView, self).form_valid(form)
+		
+class ResetPasswordView(TemplateView):
 	form_class = UserPasswordResetForm
 	template_name = "user/password/password_reset.html"
 	success_url = reverse_lazy('web:home')
+#class UserSetPassView(TemplateView)
