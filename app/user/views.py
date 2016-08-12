@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+import jsonpickle
 
 from django.http import HttpResponseRedirect
 from django.views import generic as g
@@ -13,13 +14,22 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import render_to_response
+from django.contrib.auth.models import AbstractUser
 import models as m
 import forms as f
+from managers import BaseDataManager as manager
+from django.conf import settings
+
+def put(request, name, value):
+    request.session[name] = jsonpickle.encode(value)
+
 
 __all__ = ['Home' ,'Login', 'RegisterView', 'ResetPasswordView']
 
 class Home(g.TemplateView):
 	template_name = 'user/base/home.html'
+
+
 
 class Login(g.FormView):
 	form_class = f.LoginForm
@@ -32,11 +42,12 @@ class Login(g.FormView):
 		return super(Login, self).dispatch(request, *args, **kwargs)
 
 	def form_valid(self, form):
-		user = authenticate(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
-		if user and m.SystemUser.objects.filter(id = user.id):
-			login(self.request, user)
-			messages.success(self.request, u"Монексд тавтай морил %s" %user.username)
+		user =  manager.loginUser(form.cleaned_data['username'], form.cleaned_data['password'])
+		if user.isHavePrivilege:
+			messages.success(self.request, u"Монексд тавтай морил")
 			url = self.request.GET.get('next', None)
+			put(self.request, 'user', user)
+			print user.is_authenticated()
 			if url:
 				return HttpResponseRedirect(url)
 			return super(Login, self).form_valid(form)
@@ -46,7 +57,6 @@ class Login(g.FormView):
 	@staticmethod
 	def logout(request):
 		username = request.user.username
-		logout(request)
 		messages.warning(request, u"Дахин уулзахдаа баяртай байх болно %s." %username)
 		return HttpResponseRedirect(reverse_lazy('web:home'))
 

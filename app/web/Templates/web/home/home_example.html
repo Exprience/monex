@@ -35,6 +35,7 @@
           <div class="header-nav">
             <nav>
               <ul class="primary-nav">
+                {{ user.is_authenticated }}
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'user:home' %}">Хянах самбар</a></li>
                 {% endif %}
