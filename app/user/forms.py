@@ -12,6 +12,7 @@ from django.contrib import messages
 from monex.get_username import get_username as gu
 
 import models as m
+from managers import BaseDataManager as manager
 
 __all__ = ['RegisterForm', 'LoginForm', 'ProfileUpdateForm']
 
@@ -82,15 +83,13 @@ class LoginForm(forms.Form):
 			settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 		return remember_me
 
+
 	def clean(self):
 		cleaned_data = super(LoginForm, self).clean()
 		if self.is_valid():
-			user = authenticate(username = cleaned_data['username'], password = cleaned_data['password'])
-			if not user:
+			user = manager.loginUser(cleaned_data['username'], cleaned_data['password'])
+			if not user.isHavePrivilege:
 				raise forms.ValidationError(_(u'Хэрэглэгчийн нэр эсвэл нууц үг буруу байна'), code='invalid')
-			else:
-				if not m.SystemUser.objects.filter(username = user.username):
-					raise forms.ValidationError(_(u'Хэрэглэгчийн нэр эсвэл нууц үг буруу байна'), code='invalid')
 		return cleaned_data
 
 
@@ -116,6 +115,18 @@ class RegisterForm(forms.Form):
 			#'password' : forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}),
 	#	}
 		
+
+	def clean_username(self):
+		username = self.cleaned_data['username']
+		if not manager.check_unique_user(True, username):
+			raise forms.ValidationError(_(u'Хэрэглэгч бүртгэлтэй байна'), code='invalid')
+		return username
+
+	def clean_email(self):
+		email = self.cleaned_data['email']
+		if not manager.check_unique_user(False, email):
+			raise forms.ValidationError(_(u'Э-мэйл хаяг бүртгэлтэй байна'), code='invalid')
+		return email
 
 	def clean(self):
 		cleaned_data = super(RegisterForm, self).clean()

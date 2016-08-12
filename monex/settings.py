@@ -228,3 +228,8 @@ CAPTCHA_LETTER_ROTATION = 0
 CAPTCHA_TEXT_FIELD_TEMPLATE = 'web/captcha/captcha_text_field.html'
 
 AUTH_USER_EMAIL_UNIQUE = True
+
+
+WS_SERVER=get_local('WS_SERVER', '192.168.1.20')
+
+STATIC_DOMAIN_URL = get_local('STATIC_DOMAIN_URL', '%s') % '/static/'
