@@ -97,28 +97,9 @@ class LoginForm(forms.Form):
 class RegisterForm(forms.Form):
 	username = forms.CharField(widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нэвтрэх нэр'}) )
 	email = forms.EmailField(widget = forms.EmailInput(attrs = {'class':'form-control', 'placeholder':'Э-мэйл'}))
-<<<<<<< HEAD
-	#password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}))
-	#repeat_password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг давтах'}))
 
-	#class Meta:
-		#model = SystemUser
-	#	fields = ['username', 'first_name', 'last_name', 'register', 'email', 'phone'] #'bank', 'account', 'password']
-	#	widgets = {
-	#		'username' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нэвтрэх нэр'}),
-	#		'first_name' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нэр'}),
-	#		'last_name' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Овог'}),
-	#		'register' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Регистер'}),
-	#		'email' : forms.EmailInput(attrs = {'class':'form-control', 'placeholder':'Э-мэйл'}),
-	#		'phone' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Утас'}),
-			#'bank' : forms.Select(attrs = {'class':'form-control', 'placeholder':'Банк'}),
-			#'account' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Дансны дугаар'}),
-			#'password' : forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}),
-	#	}
-=======
 	password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}))
 	repeat_password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг давтах'}))
->>>>>>> d46ba2cbabacb2ec5a9a741be6b216c941e986d3
 		
 
 	def clean_username(self):
@@ -133,14 +114,14 @@ class RegisterForm(forms.Form):
 			raise forms.ValidationError(_(u'Э-мэйл хаяг бүртгэлтэй байна'), code='invalid')
 		return email
 
-	#def clean(self):
-	#	cleaned_data = super(RegisterForm, self).clean()
-	#	if self.is_valid():
-	#		password = cleaned_data['password']
-	#		repeat_password = cleaned_data['repeat_password']
-	#		if not password == repeat_password:
-	#			raise forms.ValidationError(_(u'Нууц үг зөрүүтэй байна'), code='invalid')
-	#	return cleaned_data
+	def clean(self):
+		cleaned_data = super(RegisterForm, self).clean()
+		if self.is_valid():
+			password = cleaned_data['password']
+			repeat_password = cleaned_data['repeat_password']
+			if not password == repeat_password:
+				raise forms.ValidationError(_(u'Нууц үг зөрүүтэй байна'), code='invalid')
+		return cleaned_data
 
 
 class ProfileUpdateForm(forms.Form):
