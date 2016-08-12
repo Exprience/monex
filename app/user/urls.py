@@ -9,4 +9,6 @@ urlpatterns = [
     url(r'^register/$', v.RegisterView.as_view(), name = 'register'),
     url(r'^logout/$', v.Login.logout, name = 'logout'),
     url(r'^password_reset/$', v.ResetPasswordView.as_view(), name= 'password_reset'),
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', v.UserSetPassView.as_view(), name= 'password_reset_confirm'),
+    url(r'^change_password/$', v.UserChangePassView.as_view(), name="password_change"),
 ]

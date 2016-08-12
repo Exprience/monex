@@ -16,9 +16,9 @@ class BagtsForm(forms.Form):
 	too = forms.IntegerField(label = u'Ширхэг', widget = forms.TextInput(attrs = {'class':'form-control'}))
 
 class NewsForm(forms.Form):
-	title = forms.CharField(label = u'Garchig', widget = forms.TextInput(attrs = {'class':'form-control'}))
-	body = forms.CharField(widget = RedactorEditor(attrs = {'class':'form-control'}))
-	angilal = forms.ChoiceField()
+	title = forms.CharField(label = u'Гарчиг', widget = forms.TextInput(attrs = {'class':'form-control'}))
+	body = forms.CharField(label = u'Мэдээ',widget = RedactorEditor(attrs = {'class':'form-control'}))
+	angilal = forms.ChoiceField(required=True)
 	#class Meta:
 	#	model = Medee
 	#	fields = ['angilal', 'title', 'body']
@@ -84,7 +84,7 @@ class ResearchForm(forms.ModelForm):
 	#	}
 
 class NewsCategoryForm(forms.Form):
-	angilal = forms.CharField()
+	angilal = forms.CharField(label = u'Ангилал', widget = forms.TextInput(attrs = {'class':'form-control'}))
 	#class Meta:
 	#	model = MedeeAngilal
 	#	fields = "__all__"

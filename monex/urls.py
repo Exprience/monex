@@ -47,11 +47,11 @@ urlpatterns = [
     #url(r'^reset_done/$', views.password_reset_complete,
     #    {'template_name' : 'user/password/password_reset_complete.html' }, name ='password_reset_complete'),
 
-    url(r'^change_password/$', views.password_change, {
-        'template_name' : 'user/password/password_change.html',
-        'password_change_form' : UserPasswordChangeForm,
-        'post_change_redirect' : 'web:home',
-        }, name="password_change"),
+    #url(r'^change_password/$', views.password_change, {
+    #    'template_name' : 'user/password/password_change.html',
+    #    'password_change_form' : UserPasswordChangeForm,
+    #    'post_change_redirect' : 'web:home',
+    #    }, name="password_change"),
 
     #url(r'^confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', views.password_reset_confirm, {
     #    'template_name' : 'user/password/password_reset_confirm.html',

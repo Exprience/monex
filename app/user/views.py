@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.views import generic as g
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
-from .forms import RegisterForm,  LoginForm, UserPasswordResetForm, UserPasswordChangeForm
+from .forms import RegisterForm,  LoginForm, UserPasswordResetForm, UserPasswordChangeForm, UserSetPasswordForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, FormView
@@ -24,7 +24,7 @@ def put(request, name, value):
     request.session[name] = jsonpickle.encode(value)
 
 
-__all__ = ['Home' ,'Login', 'RegisterView', 'ResetPasswordView']
+__all__ = ['Home' ,'Login', 'RegisterView', 'ResetPasswordView','UserSetPassView','UserChangePassView']
 
 class Home(g.TemplateView):
 	template_name = 'user/base/home.html'
@@ -69,6 +69,18 @@ class RegisterView(FormView):
 	def form_valid(self, form):
 		username = form.cleaned_data['username']
 		email = form.cleaned_data['email']
+<<<<<<< HEAD
+		#password = form.cleaned_data['password']
+		#repeat_password = form.cleaned_data['repeat_password']
+	#	user = form.save()
+	#	uid = urlsafe_base64_encode(force_bytes1(user.pk))
+	#	token = default_token_generator.make_token(user)
+	#	text = 'http://127.0.0.1:8000/confirm/%s/%s/' %(uid, token)
+		send_mail('subject', text, 'uuganaaaaaa@gmail.com')
+		context = {}
+	#	context['email'] = user.email
+		return render_to_response('user/register/register_confirm.html', context)
+=======
 		password = form.cleaned_data['password']
 		user = manager.register(username, email, password)
 		if user.isSuccess:
@@ -76,9 +88,19 @@ class RegisterView(FormView):
 		else:
 			return super(RegisterView, self).form_invalid(form)
 
+>>>>>>> d46ba2cbabacb2ec5a9a741be6b216c941e986d3
 
 class ResetPasswordView(TemplateView):
 	form_class = UserPasswordResetForm
 	template_name = "user/password/password_reset.html"
 	success_url = reverse_lazy('web:home')
-#class UserSetPassView(TemplateView)
+
+class UserSetPassView(TemplateView):
+	form_class = UserSetPasswordForm
+	template_name = "user/password/password_reset_confirm.html"
+	success_url = reverse_lazy('web:home')
+
+class UserChangePassView(TemplateView):
+	form_class = UserPasswordChangeForm
+	template_name = "user/password/password_change.html"
+	success_url = reverse_lazy('web:home')
