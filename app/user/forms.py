@@ -99,21 +99,6 @@ class RegisterForm(forms.Form):
 	email = forms.EmailField(widget = forms.EmailInput(attrs = {'class':'form-control', 'placeholder':'Э-мэйл'}))
 	password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}))
 	repeat_password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг давтах'}))
-
-	#class Meta:
-		#model = SystemUser
-	#	fields = ['username', 'first_name', 'last_name', 'register', 'email', 'phone'] #'bank', 'account', 'password']
-	#	widgets = {
-	#		'username' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нэвтрэх нэр'}),
-	#		'first_name' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нэр'}),
-	#		'last_name' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Овог'}),
-	#		'register' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Регистер'}),
-	#		'email' : forms.EmailInput(attrs = {'class':'form-control', 'placeholder':'Э-мэйл'}),
-	#		'phone' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Утас'}),
-			#'bank' : forms.Select(attrs = {'class':'form-control', 'placeholder':'Банк'}),
-			#'account' : forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Дансны дугаар'}),
-			#'password' : forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}),
-	#	}
 		
 
 	def clean_username(self):
