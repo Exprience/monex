@@ -7,3 +7,4 @@ app/chat/migrations/
 app/online_support/migrations/
 .store/
 monex/local_settings.py
+monex.sqlite
