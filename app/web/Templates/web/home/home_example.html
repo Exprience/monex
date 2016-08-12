@@ -58,7 +58,7 @@
                 <li><a href="{% url 'web:competition_calendar' %}" class="btn-white btn-small">Тэмцээн</a></li>
                 {% else %}
                 <li><a href="{% url 'user:login' %}" class="login">Нэвтрэх</a></li>
-                <li><a href="#login" class="btn-white btn-small">Бүртгүүлэх</a></li>
+                <li><a href="{% url 'user:register' %}" class="btn-white btn-small">Бүртгүүлэх</a></li>
                 {% endif %}
               </ul>
             </nav>
@@ -75,12 +75,14 @@
           <div class="hero-content text-center">
             <h2>Monex гэж юу вэ?</h2>
             <iframe width="620" height="415" src="//www.youtube.com/embed/9B7te184ZpQ?rel=0"></iframe><br>
-            <a style="margin-top:10px;" href="#login" class="btn btn-ghost btn-large">Бүртгүүлэх</a>
+            <a style="margin-top:10px;" href="{% url 'user:register' %}" class="btn btn-ghost btn-large">
+              Бүртгүүлэх
+            </a>
           </div>
         </div>
       </div>
     </div>
-    <div class="down-arrow floating-arrow"><a href="#"><i class="fa fa-angle-down"></i></a></div>
+    <div class="down-arrow floating-arrow"><a href="javascript:;"><i class="fa fa-angle-down"></i></a></div>
   </section>
   <section class="intro section-padding">
     <div class="container">
@@ -219,6 +221,7 @@
       </div>
     </div>
   </section>
+  {% comment %}
   <section class="sign-up section-padding text-center" id="login">
     <div class="container">
       <div class="row">
@@ -247,6 +250,7 @@
       </div>
     </div>
   </section>
+  {% endcomment %}
   <section class="to-top">
       <div class="container">
           <div class="row">

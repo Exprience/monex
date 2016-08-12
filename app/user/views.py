@@ -64,11 +64,12 @@ class Login(g.FormView):
 class RegisterView(FormView):
 	form_class = RegisterForm
 	template_name = "user/register/register.html"
-	success_url = reverse_lazy('register_confirm')
+	success_url = reverse_lazy('web:home')
 
 	def form_valid(self, form):
 		username = form.cleaned_data['username']
 		email = form.cleaned_data['email']
+<<<<<<< HEAD
 		#password = form.cleaned_data['password']
 		#repeat_password = form.cleaned_data['repeat_password']
 	#	user = form.save()
@@ -79,6 +80,15 @@ class RegisterView(FormView):
 		context = {}
 	#	context['email'] = user.email
 		return render_to_response('user/register/register_confirm.html', context)
+=======
+		password = form.cleaned_data['password']
+		user = manager.register(username, email, password)
+		if user.isSuccess:
+			return super(RegisterView, self).form_valid(form)
+		else:
+			return super(RegisterView, self).form_invalid(form)
+
+>>>>>>> d46ba2cbabacb2ec5a9a741be6b216c941e986d3
 
 class ResetPasswordView(TemplateView):
 	form_class = UserPasswordResetForm
