@@ -74,6 +74,15 @@ class BaseDataManager(object):
         except:
             return None
 
+    @staticmethod
+    def register(username, email):
+        try:
+            client = BaseDataManager.get_instance().setup_client('/MX_User_RegistrationService/MX_User_RegistrationPort?wsdl')
+            result = client.service.MX_User_RegistrationOperation(username, email)
+            return result
+        except:
+            return None
+
 
 class User(object):
 

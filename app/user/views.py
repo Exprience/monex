@@ -69,8 +69,8 @@ class RegisterView(FormView):
 	def form_valid(self, form):
 		username = form.cleaned_data['username']
 		email = form.cleaned_data['email']
-		password = form.cleaned_data['password']
-		repeat_password = form.cleaned_data['repeat_password']
+	#	password = form.cleaned_data['password']
+	#	repeat_password = form.cleaned_data['repeat_password']
 		
 	#	user = form.save()
 	#	uid = urlsafe_base64_encode(force_bytes1(user.pk))
@@ -79,7 +79,7 @@ class RegisterView(FormView):
 	#	send_mail('subject', text, 'uuganaaaaaa@gmail.com', [user.email])
 		context = {}
 	#	context['email'] = user.email
-		return render_to_response('user/register/register_confirm.html', context)
+	#	return render_to_response('user/register/register_confirm.html', context)
 
 class ResetPasswordView(FormView):
 	form_class = UserPasswordResetForm
