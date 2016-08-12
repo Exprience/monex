@@ -90,6 +90,7 @@ class User(object):
         return True
 
     def fill_user(self, data):
+        self.id = data.id
         self.isHavePrivilege = data.isHavePrivilege
         self.last_login = data.last_login
         self.is_superuser = data.is_superuser
