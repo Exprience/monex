@@ -11,7 +11,6 @@ from django.contrib import messages
 
 from monex.get_username import get_username as gu
 
-import models as m
 from managers import BaseDataManager as manager
 
 __all__ = ['RegisterForm', 'LoginForm', 'ProfileUpdateForm']

@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from datetime import datetime, date, timedelta
-from django.views.generic import TemplateView, FormView, ListView, CreateView, View
+from django.views.generic import TemplateView, FormView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -9,11 +9,7 @@ from django.shortcuts import render_to_response
 from django.core.mail import send_mail, BadHeaderError, EmailMessage
 from django.template import RequestContext
 from .forms import BagtsForm, LessonMailForm
-from .models import *
-from app.competition.models import *
 from app.competition.forms import CompetitionRegisterForm
-from app.user.models import SystemUser, Bank
-from app.manager.models import Manager
 from app.user.forms import RegisterForm
 
 from django_modalview.generic.base import ModalTemplateView
@@ -55,25 +51,12 @@ def handler500(request):
 
 
 class SystemUserLoginRequired(object):
-
-	@method_decorator(login_required)
-	def dispatch(self, request, *args, **kwargs):
-		if request.user.is_authenticated():
-			if SystemUser.objects.filter(username = request.user.username):
-				return super(SystemUserLoginRequired, self).dispatch(request, *args, **kwargs)
-			else:
-				return HttpResponseRedirect(reverse_lazy('web:login'))
-		else:
-			return HttpResponseRedirect(reverse_lazy('web:login'))
+	pass
 
 
 class NotManager(object):
 
-	def dispatch(self, request, *args, **kwargs):
-		if not Manager.objects.filter(username = request.user.username):
-			return super(NotManager, self).dispatch(request, *args, **kwargs)
-		else:
-			return HttpResponseRedirect(reverse_lazy('user:login'))
+	pass
 
 
 class Web(NotManager):
@@ -81,15 +64,6 @@ class Web(NotManager):
 	def get_context_data(self, *args, **kwargs):
 		
 		context = super(Web, self).get_context_data(*args, **kwargs)
-		#context['corausel'] = Medee.objects.all().order_by('created_at')[:5]
-		#context['news_category'] = MedeeAngilal.objects.all()
-		#context['research_category'] = SudalgaaAngilal.objects.all()
-		#context['lesson_category'] = SurgaltAngilal.objects.all()
-		#context['medee'] = Medee.objects.all().order_by('-id')[:5]
-		#context['medee_most'] = Medee.objects.all().order_by('-view')[:5]
-		#context['sudalgaa'] = Sudalgaa.objects.all().order_by('-id')[:5]
-		#context['surgalt'] = Surgalt.objects.all()[:4]
-		#context['menu_num'] = self.menu_num
 		return context
 
 
@@ -98,18 +72,9 @@ class Home(NotManager, FormView):
 	form_class = RegisterForm
 	success_url = reverse_lazy('home')
 
-	#def dispatch(self, request, *args, **kwargs):
-		#from datetime import datetime
-		#a = datetime.now()
-		#print c.check_token(1 ,2 , 3, a, 'MQ-Mg-Mw-NTY1Mw')
-		#print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-		#return super(Home, self).dispatch(request, *args, **kwargs)
 	
 	def get_context_data(self, *args, **kwargs):
 		context = super(Home, self).get_context_data(*args, **kwargs)
-		#context['news_first'] = Medee.objects.first()
-		#context['research_first'] = Sudalgaa.objects.first()
-		#context['lesson_first'] = Surgalt.objects.first()
 		return context
 
 	def form_valid(self, form):
@@ -132,7 +97,6 @@ class About(Web, TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(About, self).get_context_data(*args, **kwargs)
-		#context['about'] = BidniiTuhai.objects.last()
 		return context
 
 class News(Web, TemplateView):
@@ -144,9 +108,6 @@ class NewsSelf(Web, TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(NewsSelf, self).get_context_data(*args, **kwargs)
-		#context['news_self'] = Medee.objects.get(id = self.kwargs.pop('id', None))
-		#context['news_self'].view += 11 #???
-		#context['news_self'].save(update_fields=['view']) #????
 		return context
 
 
@@ -155,25 +116,6 @@ class Research(SystemUserLoginRequired, Web, TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(Research, self).get_context_data(**kwargs)
-		name = self.request.GET.get('name', None)
-		author_name = self.request.GET.get('author_name', None)
-		if name and author_name:
-			object_list = Sudalgaa.objects.filter(name__icontains = name, author_name__icontains = author_name)
-		elif name:
-			object_list = Sudalgaa.objects.filter(name__icontains = name)
-		elif author_name:
-			object_list = Sudalgaa.objects.filter(author_name__icontains = author_name)
-		else:
-			object_list = Sudalgaa.objects.all()
-		category_list = []
-		for i in object_list.values('angilal').distinct():
-			obj = SudalgaaAngilal.objects.get(id = i.values()[0])
-			setattr(obj, 'research_list', [])
-			category_list.append(obj)
-			for ob in object_list:
-				if ob.angilal.id == obj.id:
-					obj.research_list.append(ob)
-		context['research_category'] = category_list
 		return context
 
 
@@ -181,26 +123,12 @@ class ResearchFilter(Research):
 	template_name = 'web/research/research_filter.html'
 
 
-class Lesson(Web, ListView):
+class Lesson(Web, TemplateView):
 	template_name = 'web/lesson/lesson.html'
 	#model = Surgalt
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(Lesson, self).get_context_data(*args, **kwargs)
-		name = self.request.GET.get('name', None)
-		if name:
-			object_list = Surgalt.objects.filter(video_name__icontains = name)
-		else:
-			object_list = Surgalt.objects.all()
-		lesson_category_list = []
-		for i in object_list.values('angilal').distinct():
-			obj = SurgaltAngilal.objects.get(id = i.values()[0])
-			setattr(obj, 'lesson_list', [])
-			lesson_category_list.append(obj)
-			for ob in object_list:
-				if ob.angilal.id == obj.id:
-					obj.lesson_list.append(ob)
-		context['lesson_category'] = lesson_category_list
 		return context
 
 
@@ -218,35 +146,11 @@ class Contact(Web, TemplateView):
 		return context
 
 
-class WebCompetitionCalendar(Web, ListView):
+class WebCompetitionCalendar(Web, TemplateView):
 	template_name = 'web/competition/competition.html'
-	model = Competition
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(WebCompetitionCalendar, self).get_context_data(*args, **kwargs)
-		filter_type = self.request.GET.get('filter_type', None)
-		start = self.request.GET.get('start', None)
-		end = self.request.GET.get('end', None)
-		if filter_type == '0':
-			object_list = Competition.objects.all()
-		elif filter_type == '1':
-			object_list = Competition.registered_competition(self.request.user)
-		elif filter_type == '2':
-			object_list = Competition.objects.filter(competition_status = 0)
-		elif filter_type == '3':
-			object_list = Competition.objects.filter(competition_status = 1)
-		elif filter_type == '4':
-			object_list = Competition.objects.filter(competition_status = 2)
-		elif filter_type == '5':
-			start = datetime.strptime(start, '%Y-%m-%d').replace(hour=0, minute=0)
-			end = datetime.strptime(end, '%Y-%m-%d').replace(hour=0, minute=0)
-			if start == end:
-				object_list = Competition.objects.filter(start__startswith = start.date())
-			else:
-				object_list = Competition.objects.filter(start__range = (start, end))
-		else:
-			object_list = Competition.objects.all()
-		context['object_list'] = object_list
 		return context
 
 
@@ -263,30 +167,6 @@ class Calendar(Web, TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(Calendar, self).get_context_data(*args, **kwargs)
-		filter_type = self.request.GET.get('filter', None)
-		start = self.request.GET.get('start', None)
-		end = self.request.GET.get('end', None)
-		if filter_type:
-			if filter_type == '1':
-				object_list = EconomicCalendar.objects.filter(time__startswith = date.today() - timedelta(1))
-			elif filter_type == '2':
-				object_list = EconomicCalendar.objects.filter(time__startswith = date.today())
-			elif filter_type == '3':
-				object_list = EconomicCalendar.objects.filter(time__startswith = date.today() + timedelta(1))
-			elif filter_type == '4':
-				object_list = EconomicCalendar.objects.filter(time__range =
-					(date.today(), date.today() + timedelta(7))).order_by('time')
-			elif filter_type == '0':
-				start = datetime.strptime(start, '%Y-%m-%d').replace(hour=0, minute=0)
-				end = datetime.strptime(end, '%Y-%m-%d').replace(hour=0, minute=0)
-				if start == end:
-					print start
-					object_list = EconomicCalendar.objects.filter(time__startswith = start.date()).order_by('time')
-				else:
-					object_list = EconomicCalendar.objects.filter(time__range = (start.date(), end.date())).order_by('time')
-		else:
-			object_list = EconomicCalendar.objects.filter(time__startswith = date.today())
-		context['object_list'] = object_list
 		return context
 
 

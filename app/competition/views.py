@@ -1,11 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import Http404
-from app.user.models import Bank
-from app.web.models import Company
 from .token import competition_register_token as c
-from .models import CompetitionRegister
-# Create your views here.
 
 class CompetitionHome(TemplateView):
 	template_name = 'competition/home/home.html'

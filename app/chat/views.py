@@ -6,22 +6,19 @@ from django.views.generic import CreateView, FormView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .forms import *
-from .models import *
 
 __all__ = ['RoomView', 'ChatView', 'message']
 
-class RoomView(CreateView):
+class RoomView(FormView):
 	template_name = 'chat/room.html'
 	form_class = RoomForm
 	success_url = reverse_lazy('room')
 
-	@method_decorator(login_required)
 	def dispatch(self, request, *args, **kwargs):
 		return super(RoomView, self).dispatch(request, *args, **kwargs)
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(RoomView, self).get_context_data(*args, **kwargs)
-		context['rooms'] = Room.objects.all()
 		return context
 
 class ChatView(FormView):
@@ -31,7 +28,6 @@ class ChatView(FormView):
 	def get_success_url(self, **kwargs):
 		return reverse_lazy('chat', args = (self.room_id))
 
-	@method_decorator(login_required)
 	def dispatch(self, request, *args ,**kwargs):
 		self.room_id = self.kwargs.pop('id', None)
 		self.user = request.user
@@ -39,8 +35,6 @@ class ChatView(FormView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(ChatView, self).get_context_data(*args, **kwargs)
-		context['messages'] = Message.objects.filter(room__id = self.room_id)
-		context['room_id'] = self.room_id
 		return context
 
 	def form_valid(self, form):

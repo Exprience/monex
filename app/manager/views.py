@@ -19,13 +19,8 @@ from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 
 from .forms import ManagerLoginForm, ManagerForm, ManagerUpdateForm
-from .models import Manager
-from app.competition.models import CompetitionRank, Competition, CompetitionRegister
 from app.competition.forms import *
-from app.web.models import *
 from app.web.forms import *
-from app.user.models import SystemUser
-from app.online_support.models import Support, SupportMessage
 from app.online_support.forms import SupportManagerMessageForm
 
 
@@ -94,9 +89,6 @@ class RankCreateModalView(ModalView, me.ModalCreateView):
 
 class RankUpdateModalView(ModalView, me.ModalUpdateView):
 
-	def dispatch(self, request, *args, **kwargs):
-		self.object = CompetitionRank.objects.get(pk=kwargs.get('pk'))
-		return super(RankUpdateModalView, self).dispatch(request, *args, **kwargs)
 
 
 	def form_valid(self, form, **kwargs):
@@ -193,18 +185,15 @@ class ManagerHomeView(ManagerMessage, ManagerLoginNotPermissions, g.TemplateView
 
 ''' Тэмцээний ангилал crud view '''
 
-class ManagerRankListView(ManagerLoginRequired, g.ListView):
-	model = CompetitionRank
+class ManagerRankListView(ManagerLoginRequired, g.TemplateView):
 	template_name = 'manager/rank/rank_list.html'
 
-class ManagerRankCreateView(ManagerLoginRequired, g.CreateView):
-	model = CompetitionRank
+class ManagerRankCreateView(ManagerLoginRequired, g.FormView):
 	form_class = CompetitionRankForm
 	template_name = 'manager/rank/rank_form.html'
 	success_url = reverse_lazy('manager_rank_list')
 
-class ManagerRankUpdateView(ManagerLoginRequired, g.UpdateView):
-	model = CompetitionRank
+class ManagerRankUpdateView(ManagerLoginRequired, g.FormView):
 	form_class = CompetitionRankForm
 	template_name = 'manager/rank/rank_form.html'
 	success_url = reverse_lazy('manager_rank_list')
@@ -218,8 +207,7 @@ class ManagerRankUpdateView(ManagerLoginRequired, g.UpdateView):
 
 ''' Тэмцээний crud view '''
 
-class ManagerCompetitionListView(ManagerLoginRequired, g.ListView):
-	model = Competition
+class ManagerCompetitionListView(ManagerLoginRequired, g.TemplateView):
 	template_name = 'manager/competition/competition_list.html'
 
 	def get_context_data(self, *args, **kwargs):
@@ -229,14 +217,12 @@ class ManagerCompetitionListView(ManagerLoginRequired, g.ListView):
 		context['end_count'] = Competition.objects.filter(competition_status = 2).count()
 		return context
 
-class ManagerCompetitionCreateView(ManagerLoginRequired, g.CreateView):
-	model = Competition
+class ManagerCompetitionCreateView(ManagerLoginRequired, g.FormView):
 	form_class = CompetitionForm
 	template_name = 'manager/competition/competition_form.html'
 	success_url = reverse_lazy('manager_competition')
 
-class ManagerCompetitionUpdateView(ManagerLoginRequired, g.UpdateView):
-	model = Competition
+class ManagerCompetitionUpdateView(ManagerLoginRequired, g.FormView):
 	form_class = CompetitionForm
 	template_name = 'manager/competition/competition_form.html'
 	success_url = reverse_lazy('manager_competition')
@@ -247,14 +233,12 @@ class ManagerCompetitionUpdateView(ManagerLoginRequired, g.UpdateView):
 			raise Http404
 		return super(ManagerCompetitionUpdateView, self).dispatch(request, *args, **kwargs)
 
-class ManagerCompetitionRankCreateView(PopupCreate, ManagerLoginRequired, g.CreateView):
-	model = CompetitionRank
+class ManagerCompetitionRankCreateView(PopupCreate, ManagerLoginRequired, g.FormView):
 	form_class = CompetitionRankForm
 	template_name = 'manager/competition/competition_rank_form.html'
 	success_url = reverse_lazy('manager_competition')
 
-class ManagerCompetitionRankUpdateView(PopupUpdate, ManagerLoginRequired, g.UpdateView):
-	model = CompetitionRank
+class ManagerCompetitionRankUpdateView(PopupUpdate, ManagerLoginRequired, g.FormView):
 	form_class = CompetitionRankForm
 	template_name = 'manager/competition/competition_rank_form.html'
 	success_url = reverse_lazy('manager_competition')
@@ -274,8 +258,7 @@ class ManagerCompetitionHistoryView(ManagerLoginNotPermissions, mb.ModalTemplate
 		self.icon = "icon-mymodal"
 		self.close_button = mc.ModalButton(value=u'Хаах', button_type ='default btn-flat')
 
-class ManagerCompetitionFilter(ManagerLoginNotPermissions, g.ListView):
-	model = Competition
+class ManagerCompetitionFilter(ManagerLoginNotPermissions, g.TemplateView):
 	template_name = 'manager/competition/competition_filter.html'
 
 	def get_context_data(self, *args, **kwargs):
@@ -312,12 +295,10 @@ class ManagerCompetitionFilter(ManagerLoginNotPermissions, g.ListView):
 
 
 
-class ManagerNewsView(ManagerLoginRequired, g.ListView):
-	model = Medee
+class ManagerNewsView(ManagerLoginRequired, g.TemplateView):
 	template_name = 'manager/news/news_list.html'
 
-class ManagerNewsCreateView(ManagerLoginRequired, g.CreateView):
-	model = Medee
+class ManagerNewsCreateView(ManagerLoginRequired, g.FormView):
 	form_class = NewsForm
 	template_name = 'manager/news/news_form.html'
 	success_url = reverse_lazy('manager:manager_news')
@@ -333,20 +314,17 @@ class ManagerNewsCreateView(ManagerLoginRequired, g.CreateView):
 		send_mass_mail((message,))
 		return super(ManagerNewsCreateView, self).form_valid(form)
 
-class ManagerNewsUpdateView(ManagerLoginRequired, g.UpdateView):
-	model = Medee
+class ManagerNewsUpdateView(ManagerLoginRequired, g.FormView):
 	form_class = NewsForm
 	template_name = 'manager/news/news_form.html'
 	success_url = reverse_lazy('manager:manager_news')
 
-class ManagerNewsCategoryCreateView(PopupCreate, ManagerLoginRequired, g.CreateView):
-	model = MedeeAngilal
+class ManagerNewsCategoryCreateView(PopupCreate, ManagerLoginRequired, g.FormView):
 	form_class = NewsCategoryForm
 	success_url = reverse_lazy('manager_news')
 	template_name = "manager/news/news_category_form.html"
 
-class ManagerNewsCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.UpdateView):
-	model = MedeeAngilal
+class ManagerNewsCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.FormView):
 	form_class = NewsCategoryForm
 	success_url = reverse_lazy('manager_news')
 	template_name = "manager/news/news_category_form.html"
@@ -357,7 +335,6 @@ class ManagerNewsCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.UpdateV
 
 
 class ManagerAboutView(ManagerLoginRequired, g.TemplateView):
-	model = BidniiTuhai
 	template_name = 'manager/about/about.html'
 
 	def get_context_data(self, *args, **kwargs):
@@ -366,7 +343,6 @@ class ManagerAboutView(ManagerLoginRequired, g.TemplateView):
 		return context
 
 class ManagerAboutCreateView(ManagerLoginRequired, g.FormView):
-	model = BidniiTuhai
 	form_class = AboutForm
 	template_name = 'manager/about/about_create.html'
 	success_url = reverse_lazy('manager_about')
@@ -398,30 +374,25 @@ class ManagerAboutCreateView(ManagerLoginRequired, g.FormView):
 
 
 
-class ManagerLessonView(ManagerLoginRequired, g.ListView):
-	model = Surgalt
+class ManagerLessonView(ManagerLoginRequired, g.TemplateView):
 	template_name = 'manager/lesson/lesson_list.html'
 
-class ManagerLessonCreateView(ManagerLoginRequired, g.CreateView):
-	model = Surgalt
+class ManagerLessonCreateView(ManagerLoginRequired, g.FormView):
 	form_class = LessonForm
 	template_name = 'manager/lesson/lesson_form.html'
 	success_url = reverse_lazy('manager_lesson')
 
-class ManagerLessonUpdateView(ManagerLoginRequired, g.UpdateView):
-	model = Surgalt
+class ManagerLessonUpdateView(ManagerLoginRequired, g.FormView):
 	form_class = LessonForm
 	success_url = reverse_lazy('manager_lesson')
 	template_name = 'manager/lesson/lesson_form.html'
 
-class ManagerLessonCategoryCreateView(PopupCreate, ManagerLoginRequired, g.CreateView):
-	model = SurgaltAngilal
+class ManagerLessonCategoryCreateView(PopupCreate, ManagerLoginRequired, g.FormView):
 	form_class = LessonCategoryForm
 	template_name = 'manager/lesson/lesson_category_form.html'
 	success_url = reverse_lazy('manager_competition')
 
-class ManagerLessonCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.UpdateView):
-	model = SurgaltAngilal
+class ManagerLessonCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.FormView):
 	form_class = LessonCategoryForm
 	template_name = 'manager/lesson/lesson_category_form.html'
 	success_url = reverse_lazy('manager_competition')
@@ -431,30 +402,25 @@ class ManagerLessonCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.Updat
 
 
 
-class ManagerResearchView(ManagerLoginRequired, g.ListView):
-	model = Sudalgaa
+class ManagerResearchView(ManagerLoginRequired, g.TemplateView):
 	template_name = 'manager/research/research_list.html'
 
-class ManagerResearchCreateView(ManagerLoginRequired, g.CreateView):
-	model = Sudalgaa
+class ManagerResearchCreateView(ManagerLoginRequired, g.FormView):
 	form_class = ResearchForm
 	template_name = 'manager/research/research_form.html'
 	success_url = reverse_lazy('manager_research')
 	
-class ManagerResearchUpdateView(ManagerLoginRequired, g.UpdateView):
-	model = Sudalgaa
+class ManagerResearchUpdateView(ManagerLoginRequired, g.FormView):
 	form_class = ResearchForm
 	success_url = reverse_lazy('manager_research')
 	template_name = 'manager/research/research_form.html'
 
-class ManagerResearchCategoryCreateView(PopupCreate, ManagerLoginRequired, g.CreateView):
-	model = SudalgaaAngilal
+class ManagerResearchCategoryCreateView(PopupCreate, ManagerLoginRequired, g.FormView):
 	form_class = ResearchCategoryForm
 	template_name = 'manager/research/research_category_form.html'
 	success_url = reverse_lazy('manager_competition')
 
-class ManagerResearchCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.UpdateView):
-	model = SudalgaaAngilal
+class ManagerResearchCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.FormView):
 	form_class = ResearchCategoryForm
 	template_name = 'manager/research/research_category_form.html'
 	success_url = reverse_lazy('manager_competition')
@@ -465,8 +431,7 @@ class ManagerResearchCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.Upd
 
 
 
-class ManagerUserListView(ManagerLoginRequired, g.ListView):
-	model = SystemUser
+class ManagerUserListView(ManagerLoginRequired, g.TemplateView):
 	template_name = 'manager/user/user.html'
 
 
@@ -475,12 +440,10 @@ class ManagerUserListView(ManagerLoginRequired, g.ListView):
 
 
 
-class ManagerAdminUserListView(ManagerLoginRequired, g.ListView):
-	model = Manager
+class ManagerAdminUserListView(ManagerLoginRequired, g.TemplateView):
 	template_name = 'manager/user/admin/admin_user_list.html'
 
-class ManagerAdminUserCreateView(ManagerLoginRequired, g.CreateView):
-	model = Manager
+class ManagerAdminUserCreateView(ManagerLoginRequired, g.FormView):
 	form_class = ManagerForm
 	template_name = 'manager/user/admin/admin_user_form.html'
 	success_url = reverse_lazy('manager:manager_admin_user_list')
@@ -493,8 +456,7 @@ class ManagerAdminUserCreateView(ManagerLoginRequired, g.CreateView):
 		send_mail('subject', text, 'uuganaaaaaa@gmail.com', [user.email])
 		return super(ManagerAdminUserCreateView, self).form_valid(form)
 
-class ManagerAdminUserUpdateView(ManagerLoginRequired, g.UpdateView):
-	model = Manager
+class ManagerAdminUserUpdateView(ManagerLoginRequired, g.FormView):
 	form_class = ManagerUpdateForm
 	template_name = 'manager/user/admin/admin_user_form.html'
 	success_url = reverse_lazy('manager:manager_admin_user_list')
@@ -506,9 +468,7 @@ class ManagerAdminUserUpdateView(ManagerLoginRequired, g.UpdateView):
 
 
 
-class ManagerCompetitionRegisterView(ManagerLoginRequired, g.ListView):
-	model = CompetitionRegister
-	queryset = CompetitionRegister.objects.filter(status = False)
+class ManagerCompetitionRegisterView(ManagerLoginRequired, g.TemplateView):
 	template_name = 'manager/competition/competition_register.html'
 
 def manager_competition_register_view(request, id = 0):
@@ -541,9 +501,8 @@ class ManagerFinanceView(ManagerLoginRequired, g.TemplateView):
 
 
 
-class ManagerSupportMessageView(ManagerLoginRequired, g.CreateView):
+class ManagerSupportMessageView(ManagerLoginRequired, g.FormView):
 
-	model = SupportMessage
 	form_class = SupportManagerMessageForm
 	template_name = 'manager/support_message/support_message_list.html'
 

@@ -3,7 +3,6 @@ from django.contrib.sessions.models import Session
 from django.utils import timezone
 from django.http import HttpResponse
 
-from app.manager.models import Manager
 from django.utils.translation import ugettext as _
 _requests = {}
 

@@ -15,7 +15,6 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import AbstractUser
-import models as m
 import forms as f
 from managers import BaseDataManager as manager
 from django.conf import settings
@@ -36,10 +35,6 @@ class Login(g.FormView):
 	template_name = "user/register/login.html"
 	success_url = reverse_lazy('web:home')
 
-	def dispatch(self, request, *args, **kwargs):
-		if m.SystemUser.objects.filter(id = request.user.id):
-			return HttpResponseRedirect(reverse_lazy('web:home'))
-		return super(Login, self).dispatch(request, *args, **kwargs)
 
 	def form_valid(self, form):
 		user =  manager.loginUser(form.cleaned_data['username'], form.cleaned_data['password'])

@@ -10,9 +10,6 @@ from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 from monex.get_username import *
 from .forms import SupportUserMessageForm
-from app.manager.models import *
-from .models import SupportMessage, Support
-from app.user.models import SystemUser
 
 
 class OnlineSupportView(g.FormView):
