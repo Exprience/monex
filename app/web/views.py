@@ -10,7 +10,7 @@ from django.core.mail import send_mail, BadHeaderError, EmailMessage
 from django.template import RequestContext
 from .forms import BagtsForm, LessonMailForm
 from app.competition.forms import CompetitionRegisterForm
-from app.user.forms import RegisterForm
+
 
 from django_modalview.generic.base import ModalTemplateView
 from django_modalview.generic.edit import ModalFormView, ModalCreateView, ModalUpdateView
@@ -66,11 +66,9 @@ class Web(TemplateView):
 		return context
 
 
-class Home(FormView):
+class Home(TemplateView):
 	template_name = 'web/home/home_example.html'
-	form_class = RegisterForm
-	success_url = reverse_lazy('home')
-
+	
 	
 	def get_context_data(self, *args, **kwargs):
 		context = super(Home, self).get_context_data(*args, **kwargs)

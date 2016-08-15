@@ -40,12 +40,13 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
+    
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'app.chat',
     'app.user',
     'app.manager',
@@ -81,11 +82,11 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'app/user/templates'),
-            os.path.join(BASE_DIR, 'app/manager/Templates'),
-            os.path.join(BASE_DIR, 'app/competition/Templates'),
-            os.path.join(BASE_DIR, 'app/web/Templates'),
-            os.path.join(BASE_DIR, 'app/chat/Templates'),
-            os.path.join(BASE_DIR, 'app/online_support/Templates'),
+            os.path.join(BASE_DIR, 'app/manager/templates'),
+            os.path.join(BASE_DIR, 'app/competition/templates'),
+            os.path.join(BASE_DIR, 'app/web/templates'),
+            os.path.join(BASE_DIR, 'app/chat/templates'),
+            os.path.join(BASE_DIR, 'app/online_support/templates'),
             ],
         'APP_DIRS': True,
         'OPTIONS': {

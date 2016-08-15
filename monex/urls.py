@@ -5,8 +5,6 @@ from django.conf.urls.static import static
 from app.user.forms import UserPasswordResetForm, UserPasswordChangeForm, UserSetPasswordForm
 from django.contrib.auth import views
 
-#handler400 = 'my_app.views.bad_request'
-#handler403 = 'my_app.views.permission_denied'
 handler404 = 'app.web.views.handler404'
 handler500 = 'app.web.views.handler500'
 
@@ -24,41 +22,10 @@ urlpatterns = [
 
     url(r'^online_support/', include('app.online_support.urls', namespace = 'online_support')),
 
-    url(r'^admin/', include(admin.site.urls)),
-    
     url(r'^redactor/', include('redactor.urls')),
     
     url(r'^captcha/', include('captcha.urls')),
 
-    #url(r'^password_reset/$', views.ResetPasswordView.as_view(), name= 'password_reset'),
-
-    url(r'^password_reset/$', views.password_reset, {
-        'template_name' : 'user/password/password_reset.html',
-        'password_reset_form' : UserPasswordResetForm,
-        'post_reset_redirect' : 'web:home',
-        }, name='password_reset'),
-    
-    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', views.password_reset_confirm, {
-        'template_name' : 'user/password/password_reset_confirm.html',
-        'set_password_form': UserSetPasswordForm,
-        'post_reset_redirect' : 'web:home'
-        }, name ='password_reset_confirm'),
-    
-    #url(r'^reset_done/$', views.password_reset_complete,
-    #    {'template_name' : 'user/password/password_reset_complete.html' }, name ='password_reset_complete'),
-
-    url(r'^change_password/$', views.password_change, {
-        'template_name' : 'user/password/password_change.html',
-        'password_change_form' : UserPasswordChangeForm,
-        'post_change_redirect' : 'web:home',
-        }, name="password_change"),
-
-    #url(r'^confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', views.password_reset_confirm, {
-    #    'template_name' : 'user/password/password_reset_confirm.html',
-    #    'set_password_form': UserSetPasswordForm,
-    #    'post_reset_redirect' : 'web:home',
-    #    },
-    #    name ='password_confirm'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

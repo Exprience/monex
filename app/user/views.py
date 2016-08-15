@@ -1,37 +1,44 @@
+# !/usr/bin/python/env
 # -*- coding:utf-8 -*-
+
+
 import jsonpickle
+
 
 from django.http import HttpResponseRedirect
 from django.views import generic as g
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
-from .forms import RegisterForm,  LoginForm, UserPasswordResetForm, UserPasswordChangeForm, UserSetPasswordForm
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.views.generic import TemplateView, FormView
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import render_to_response
-from django.contrib.auth.models import AbstractUser
-import forms as f
+
+
+from forms import UserRegisterForm,  UserLoginForm, UserPasswordResetForm, UserPasswordChangeForm, UserSetPasswordForm
 from managers import BaseDataManager as manager
-from django.conf import settings
+
+
+
+
 
 def put(request, name, value):
+
     request.session[name] = jsonpickle.encode(value)
 
 
-__all__ = ['Home' ,'Login', 'RegisterView', 'ResetPasswordView','UserSetPassView','UserChangePassView']
 
-class Home(g.TemplateView):
+
+class UserHome(g.TemplateView):
+
 	template_name = 'user/base/home.html'
 
 
 
-class Login(g.FormView):
-	form_class = f.LoginForm
+
+class UserLogin(g.FormView):
+	form_class = UserLoginForm
 	template_name = "user/register/login.html"
 	success_url = reverse_lazy('web:home')
 
@@ -56,8 +63,10 @@ class Login(g.FormView):
 		return HttpResponseRedirect(reverse_lazy('web:home'))
 
 
-class RegisterView(FormView):
-	form_class = RegisterForm
+
+
+class UserRegisterView(g.FormView):
+	form_class = UserRegisterForm
 	template_name = "user/register/register.html"
 	success_url = reverse_lazy('web:home')
 
@@ -72,13 +81,17 @@ class RegisterView(FormView):
 			return super(RegisterView, self).form_invalid(form)
 
 
-class ResetPasswordView(TemplateView):
+
+
+class UserResetPasswordView(g.FormView):
 	form_class = UserPasswordResetForm
 	template_name = "user/password/password_reset.html"
 	post_change_redirect = reverse_lazy('web:home')
 
 
-class UserSetPassView(TemplateView):
+
+
+class UserSetPassView(g.FormView):
 	form_class = UserSetPasswordForm
 	def password_change(request, template_name="user/password/password_reset_confirm.html", post_change_redirect=None):
 		if post_change_redirect is None:
@@ -87,7 +100,10 @@ class UserSetPassView(TemplateView):
 				form.save()
 				return HttpResponseRedirect(post_change_redirect)
 
-class UserChangePassView(TemplateView):
+
+
+
+class UserChangePasswordView(g.FormView):
 	form_class = UserPasswordChangeForm
 	template_name = "user/password/password_change.html"
 	post_change_redirect  = reverse_lazy('web:home')
