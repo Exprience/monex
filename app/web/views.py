@@ -50,7 +50,7 @@ def handler500(request):
     return response
 
 
-class SystemUserLoginRequired(object):
+class UserLoginRequired(object):
 	pass
 
 
@@ -110,7 +110,7 @@ class NewsSelf(Web, TemplateView):
 		return context
 
 
-class Research(SystemUserLoginRequired, Web, TemplateView):
+class Research(UserLoginRequired, Web, TemplateView):
 	template_name = 'web/research/research.html'
 
 	def get_context_data(self, **kwargs):
@@ -190,7 +190,7 @@ class BagtsView(ModalFormView):
 		return super(BagtsView, self).form_valid(form, commit = False, **kwargs)
 
 
-class WebCompetitionRegisterView(SystemUserLoginRequired, ModalFormView):
+class WebCompetitionRegisterView(UserLoginRequired, ModalFormView):
 
 	def __init__(self, *args, **kwargs):
 		super(WebCompetitionRegisterView, self).__init__(*args, **kwargs)
