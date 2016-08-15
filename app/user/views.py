@@ -80,16 +80,19 @@ class RegisterView(FormView):
 class ResetPasswordView(TemplateView):
 	form_class = UserPasswordResetForm
 	template_name = "user/password/password_reset.html"
-	success_url = reverse_lazy('web:home')
+	post_change_redirect = reverse_lazy('web:home')
 
 
 class UserSetPassView(TemplateView):
 	form_class = UserSetPasswordForm
-	template_name = "user/password/password_reset_confirm.html"
-	success_url = reverse_lazy('web:home')
-
+	def password_change(request, template_name="user/password/password_reset_confirm.html", post_change_redirect=None):
+		if post_change_redirect is None:
+			post_change_redirect = reverse_lazy('web:home')
+			if form.is_valid():
+				form.save()
+				return HttpResponseRedirect(post_change_redirect)
 
 class UserChangePassView(TemplateView):
 	form_class = UserPasswordChangeForm
 	template_name = "user/password/password_change.html"
-	success_url = reverse_lazy('web:home')
+	post_change_redirect  = reverse_lazy('web:home')

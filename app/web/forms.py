@@ -19,6 +19,7 @@ class NewsForm(forms.Form):
 	title = forms.CharField(label = u'Гарчиг', widget = forms.TextInput(attrs = {'class':'form-control'}))
 	body = forms.CharField(label = u'Мэдээ',widget = RedactorEditor(attrs = {'class':'form-control'}))
 	angilal = forms.ChoiceField(required=True)
+	author = forms.ChoiceField(required=True)
 	#class Meta:
 	#	model = Medee
 	#	fields = ['angilal', 'title', 'body']
