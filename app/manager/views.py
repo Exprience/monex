@@ -268,10 +268,14 @@ class ManagerNewsUpdateView(ManagerLoginRequired, g.FormView):
 	template_name = 'manager/news/news_form.html'
 	success_url = reverse_lazy('manager:manager_news')
 
-class ManagerNewsCategoryCreateView(PopupCreate, ManagerLoginRequired, g.FormView):
+class ManagerNewsCategoryCreateView(ManagerLoginRequired, g.FormView):
 	form_class = NewsCategoryForm
-	success_url = reverse_lazy('manager_news')
+	success_url = reverse_lazy('manager:manager_news')
 	template_name = "manager/news/news_category_form.html"
+
+	def form_valid(self, form):
+		print "fasdfasdfasdf"
+		return super(ManagerNewsCategoryCreateView, self).form_valid(self)
 
 class ManagerNewsCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.FormView):
 	form_class = NewsCategoryForm

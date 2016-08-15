@@ -1,12 +1,19 @@
 # -*- coding:utf-8 -*-
 
 from django import forms
-from app.competition.forms import RelAdd, my_admin_site
 from captcha.fields import CaptchaField, CaptchaTextInput
 from redactor.widgets import RedactorEditor
 
+
+
+
+
 __all__ = ['BagtsForm', 'NewsForm', 'AboutForm', 'LessonForm', 'ResearchForm', 'NewsCategoryForm',
 			'LessonCategoryForm', 'ResearchCategoryForm']
+
+
+
+
 
 class BagtsForm(forms.Form):
 	name = forms.CharField(label = u'Хувьцааны нэр', widget = forms.TextInput(attrs = {'class':'form-control'}))
@@ -15,10 +22,11 @@ class BagtsForm(forms.Form):
 	too = forms.IntegerField(label = u'Ширхэг', widget = forms.TextInput(attrs = {'class':'form-control'}))
 
 class NewsForm(forms.Form):
+	category = forms.CharField(label = u'Ангилал', widget = forms.TextInput(attrs = {'class':'form-control'}))
+	
 	title = forms.CharField(label = u'Гарчиг', widget = forms.TextInput(attrs = {'class':'form-control'}))
 	body = forms.CharField(label = u'Мэдээ',widget = RedactorEditor(attrs = {'class':'form-control'}))
-	angilal = forms.ChoiceField(required=True)
-	author = forms.ChoiceField(required=True)
+	
 
 class AboutForm(forms.Form):
 

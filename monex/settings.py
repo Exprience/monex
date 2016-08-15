@@ -46,18 +46,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'app.chat',
     'app.user',
     'app.manager',
     'app.web',
-    #'app.chat',
     'app.competition',
     'app.online_support',
-    
     'redactor',
     'django_modalview',
     'captcha',
-    'app.chat.apps.ChatConfig'
+    
 )
 
 
@@ -82,7 +80,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'app/user/Templates'),
+            os.path.join(BASE_DIR, 'app/user/templates'),
             os.path.join(BASE_DIR, 'app/manager/Templates'),
             os.path.join(BASE_DIR, 'app/competition/Templates'),
             os.path.join(BASE_DIR, 'app/web/Templates'),
@@ -103,16 +101,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'monex.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-DATABASES = {
-	'default': {
-      	'ENGINE': 'django.db.backends.sqlite3',
-       	'NAME': 'monex.sqlite',
-    }
-}
 
 
 # Internationalization
@@ -226,8 +214,6 @@ CAPTCHA_FONT_SIZE = 30
 CAPTCHA_IMAGE_SIZE = (90, 36)
 CAPTCHA_LETTER_ROTATION = 0
 CAPTCHA_TEXT_FIELD_TEMPLATE = 'web/captcha/captcha_text_field.html'
-
-AUTH_USER_EMAIL_UNIQUE = True
 
 
 WS_SERVER=get_local('WS_SERVER', '192.168.1.20')
