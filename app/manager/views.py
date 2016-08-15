@@ -81,11 +81,6 @@ class ModalView(object):
 			button_type='success btn-flat')
 		self.close_button = mc.ModalButton(value=u'Хаах', button_type ='default btn-flat')
 
-
-
-
-
-
 class RankCreateModalView(ModalView, me.ModalCreateView):
 
 	def __init__(self, *args, **kwargs):
