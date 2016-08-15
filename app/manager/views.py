@@ -399,29 +399,29 @@ class ManagerAboutCreateView(ManagerLoginRequired, g.FormView):
 
 
 class ManagerLessonView(ManagerLoginRequired, g.ListView):
-	model = Surgalt
+	#model = Surgalt
 	template_name = 'manager/lesson/lesson_list.html'
 
 class ManagerLessonCreateView(ManagerLoginRequired, g.CreateView):
-	model = Surgalt
+	#model = Surgalt
 	form_class = LessonForm
 	template_name = 'manager/lesson/lesson_form.html'
 	success_url = reverse_lazy('manager_lesson')
 
 class ManagerLessonUpdateView(ManagerLoginRequired, g.UpdateView):
-	model = Surgalt
+	#model = Surgalt
 	form_class = LessonForm
 	success_url = reverse_lazy('manager_lesson')
 	template_name = 'manager/lesson/lesson_form.html'
 
 class ManagerLessonCategoryCreateView(PopupCreate, ManagerLoginRequired, g.CreateView):
-	model = SurgaltAngilal
+	#model = SurgaltAngilal
 	form_class = LessonCategoryForm
 	template_name = 'manager/lesson/lesson_category_form.html'
 	success_url = reverse_lazy('manager_competition')
 
 class ManagerLessonCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.UpdateView):
-	model = SurgaltAngilal
+	#model = SurgaltAngilal
 	form_class = LessonCategoryForm
 	template_name = 'manager/lesson/lesson_category_form.html'
 	success_url = reverse_lazy('manager_competition')

@@ -43,26 +43,30 @@ class AboutForm(forms.ModelForm):
 			'video_url' : forms.TextInput(attrs = {'class':'form-control'})
 		}
 
-class LessonForm(forms. ModelForm):
-
-	class Meta:
+class LessonForm(forms.Form):
+	video_name= forms.CharField(widget = forms.TextInput(attrs = {'class':'form-control'}))
+	url = forms.CharField(widget = forms.TextInput(attrs = {'class':'form-control'}))
+	author_name = forms.ChoiceField(required=True)
+	author_email = forms.EmailField(widget = forms.EmailInput(attrs = {'class':'form-control'}))
+	category = forms.ChoiceField(required=True)
+	#class Meta:
 		#model = Surgalt
-		fields = "__all__"
-		widgets = {
-			'angilal' : RelAdd(
-				Surgalt._meta.get_field('angilal').formfield().widget,
-            	Surgalt._meta.get_field('angilal').rel,
-            	my_admin_site,
-            	can_add_related=True,
-            	can_change_related = True,
-            	),
-			'video_name' : forms.TextInput(attrs = {'class':'form-control'}),
-			'url' : forms.TextInput(attrs = {'class':'form-control'}),
-			'author_name' : forms.TextInput(attrs = {'class':'form-control'}),
-			'author_email' : forms.EmailInput(attrs = {'class':'form-control'}),
-			}
+	#	fields = "__all__"
+	#	widgets = {
+	#		'angilal' : RelAdd(
+	#			Surgalt._meta.get_field('angilal').formfield().widget,
+    #        	Surgalt._meta.get_field('angilal').rel,
+    #        	my_admin_site,
+    #        	can_add_related=True,
+    #        	can_change_related = True,
+    #        	),
+	#		'video_name' : forms.TextInput(attrs = {'class':'form-control'}),
+	#		'url' : forms.TextInput(attrs = {'class':'form-control'}),
+	#		'author_name' : forms.TextInput(attrs = {'class':'form-control'}),
+	#		'author_email' : forms.EmailInput(attrs = {'class':'form-control'}),
+	#		}
 
-class ResearchForm(forms.ModelForm):
+class ResearchForm(forms.Form):
 	name = forms.CharField(label = u'нэр', widget = forms.TextInput(attrs = {'class':'form-control'}))
 	
 	#class Meta:
@@ -93,23 +97,23 @@ class NewsCategoryForm(forms.Form):
 	#		'name' : forms.TextInput(attrs = {'class':'form-control'})
 	#	}
 
-class LessonCategoryForm(forms.ModelForm):
+class LessonCategoryForm(forms.Form):
+	name = forms.CharField(widget =forms.TextInput(attrs = {'class' : 'form-control'}))
+	#class Meta:
+	#	model = SurgaltAngilal
+	#	fields = "__all__"
+	#	widgets = {
+	#		'name' : forms.TextInput(attrs = {'class' : 'form-control'})
+	#	}
 
-	class Meta:
-		model = SurgaltAngilal
-		fields = "__all__"
-		widgets = {
-			'name' : forms.TextInput(attrs = {'class' : 'form-control'})
-		}
-
-class ResearchCategoryForm(forms.ModelForm):
-
-	class Meta:
-		model = SudalgaaAngilal
-		fields = "__all__"
-		widgets = {
-			'name' : forms.TextInput(attrs = {'class' : 'form-control'})
-		}
+class ResearchCategoryForm(forms.Form):
+	name = forms.CharField(label = u'Гарчиг', widget = forms.TextInput(attrs = {'class':'form-control'}))
+	#class Meta:
+		#model = SudalgaaAngilal
+		#fields = "__all__"
+		#widgets = {
+		#	'name' : forms.TextInput(attrs = {'class' : 'form-control'})
+		#}
 
 class LessonMailForm(forms.Form):
 	feedback = forms.CharField(widget = forms.Textarea(attrs = {'class':'form-control'}), label = u'Санал хүсэлт')

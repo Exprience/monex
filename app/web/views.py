@@ -67,16 +67,16 @@ class SystemUserLoginRequired(object):
 			return HttpResponseRedirect(reverse_lazy('web:login'))
 
 
-class NotManager(object):
+#class NotManager(object):
 
-	def dispatch(self, request, *args, **kwargs):
-		if not Manager.objects.filter(username = request.user.username):
-			return super(NotManager, self).dispatch(request, *args, **kwargs)
-		else:
-			return HttpResponseRedirect(reverse_lazy('user:login'))
+#	def dispatch(self, request, *args, **kwargs):
+#		if not Manager.objects.filter(username = request.user.username):
+#			return super(NotManager, self).dispatch(request, *args, **kwargs)
+#		else:
+#			return HttpResponseRedirect(reverse_lazy('user:login'))
 
 
-class Web(NotManager):
+class Web():
 
 	def get_context_data(self, *args, **kwargs):
 		
@@ -89,11 +89,11 @@ class Web(NotManager):
 		#context['medee_most'] = Medee.objects.all().order_by('-view')[:5]
 		#context['sudalgaa'] = Sudalgaa.objects.all().order_by('-id')[:5]
 		#context['surgalt'] = Surgalt.objects.all()[:4]
-		#context['menu_num'] = self.menu_num
+		context['menu_num'] = self.menu_num
 		return context
 
 
-class Home(NotManager, FormView):
+class Home(FormView):
 	template_name = 'web/home/home_example.html'
 	form_class = RegisterForm
 	success_url = reverse_lazy('home')
@@ -181,25 +181,25 @@ class ResearchFilter(Research):
 	template_name = 'web/research/research_filter.html'
 
 
-class Lesson(Web, ListView):
+class Lesson(Web, FormView):
 	template_name = 'web/lesson/lesson.html'
 	#model = Surgalt
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(Lesson, self).get_context_data(*args, **kwargs)
-		name = self.request.GET.get('name', None)
-		if name:
-			object_list = Surgalt.objects.filter(video_name__icontains = name)
-		else:
-			object_list = Surgalt.objects.all()
-		lesson_category_list = []
-		for i in object_list.values('angilal').distinct():
-			obj = SurgaltAngilal.objects.get(id = i.values()[0])
-			setattr(obj, 'lesson_list', [])
-			lesson_category_list.append(obj)
-			for ob in object_list:
-				if ob.angilal.id == obj.id:
-					obj.lesson_list.append(ob)
+		#name = self.request.GET.get('name', None)
+		#if name:
+		#	object_list = Surgalt.objects.filter(video_name__icontains = name)
+		#else:
+		#	object_list = Surgalt.objects.all()
+		#lesson_category_list = []
+		#for i in object_list.values('angilal').distinct():
+		#	obj = SurgaltAngilal.objects.get(id = i.values()[0])
+		#	setattr(obj, 'lesson_list', [])
+		#	lesson_category_list.append(obj)
+		#	for ob in object_list:
+		#		if ob.angilal.id == obj.id:
+		#			obj.lesson_list.append(ob)
 		context['lesson_category'] = lesson_category_list
 		return context
 
@@ -220,7 +220,7 @@ class Contact(Web, TemplateView):
 
 class WebCompetitionCalendar(Web, ListView):
 	template_name = 'web/competition/competition.html'
-	model = Competition
+	#model = Competition
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(WebCompetitionCalendar, self).get_context_data(*args, **kwargs)
@@ -291,7 +291,7 @@ class Calendar(Web, TemplateView):
 
 
 class CalendarFilter(Calendar):
-	template_name = 'web/calendar/calendar_filter.html'
+	template_name = 'web/calendarWWW/calendar_filter.html'
 
 
 class BagtsView(ModalFormView):
@@ -350,8 +350,10 @@ class LessonMailView(ModalFormView):
 		self.response = ModalResponse('Таны мэйл амжилттай илгээгдлээ', 'success')
 		subject = 'no reply'
 		message = form.cleaned_data['feedback']
-		user = SystemUser.objects.get(id = self.kwargs.pop('user_id', None))
-		video = Surgalt.objects.get(id = self.kwargs.pop('video_id', None))
+		user= form.cleaned_data['username']
+		video = form.cleaned_data['video_name']
+		#user = SystemUser.objects.get(id = self.kwargs.pop('user_id', None))
+		#video = Surgalt.objects.get(id = self.kwargs.pop('video_id', None))
 		message += user.email
 		try:
 			email = EmailMessage(subject, message, to = [video.author_email])
