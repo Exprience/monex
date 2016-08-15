@@ -101,7 +101,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'monex.wsgi.application'
 
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'monex.sqlite',
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
