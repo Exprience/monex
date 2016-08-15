@@ -1,4 +1,3 @@
-{% load notifications_tags %}
 <header class="main-header">
   <a href="{% url 'manager:manager_home' %}" class="logo">
     <span class="logo-mini"><b>M</b>EX</span>
@@ -38,12 +37,12 @@
         <li class="dropdown notifications-menu">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-bell-o"></i>
-            <span class="label label-warning">{% live_notify_badge classes="special-badge" %}</span>
+            <span class="label label-warning"></span>
           </a>
           <ul class="dropdown-menu">
-            <li class="header">Танд {% live_notify_badge classes="special-badge" %} мэдэгдэл ирсэн байна</li>
+            <li class="header">Танд мэдэгдэл ирсэн байна</li>
             <li>
-              {% live_notify_list classes="menu" %}
+              
               {% comment %}
               <ul class="menu">
                 {% for n in user.notifications.unread %}
@@ -89,4 +88,3 @@
     $('.special-badge').html(data.unread_count);
   }
 </script>
-{% register_notify_callbacks callbacks='my_special_notification_callback,special_fill_notification_badge' %}

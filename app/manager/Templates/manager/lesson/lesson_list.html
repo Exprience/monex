@@ -1,8 +1,6 @@
 {% extends 'manager/base.html' %}
 {% load i18n %}
 {% block content %}
-{% load pagination_tags %}
-{% autopaginate object_list 20 %}
 <section class="content-header">
   <h1>{% trans 'Сургалт' %}</h1>
   <ol class="breadcrumb">
@@ -48,11 +46,6 @@
             </tbody>
           </table>
 				</div>
-				<div class="box-footer">
-          <div class="pull-right">
-            {% paginate %}
-          </div>
-        </div>
 			</div>
 		</div>
 	</div>

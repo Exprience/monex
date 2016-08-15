@@ -131,43 +131,39 @@ class ManagerLoginView(g.FormView):
 		return HttpResponseRedirect(reverse_lazy('manager:manager_login'))
 
 class ManagerLoginRequired(object):
-	get_perm = 'permission_denied'
-	model = None
+	pass
+	#get_perm = 'permission_denied'
+	#model = None
 
-	@method_decorator(login_required(login_url = reverse_lazy('manager:manager_login')))
-	def dispatch(self, request, *args, **kwargs):
-		user = request.user
-		if user.is_authenticated():
-			if Manager.objects.filter(username = user.username):
-				if self.get_permissions(self.get_perm, self.model):
-					return super(ManagerLoginRequired, self).dispatch(request, *args, **kwargs)
-				else:
-					raise PermissionDenied
-		return HttpResponseRedirect(reverse_lazy('manager:manager_login'))
+	#@method_decorator(login_required(login_url = reverse_lazy('manager:manager_login')))
+	#def dispatch(self, request, *args, **kwargs):
+	#	user = request.user
+	#	if user.is_authenticated():
+	#		if Manager.objects.filter(username = user.username):
+	#			if self.get_permissions(self.get_perm, self.model):
+	#				return super(ManagerLoginRequired, self).dispatch(request, *args, **kwargs)
+	#			else:
+	#				raise PermissionDenied
+	#	return HttpResponseRedirect(reverse_lazy('manager:manager_login'))
 
-	def get_permissions(self, perm, model = None):
-		perm_list = []
-		user = self.request.user
-		if model:
-			for i in self.model._meta.default_permissions:
-				i += "_"+self.model._meta.model_name
-				perm_list.append(i)
-		else:
-			perm_list.append(perm)
-		for i in user.groups.all():
-			if i.permissions.filter(codename__in = perm_list):
-				return True
-		return False
+	#def get_permissions(self, perm, model = None):
+	#	perm_list = []
+	#	user = self.request.user
+	#	if model:
+	#		for i in self.model._meta.default_permissions:
+	#			i += "_"+self.model._meta.model_name
+	#			perm_list.append(i)
+	#	else:
+	#		perm_list.append(perm)
+	#	for i in user.groups.all():
+	#		if i.permissions.filter(codename__in = perm_list):
+	#			return True
+	#	return False
 
 class ManagerMessage(object):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(ManagerMessage, self).get_context_data(*args, **kwargs)
-		context['messages'] = SupportMessage.objects.filter(
-			support__manager__id = self.request.user.id,
-			read_at = None,
-			manager_message = None
-			).order_by('-support_date')
 		return context
 
 class ManagerLoginNotPermissions(ManagerLoginRequired):
@@ -212,9 +208,6 @@ class ManagerCompetitionListView(ManagerLoginRequired, g.TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(ManagerCompetitionListView, self).get_context_data(*args, **kwargs)
-		context['register_count'] = Competition.objects.filter(competition_status = 0).count()
-		context['start_count'] = Competition.objects.filter(competition_status = 1).count()
-		context['end_count'] = Competition.objects.filter(competition_status = 2).count()
 		return context
 
 class ManagerCompetitionCreateView(ManagerLoginRequired, g.FormView):
@@ -339,7 +332,6 @@ class ManagerAboutView(ManagerLoginRequired, g.TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(ManagerAboutView, self).get_context_data(*args, **kwargs)
-		context['about'] = BidniiTuhai.objects.first()
 		return context
 
 class ManagerAboutCreateView(ManagerLoginRequired, g.FormView):
@@ -375,26 +367,26 @@ class ManagerAboutCreateView(ManagerLoginRequired, g.FormView):
 
 
 
-class ManagerLessonView(ManagerLoginRequired, g.ListView):
+class ManagerLessonView(ManagerLoginRequired, g.TemplateView):
 
 	template_name = 'manager/lesson/lesson_list.html'
 
-class ManagerLessonCreateView(ManagerLoginRequired, g.CreateView):
+class ManagerLessonCreateView(ManagerLoginRequired, g.FormView):
 	form_class = LessonForm
 	template_name = 'manager/lesson/lesson_form.html'
 	success_url = reverse_lazy('manager_lesson')
 
-class ManagerLessonUpdateView(ManagerLoginRequired, g.UpdateView):
+class ManagerLessonUpdateView(ManagerLoginRequired, g.FormView):
 	form_class = LessonForm
 	success_url = reverse_lazy('manager_lesson')
 	template_name = 'manager/lesson/lesson_form.html'
 
-class ManagerLessonCategoryCreateView(PopupCreate, ManagerLoginRequired, g.CreateView):
+class ManagerLessonCategoryCreateView(PopupCreate, ManagerLoginRequired, g.FormView):
 	form_class = LessonCategoryForm
 	template_name = 'manager/lesson/lesson_category_form.html'
 	success_url = reverse_lazy('manager_competition')
 
-class ManagerLessonCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.UpdateView):
+class ManagerLessonCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.FormView):
 	form_class = LessonCategoryForm
 	template_name = 'manager/lesson/lesson_category_form.html'
 	success_url = reverse_lazy('manager_competition')

@@ -59,10 +59,9 @@ class NotManager(object):
 	pass
 
 
-class Web():
+class Web(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
-		
 		context = super(Web, self).get_context_data(*args, **kwargs)
 		return context
 
@@ -125,7 +124,7 @@ class ResearchFilter(Research):
 
 class Lesson(Web, FormView):
 	template_name = 'web/lesson/lesson.html'
-	#model = Surgalt
+	form_class = LessonMailForm
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(Lesson, self).get_context_data(*args, **kwargs)
