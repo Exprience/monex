@@ -145,8 +145,8 @@ class NewsSelf(Web, TemplateView):
 	def get_context_data(self, *args, **kwargs):
 		context = super(NewsSelf, self).get_context_data(*args, **kwargs)
 		#context['news_self'] = Medee.objects.get(id = self.kwargs.pop('id', None))
-		context['news_self'].view += 11
-		#context['news_self'].save(update_fields=['view'])
+		#context['news_self'].view += 11 #???
+		#context['news_self'].save(update_fields=['view']) #????
 		return context
 
 
