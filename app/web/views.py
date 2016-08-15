@@ -107,9 +107,9 @@ class Home(NotManager, FormView):
 	
 	def get_context_data(self, *args, **kwargs):
 		context = super(Home, self).get_context_data(*args, **kwargs)
-		context['news_first'] = Medee.objects.first()
-		context['research_first'] = Sudalgaa.objects.first()
-		context['lesson_first'] = Surgalt.objects.first()
+		#context['news_first'] = Medee.objects.first()
+		#context['research_first'] = Sudalgaa.objects.first()
+		#context['lesson_first'] = Surgalt.objects.first()
 		return context
 
 	def form_valid(self, form):
@@ -132,7 +132,7 @@ class About(Web, TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(About, self).get_context_data(*args, **kwargs)
-		context['about'] = BidniiTuhai.objects.last()
+		#context['about'] = BidniiTuhai.objects.last()
 		return context
 
 class News(Web, TemplateView):
