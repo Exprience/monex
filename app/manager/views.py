@@ -374,25 +374,27 @@ class ManagerAboutCreateView(ManagerLoginRequired, g.FormView):
 
 
 
-class ManagerLessonView(ManagerLoginRequired, g.TemplateView):
+
+class ManagerLessonView(ManagerLoginRequired, g.ListView):
+
 	template_name = 'manager/lesson/lesson_list.html'
 
-class ManagerLessonCreateView(ManagerLoginRequired, g.FormView):
+class ManagerLessonCreateView(ManagerLoginRequired, g.CreateView):
 	form_class = LessonForm
 	template_name = 'manager/lesson/lesson_form.html'
 	success_url = reverse_lazy('manager_lesson')
 
-class ManagerLessonUpdateView(ManagerLoginRequired, g.FormView):
+class ManagerLessonUpdateView(ManagerLoginRequired, g.UpdateView):
 	form_class = LessonForm
 	success_url = reverse_lazy('manager_lesson')
 	template_name = 'manager/lesson/lesson_form.html'
 
-class ManagerLessonCategoryCreateView(PopupCreate, ManagerLoginRequired, g.FormView):
+class ManagerLessonCategoryCreateView(PopupCreate, ManagerLoginRequired, g.CreateView):
 	form_class = LessonCategoryForm
 	template_name = 'manager/lesson/lesson_category_form.html'
 	success_url = reverse_lazy('manager_competition')
 
-class ManagerLessonCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.FormView):
+class ManagerLessonCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.UpdateView):
 	form_class = LessonCategoryForm
 	template_name = 'manager/lesson/lesson_category_form.html'
 	success_url = reverse_lazy('manager_competition')

@@ -25,8 +25,12 @@ class AboutForm(forms.Form):
 	pass
 
 class LessonForm(forms.Form):
+	video_name= forms.CharField(widget = forms.TextInput(attrs = {'class':'form-control'}))
+	url = forms.CharField(widget = forms.TextInput(attrs = {'class':'form-control'}))
+	author_name = forms.ChoiceField(required=True)
+	author_email = forms.EmailField(widget = forms.EmailInput(attrs = {'class':'form-control'}))
+	category = forms.ChoiceField(required=True)
 
-	pass
 
 class ResearchForm(forms.Form):
 	name = forms.CharField(label = u'нэр', widget = forms.TextInput(attrs = {'class':'form-control'}))
@@ -41,6 +45,11 @@ class LessonCategoryForm(forms.Form):
 
 class ResearchCategoryForm(forms.Form):
 	pass
+
+
+class ResearchCategoryForm(forms.Form):
+	name = forms.CharField(label = u'Гарчиг', widget = forms.TextInput(attrs = {'class':'form-control'}))
+
 
 class LessonMailForm(forms.Form):
 	feedback = forms.CharField(widget = forms.Textarea(attrs = {'class':'form-control'}), label = u'Санал хүсэлт')

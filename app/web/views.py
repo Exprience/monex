@@ -59,7 +59,7 @@ class NotManager(object):
 	pass
 
 
-class Web(NotManager):
+class Web():
 
 	def get_context_data(self, *args, **kwargs):
 		
@@ -67,7 +67,7 @@ class Web(NotManager):
 		return context
 
 
-class Home(NotManager, FormView):
+class Home(FormView):
 	template_name = 'web/home/home_example.html'
 	form_class = RegisterForm
 	success_url = reverse_lazy('home')
@@ -123,7 +123,7 @@ class ResearchFilter(Research):
 	template_name = 'web/research/research_filter.html'
 
 
-class Lesson(Web, TemplateView):
+class Lesson(Web, FormView):
 	template_name = 'web/lesson/lesson.html'
 	#model = Surgalt
 
@@ -171,7 +171,7 @@ class Calendar(Web, TemplateView):
 
 
 class CalendarFilter(Calendar):
-	template_name = 'web/calendar/calendar_filter.html'
+	template_name = 'web/calendarWWW/calendar_filter.html'
 
 
 class BagtsView(ModalFormView):
@@ -230,8 +230,10 @@ class LessonMailView(ModalFormView):
 		self.response = ModalResponse('Таны мэйл амжилттай илгээгдлээ', 'success')
 		subject = 'no reply'
 		message = form.cleaned_data['feedback']
-		user = SystemUser.objects.get(id = self.kwargs.pop('user_id', None))
-		video = Surgalt.objects.get(id = self.kwargs.pop('video_id', None))
+		user= form.cleaned_data['username']
+		video = form.cleaned_data['video_name']
+		#user = SystemUser.objects.get(id = self.kwargs.pop('user_id', None))
+		#video = Surgalt.objects.get(id = self.kwargs.pop('video_id', None))
 		message += user.email
 		try:
 			email = EmailMessage(subject, message, to = [video.author_email])
