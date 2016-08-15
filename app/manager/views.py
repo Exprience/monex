@@ -83,8 +83,6 @@ class RankCreateModalView(ModalView, me.ModalCreateView):
 		self.title = u"Тэмцээний ангилал нэмэх"
 
 	def form_valid(self, form, **kwargs):
-		self.save(form)
-		self.response = mc.ModalResponse("{obj} is created".format(obj=self.object), 'success')
 		return super(RankCreateModalView, self).form_valid(form, commit = False, **kwargs)
 
 class RankUpdateModalView(ModalView, me.ModalUpdateView):
@@ -111,23 +109,13 @@ class ManagerLoginView(g.FormView):
 		return reverse_lazy('manager:manager_home')
 
 	def dispatch(self, request, *args, **kwargs):
-		if Manager.objects.filter(username = request.user.username):
-			return HttpResponseRedirect(reverse_lazy('manager:manager_home'))
 		return super(ManagerLoginView, self).dispatch(request, *args, **kwargs)
 
 	def form_valid(self, form):
-		user = authenticate(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
-		if user and Manager.objects.filter(username = user.username):
-			self.request.user = Manager.objects.get(username = user.username)
-			login(self.request, user)
-			url = self.request.GET.get('next', None)
-			if url:
-				return HttpResponseRedirect(url)
 		return super(ManagerLoginView, self).form_valid(form)
 
 	@staticmethod
 	def logout(request):
-		logout(request)
 		return HttpResponseRedirect(reverse_lazy('manager:manager_login'))
 
 class ManagerLoginRequired(object):
@@ -220,11 +208,6 @@ class ManagerCompetitionUpdateView(ManagerLoginRequired, g.FormView):
 	template_name = 'manager/competition/competition_form.html'
 	success_url = reverse_lazy('manager_competition')
 
-	def dispatch(self, request, *args, **kwargs):
-		self.object = self.model.objects.get(id = self.kwargs['pk'])
-		if self.object.started():
-			raise Http404
-		return super(ManagerCompetitionUpdateView, self).dispatch(request, *args, **kwargs)
 
 class ManagerCompetitionRankCreateView(PopupCreate, ManagerLoginRequired, g.FormView):
 	form_class = CompetitionRankForm
@@ -242,10 +225,6 @@ class ManagerCompetitionHistoryView(ManagerLoginNotPermissions, mb.ModalTemplate
 		super(ManagerCompetitionHistoryView, self).__init__(*args, **kwargs)
 		from django.template import loader
 		a = loader.get_template('manager/competition/competition_list.html')
-		print a.origin
-		#with open (a.origin, "r") as myfile:
-		#	data=myfile.readlines()
-		#print data
 		self.title = u"Түүх"
 		self.description = "fasdfasdf" #t
 		self.icon = "icon-mymodal"
@@ -256,29 +235,6 @@ class ManagerCompetitionFilter(ManagerLoginNotPermissions, g.TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(ManagerCompetitionFilter, self).get_context_data(*args, **kwargs)
-		filter_type = self.request.GET.get('filter_type', None)
-		start = self.request.GET.get('start', None)
-		end = self.request.GET.get('end', None)
-		if filter_type == '0':
-			object_list = Competition.objects.all()
-		elif filter_type == '1':
-			object_list = Competition.registered_competition(self.request.user)
-		elif filter_type == '2':
-			object_list = Competition.objects.filter(competition_status = 0)
-		elif filter_type == '3':
-			object_list = Competition.objects.filter(competition_status = 1)
-		elif filter_type == '4':
-			object_list = Competition.objects.filter(competition_status = 2)
-		elif filter_type == '5':
-			start = datetime.strptime(start, '%Y-%m-%d').replace(hour=0, minute=0)
-			end = datetime.strptime(end, '%Y-%m-%d').replace(hour=0, minute=0)
-			if start == end:
-				object_list = Competition.objects.filter(start__startswith = start.date())
-			else:
-				object_list = Competition.objects.filter(start__range = (start, end))
-		else:
-			object_list = Competition.objects.all()
-		context['object_list'] = object_list
 		return context
 
 ''' Төгсгөл тэмцээний crud view '''
