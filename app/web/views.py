@@ -1,4 +1,7 @@
-# -*- coding:utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 from datetime import datetime, date, timedelta
 from django.views.generic import TemplateView, FormView
 from django.http import HttpResponseRedirect, HttpResponse
@@ -21,21 +24,15 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
+
 from app.competition.token import competition_register_token as c
+from app.user.views import UserLoginRequired
 
 
-__all__ = [
-	'Home', 'About', 'News', 'Research', 'Lesson', 'Contact', 'NewsSelf',
-	'WebCompetitionCalendar', 'Calendar', 'BagtsView', 'WebCompetitionRegisterView', 'CalendarFilter',
-	'ResearchFilter', 'LessonMailView', 'WebCompetitionCalendarFilter', 'LessonFilter','handler404',
-	'handler500'
-	]
 
 
 def handler404(request):
-	template = 'web/handler/404.html'
-	if not SystemUser.objects.filter(id = request.user.id):
-		template = 'manager/handler/404.html'
+	template = 'manager/handler/404.html'
 
 	response = render_to_response(template, {},
                                   context_instance=RequestContext(request))
@@ -44,19 +41,13 @@ def handler404(request):
 
 
 def handler500(request):
-    response = render_to_response('web/handler/404.html', {},
+    response = render_to_response('manager/handler/505.html', {},
                                   context_instance=RequestContext(request))
     response.status_code = 500
     return response
 
 
-class UserLoginRequired(object):
-	pass
 
-
-class NotManager(object):
-
-	pass
 
 
 class Web(TemplateView):
@@ -67,34 +58,29 @@ class Web(TemplateView):
 
 
 class Home(TemplateView):
-	template_name = 'web/home/home_example.html'
+	template_name = 'web/home/home.html'
 	
 	
 	def get_context_data(self, *args, **kwargs):
 		context = super(Home, self).get_context_data(*args, **kwargs)
 		return context
 
-	def form_valid(self, form):
-		user = form.save()
-		uid = urlsafe_base64_encode(force_bytes(user.pk))
-		token = default_token_generator.make_token(user)
-		text = 'http://127.0.0.1:8000/reset/%s/%s/' %(uid, token)
-		send_mail('subject', text, 'uuganaaaaaa@gmail.com', [user.email])
-		messages.success(self.request,
-			u'Бүртгэл амжилттай хийгдлээ. %s мэйл хаяг руу орж бүртгэлээ баталгаажуулна уу.' %user.email)
-		return super(Home, self).form_valid(form)
+
+	#def form_valid(self, form):
+	#	user = form.save()
+	#	uid = urlsafe_base64_encode(force_bytes(user.pk))
+	#	token = default_token_generator.make_token(user)
+	#	text = 'http://127.0.0.1:8000/reset/%s/%s/' %(uid, token)
+	#	send_mail('subject', text, 'uuganaaaaaa@gmail.com', [user.email])
+	#	messages.success(self.request,
+	#		u'Бүртгэл амжилттай хийгдлээ. %s мэйл хаяг руу орж бүртгэлээ баталгаажуулна уу.' %user.email)
+	#	return super(Home, self).form_valid(form)
 
 	def form_invalid(self, form):
 		messages.error(self.request, 'Бүртгүүлэх формд алдаа гарлаа')
 		return super(Home, self).form_invalid(form)
 
 
-class About(Web, TemplateView):
-	template_name = 'web/about.html'
-
-	def get_context_data(self, *args, **kwargs):
-		context = super(About, self).get_context_data(*args, **kwargs)
-		return context
 
 class News(Web, TemplateView):
 	template_name = 'web/news/news.html'
@@ -133,14 +119,6 @@ class LessonFilter(Lesson):
 	template_name = 'web/lesson/lesson_filter.html'
 
 
-class Contact(Web, TemplateView):
-
-	template_name = 'web/contact.html'
-
-	def get_context_data(self, *args, **kwargs):
-		context = super(Contact, self).get_context_data(*args, **kwargs)
-		context['contact'] = HolbooBarih.objects.last()
-		return context
 
 
 class WebCompetitionCalendar(Web, TemplateView):
@@ -155,8 +133,6 @@ class WebCompetitionCalendarFilter(WebCompetitionCalendar):
 	template_name = 'web/competition/competition_filter.html'
 
 
-class Contact(Web, TemplateView):
-	template_name = 'web/contact.html'
 
 
 class Calendar(Web, TemplateView):

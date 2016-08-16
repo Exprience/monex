@@ -71,7 +71,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 
+
     'monex.get_username.RequestMiddleware',
+    'app.user.middleware.UserAuthMiddleware',
 )
 
 ROOT_URLCONF = 'monex.urls'

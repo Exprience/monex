@@ -2,9 +2,10 @@
 # -*- coding:utf-8 -*-
 
 
-import jsonpickle
+import urllib
 
 
+from django.contrib.auth import login
 from django.http import HttpResponseRedirect
 from django.views import generic as g
 from django.contrib import messages
@@ -13,19 +14,30 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
+from django.conf import settings
 
 
-from forms import UserRegisterForm,  UserLoginForm, UserPasswordResetForm, UserPasswordChangeForm, UserSetPasswordForm
+import session
 from managers import BaseDataManager as manager
+from forms import UserRegisterForm,  UserLoginForm, UserPasswordResetForm, UserPasswordChangeForm, UserSetPasswordForm
 
 
 
 
+class UserLoginRequired(object):
 
-def put(request, name, value):
 
-    request.session[name] = jsonpickle.encode(value)
+	def dispatch(self, request, *args, **kwargs):
+		if request.user is None:
+			next_url = urllib.urlencode({'next': request.get_full_path()})
+			return redirect('%s?%s' % (settings.LOGIN_URL, next_url))
+		return super(UserLoginRequired, self).dispatch(request, *args, **kwargs)
+
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(UserLoginRequired, self).get_context_data(*args, **kwargs)
+		return context
 
 
 
@@ -38,28 +50,28 @@ class UserHome(g.TemplateView):
 
 
 class UserLogin(g.FormView):
+
 	form_class = UserLoginForm
 	template_name = "user/register/login.html"
 	success_url = reverse_lazy('web:home')
 
+	def get_success_url(self):
+		return self.request.GET.get('next', self.success_url)
 
 	def form_valid(self, form):
 		user =  manager.loginUser(form.cleaned_data['username'], form.cleaned_data['password'])
 		self.request.user = user
 		if user.isHavePrivilege:
 			messages.success(self.request, u"Монексд тавтай морил")
-			url = self.request.GET.get('next', None)
-			put(self.request, 'user', user)
-			if url:
-				return HttpResponseRedirect(url)
-			return super(Login, self).form_valid(form)
+			session.put(self.request, 'user', user)
+			return super(UserLogin, self).form_valid(form)
 		else:
-			return super(Login, self).form_invalid(form)
+			return super(UserLogin, self).form_invalid(form)
 
 	@staticmethod
 	def logout(request):
-		username = request.user.username
-		messages.warning(request, u"Дахин уулзахдаа баяртай байх болно %s." %username)
+		session.pop(request, 'user')
+		messages.warning(request, u"Дахин уулзахдаа баяртай байх болно.")
 		return HttpResponseRedirect(reverse_lazy('web:home'))
 
 
@@ -107,3 +119,8 @@ class UserChangePasswordView(g.FormView):
 	form_class = UserPasswordChangeForm
 	template_name = "user/password/password_change.html"
 	post_change_redirect  = reverse_lazy('web:home')
+
+
+
+
+

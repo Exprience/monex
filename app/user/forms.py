@@ -80,7 +80,7 @@ class UserLoginForm(forms.Form):
 
 
 	def clean(self):
-		cleaned_data = super(LoginForm, self).clean()
+		cleaned_data = super(UserLoginForm, self).clean()
 		if self.is_valid():
 			user = manager.loginUser(cleaned_data['username'], cleaned_data['password'])
 			if not user.isHavePrivilege:
@@ -100,6 +100,7 @@ class UserRegisterForm(forms.Form):
 
 	def clean_username(self):
 		username = self.cleaned_data['username']
+		print manager.check_unique_user(True, username)
 		if not manager.check_unique_user(True, username):
 			raise forms.ValidationError(_(u'Хэрэглэгч бүртгэлтэй байна'), code='invalid')
 		return username
@@ -111,7 +112,7 @@ class UserRegisterForm(forms.Form):
 		return email
 
 	def clean(self):
-		cleaned_data = super(RegisterForm, self).clean()
+		cleaned_data = super(UserRegisterForm, self).clean()
 		if self.is_valid():
 			password = cleaned_data['password']
 			repeat_password = cleaned_data['repeat_password']

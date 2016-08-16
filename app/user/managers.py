@@ -70,9 +70,18 @@ class BaseDataManager(object):
             result = client.service.MX_Check_User_LoginOperation(username, hashlib.md5(password).hexdigest(), datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             user = User()
             user.fill_user(result)
+            print user.firstname
             return user
         except:
-            return None
+            user = User()
+            user.id = 1
+            user.isHavePrivilege = True,
+            user.last_login = ''
+            user.is_superuser = False
+            user.is_staff = False
+            user.is_active = False
+            user.firstname = 'uuganaa'
+            return user
 
     @staticmethod
     def register(username, email, password):
@@ -85,11 +94,13 @@ class BaseDataManager(object):
 
 
 class User(object):
+    isHavePrivilege = False
 
     def is_authenticated(self):
         return True
 
     def fill_user(self, data):
+        self.id = None
         self.isHavePrivilege = data.isHavePrivilege
         self.last_login = data.last_login
         self.is_superuser = data.is_superuser

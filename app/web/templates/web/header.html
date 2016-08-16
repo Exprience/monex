@@ -21,11 +21,11 @@
             <li><a href="{% url 'user:login' %}" class="top-icon-word fa fa-user"> Нэвтрэх</a></li>
           {% else %}
           <div class="dropdown">
-            <a href="javascript:;" data-toggle="dropdown">{{ user }}
+            <a href="javascript:;" data-toggle="dropdown">{{ user.firstname }}
             <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="#">Минии мэдээлэл</a></li>
-              <li><a href="{% url 'password_change' %}">Нууц үг солих</a></li>
+              <li><a href="{% url 'user:password_change' %}">Нууц үг солих</a></li>
               <li><a href="{% url 'user:logout' %}">Системээс гарах</a></li>
             </ul>
           </div>
