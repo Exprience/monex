@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'app.manager',
     'app.web',
     'app.competition',
+    'app.platform',
     'app.online_support',
     'redactor',
     'django_modalview',

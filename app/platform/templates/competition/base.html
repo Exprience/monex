@@ -1,0 +1,36 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+  {% block head %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>MONEX</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  
+  <!--jQuery-->
+  <script src="{% static 'competition/dist/js/jQuery-2.2.0.min.js' %}"></script>
+  
+  <!--Bootstrap-->
+  <link rel="stylesheet" href="{% static 'competition/plugins/bootstrap/css/bootstrap.min.css' %}">
+  <script src="{% static 'competition/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+
+
+  <!--Style-->
+  <link rel="stylesheet" href="{% static 'competition/dist/css/style.css' %}">
+  {% endblock %}
+</head>
+<body>
+  {% block header %}
+  {% endblock %}
+  {% block sidebar %}
+  {% endblock %}
+  {% block content %}
+  {% endblock %}
+  {% block footer %}
+  {% endblock %}
+</body>
+</html>
+{% block extrajs %}
+{% endblock %}

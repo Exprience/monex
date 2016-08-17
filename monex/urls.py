@@ -22,6 +22,8 @@ urlpatterns = [
 
     url(r'^online_support/', include('app.online_support.urls', namespace = 'online_support')),
 
+    url(r'^platform/', include('app.platform.urls', namespace = 'online_support')),
+
     url(r'^redactor/', include('redactor.urls')),
     
     url(r'^captcha/', include('captcha.urls')),
