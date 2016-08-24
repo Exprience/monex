@@ -116,12 +116,12 @@ WSGI_APPLICATION = 'monex.wsgi.application'
 
 DATABASES = {
 	'default': {
-       		'ENGINE': 'django.db.backends.mysql',
-       		'NAME': 'monex',
-       		'USER': 'monex',
-       		'PASSWORD': 'monex_1',
-       		'HOST': 'localhost',
-        	'PORT': '',
+       		'ENGINE': 'django.db.backends.sqlite3',
+       		'NAME': 'monex.sqlite',
+       		#'USER': 'monex',
+       		#'PASSWORD': 'monex_1',
+       		#'HOST': 'localhost',
+        	#'PORT': '',
     }
 }
 
@@ -139,7 +139,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-LOGGING = {
+'''LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
@@ -193,7 +193,7 @@ LOGGING = {
         'handlers': ['console', 'mail_admins'],
         'level': 'INFO'
     },
-}
+}'''
 
 
 # Static files (CSS, JavaScript, Images)

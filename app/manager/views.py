@@ -411,25 +411,25 @@ class ManagerLessonCreateView(ManagerLoginRequired, g.CreateView):
 	model = Surgalt
 	form_class = LessonForm
 	template_name = 'manager/lesson/lesson_form.html'
-	success_url = reverse_lazy('manager_lesson')
+	success_url = reverse_lazy('manager:manager_lesson')
 
 class ManagerLessonUpdateView(ManagerLoginRequired, g.UpdateView):
 	model = Surgalt
 	form_class = LessonForm
-	success_url = reverse_lazy('manager_lesson')
+	success_url = reverse_lazy('manager:manager_lesson')
 	template_name = 'manager/lesson/lesson_form.html'
 
 class ManagerLessonCategoryCreateView(PopupCreate, ManagerLoginRequired, g.CreateView):
 	model = SurgaltAngilal
 	form_class = LessonCategoryForm
 	template_name = 'manager/lesson/lesson_category_form.html'
-	success_url = reverse_lazy('manager_competition')
+	success_url = reverse_lazy('manager:manager_competition')
 
 class ManagerLessonCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.UpdateView):
 	model = SurgaltAngilal
 	form_class = LessonCategoryForm
 	template_name = 'manager/lesson/lesson_category_form.html'
-	success_url = reverse_lazy('manager_competition')
+	success_url = reverse_lazy('manager:manager_competition')
 
 
 
@@ -444,25 +444,25 @@ class ManagerResearchCreateView(ManagerLoginRequired, g.CreateView):
 	model = Sudalgaa
 	form_class = ResearchForm
 	template_name = 'manager/research/research_form.html'
-	success_url = reverse_lazy('manager_research')
+	success_url = reverse_lazy('manager:manager_research')
 	
 class ManagerResearchUpdateView(ManagerLoginRequired, g.UpdateView):
 	model = Sudalgaa
 	form_class = ResearchForm
-	success_url = reverse_lazy('manager_research')
+	success_url = reverse_lazy('manager:manager_research')
 	template_name = 'manager/research/research_form.html'
 
 class ManagerResearchCategoryCreateView(PopupCreate, ManagerLoginRequired, g.CreateView):
 	model = SudalgaaAngilal
 	form_class = ResearchCategoryForm
 	template_name = 'manager/research/research_category_form.html'
-	success_url = reverse_lazy('manager_competition')
+	success_url = reverse_lazy('manager:manager_competition')
 
 class ManagerResearchCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.UpdateView):
 	model = SudalgaaAngilal
 	form_class = ResearchCategoryForm
 	template_name = 'manager/research/research_category_form.html'
-	success_url = reverse_lazy('manager_competition')
+	success_url = reverse_lazy('manager:manager_competition')
 	
 
 
