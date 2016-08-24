@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import *
+from views import *
 
 urlpatterns = [
 
@@ -38,10 +38,6 @@ urlpatterns = [
 		name = 'manager_web_medeeangilal_change'),
 	url(r'^news/category/create/$', ManagerNewsCategoryCreateView.as_view(),
 		name = 'manager_web_medeeangilal_add'),
-	
-	
-	url(r'^about/$', ManagerAboutView.as_view(), name = 'manager_about'),
-	url(r'^about/create/$', ManagerAboutCreateView.as_view(), name = 'manager_about_create'),
 
 	
 	url(r'^lesson/$', ManagerLessonView.as_view(), name = 'manager_lesson'),

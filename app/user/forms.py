@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from django.contrib import messages
 
 
-from monex.get_username import get_username as gu
+from app.config.get_username import get_username as gu
 from managers import BaseDataManager as manager
 
 
@@ -19,22 +19,15 @@ forms.Field.default_error_messages = {
 
 
 
-
 class UserPasswordResetForm(forms.Form):
-	email = forms.EmailField(label = 'Э-мэйл', widget = forms.TextInput(attrs = {'class':'form-control'}))
-
-	#def save(self, *args, **kwargs):
-	#	email = self.cleaned_data["email"]
-	#	messages.success(kwargs['request'],
-	#		u'Нууц үг шинэчлэгдлээ. %s мэйл хаяг руу орж нууц үгээ шинэчилнэ үү.' %email)
-	#	return super(UserPasswordResetForm, self).save(*args, **kwargs)
+	email = forms.EmailField(widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Э-мэйл хаяг'}))
 
 	def clean(self):
 		if self.is_valid():
 			cleaned_data = super(UserPasswordResetForm, self).clean()
 			email = cleaned_data['email']
 			if not User.objects.filter(email = email):
-				raise forms.ValidationError(_(u'Э-мэйл хаяг бүртгэлгүй байна'), code='invalid')
+				raise forms.ValidationError(_('Э-мэйл хаяг бүртгэлгүй байна'), code='invalid')
 			return cleaned_data
 
 
@@ -42,9 +35,17 @@ class UserPasswordResetForm(forms.Form):
 
 class UserPasswordChangeForm(forms.Form):
 
-	old_password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control'}))
-	new_password1 = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control'}))
-	new_password2	 = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control'}))
+	old_password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder': 'Хуучин нууц үг'}))
+	new_password1 = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder': 'Шинэ нууц үг'}))
+	new_password2	 = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder': 'Шинэ нууц үг давтах'}))
+
+
+	def clean(self):
+		cleaned_data = super(UserPasswordChangeForm, self).clean()
+		if self.is_valid():
+			if cleaned_data['new_password1'] != cleaned_data['new_password2']:
+				raise forms.ValidationError(_('Нууц үг таарахгүй байна'))
+		return cleaned_data
 
 
 
@@ -59,7 +60,7 @@ class UserSetPasswordForm(forms.Form):
 		self.fields['new_password2'].widget.attrs['class'] = u'form-control'
 
 	def save(self, *args, **kwargs):
-		messages.success(gu(), u'Нууц үг амжилттай хадгалагдлаа')
+		messages.success(gu(), _('Нууц үг амжилттай хадгалагдлаа'))
 		return super(UserSetPasswordForm, self).save(*args, **kwargs)
 
 
@@ -83,7 +84,7 @@ class UserLoginForm(forms.Form):
 		cleaned_data = super(UserLoginForm, self).clean()
 		if self.is_valid():
 			user = manager.loginUser(cleaned_data['username'], cleaned_data['password'])
-			if not user.isHavePrivilege:
+			if user is None:
 				raise forms.ValidationError(_(u'Хэрэглэгчийн нэр эсвэл нууц үг буруу байна'), code='invalid')
 		return cleaned_data
 

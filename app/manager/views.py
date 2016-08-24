@@ -20,7 +20,7 @@ from django.utils.translation import ugettext as _
 
 from .forms import ManagerLoginForm, ManagerForm, ManagerUpdateForm
 from app.competition.forms import *
-from app.web.forms import *
+from app.web.forms import (NewsForm, NewsCategoryForm, LessonForm, LessonCategoryForm, ResearchForm, ResearchCategoryForm)
 from app.online_support.forms import SupportManagerMessageForm
 
 
@@ -32,19 +32,19 @@ from django_modalview.generic import (
 
 
 
-__all__ = [
-	'ManagerLoginView', 'ManagerHomeView', 'ManagerRankCreateView',
-	'ManagerCompetitionCreateView', 'ManagerRankUpdateView', 'ManagerCompetitionUpdateView',
-	'ManagerRankListView', 'ManagerCompetitionListView', 'ManagerNewsView', 'ManagerNewsCreateView',
-	'ManagerNewsUpdateView', 'ManagerNewsCategoryCreateView', 'ManagerNewsCategoryUpdateView',
-	'ManagerAboutView', 'ManagerAboutCreateView', 'ManagerLessonView', 'ManagerLessonCreateView',
-	'ManagerLessonUpdateView', 'ManagerResearchView', 'ManagerResearchCreateView', 'ManagerResearchUpdateView',
-	'ManagerUserListView', 'RankCreateModalView', 'RankUpdateModalView', 'ManagerCompetitionRankCreateView',
-	'ManagerCompetitionRankUpdateView', 'ManagerLessonCategoryUpdateView', 'ManagerLessonCategoryCreateView',
-	'ManagerResearchCategoryUpdateView', 'ManagerResearchCategoryCreateView', 'ManagerCompetitionRegisterView',
-	'manager_competition_register_view', 'ManagerAdminUserListView', 'ManagerAdminUserCreateView',
-	'ManagerAdminUserUpdateView', 'ManagerFinanceView', 'ManagerSupportMessageView',
-	'manager_support_message_view', 'ManagerCompetitionHistoryView', 'ManagerCompetitionFilter']
+#__all__ = [
+#	'ManagerLoginView', 'ManagerHomeView', 'ManagerRankCreateView',
+#	'ManagerCompetitionCreateView', 'ManagerRankUpdateView', 'ManagerCompetitionUpdateView',
+#	'ManagerRankListView', 'ManagerCompetitionListView', 'ManagerNewsView', 'ManagerNewsCreateView',
+#	'ManagerNewsUpdateView', 'ManagerNewsCategoryCreateView', 'ManagerNewsCategoryUpdateView',
+#	'ManagerAboutView', 'ManagerAboutCreateView', 'ManagerLessonView', 'ManagerLessonCreateView',
+#	'ManagerLessonUpdateView', 'ManagerResearchView', 'ManagerResearchCreateView', 'ManagerResearchUpdateView',
+#	'ManagerUserListView', 'RankCreateModalView', 'RankUpdateModalView', 'ManagerCompetitionRankCreateView',
+#	'ManagerCompetitionRankUpdateView', 'ManagerLessonCategoryUpdateView', 'ManagerLessonCategoryCreateView',
+#	'ManagerResearchCategoryUpdateView', 'ManagerResearchCategoryCreateView', 'ManagerCompetitionRegisterView',
+#	'manager_competition_register_view', 'ManagerAdminUserListView', 'ManagerAdminUserCreateView',
+#	'ManagerAdminUserUpdateView', 'ManagerFinanceView', 'ManagerSupportMessageView',
+#	'manager_support_message_view', 'ManagerCompetitionHistoryView', 'ManagerCompetitionFilter']
 
 
 class PopupCreate(object):
@@ -283,42 +283,6 @@ class ManagerNewsCategoryUpdateView(PopupUpdate, ManagerLoginRequired, g.FormVie
 	template_name = "manager/news/news_category_form.html"
 
 
-
-
-
-
-class ManagerAboutView(ManagerLoginRequired, g.TemplateView):
-	template_name = 'manager/about/about.html'
-
-	def get_context_data(self, *args, **kwargs):
-		context = super(ManagerAboutView, self).get_context_data(*args, **kwargs)
-		return context
-
-class ManagerAboutCreateView(ManagerLoginRequired, g.FormView):
-	form_class = AboutForm
-	template_name = 'manager/about/about_create.html'
-	success_url = reverse_lazy('manager_about')
-	def dispatch(self, request, *args, **kwargs):
-		self.model = BidniiTuhai.objects.first()
-		return super(ManagerAboutCreateView, self).dispatch(request, *args, **kwargs)
-
-	def form_valid(self, form):
-		if self.model:
-			self.model.body = form.cleaned_data['body']
-			self.model.video_url = form.cleaned_data['video_url']
-			self.model.save()
-		else:
-			form.save()
-		return super(ManagerAboutCreateView, self).form_valid(form)
-
-	def get_initial(self):
-		initial = super(ManagerAboutCreateView, self).get_initial()
-		if self.model:
-			initial['body'] = self.model.body
-			initial['video_url'] = self.model.video_url
-		else:
-			pass
-		return initial
 
 
 

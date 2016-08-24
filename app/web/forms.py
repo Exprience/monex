@@ -1,18 +1,14 @@
+# !/usr/bin/python/env
 # -*- coding:utf-8 -*-
+
 
 from django import forms
 from captcha.fields import CaptchaField, CaptchaTextInput
 from redactor.widgets import RedactorEditor
 
 
-
-
-
-__all__ = ['BagtsForm', 'NewsForm', 'AboutForm', 'LessonForm', 'ResearchForm', 'NewsCategoryForm',
-			'LessonCategoryForm', 'ResearchCategoryForm']
-
-
-
+#Export
+__all__ = []
 
 
 class BagtsForm(forms.Form):
@@ -21,16 +17,23 @@ class BagtsForm(forms.Form):
 	zarsan_une = forms.FloatField(label = u'Зарсан үнэ', widget = forms.TextInput(attrs = {'class':'form-control'}))
 	too = forms.IntegerField(label = u'Ширхэг', widget = forms.TextInput(attrs = {'class':'form-control'}))
 
+
+
+
 class NewsForm(forms.Form):
-	category = forms.CharField(label = u'Ангилал', widget = forms.TextInput(attrs = {'class':'form-control'}))
+	ch = (
+		(1,1),
+		(2,2),
+		(3,3),
+		(4,4),
+		)
+	category = forms.ChoiceField(label = u'Ангилал',choices = ch,  widget = forms.Select(attrs = {'class':'form-control'}))
 	
 	title = forms.CharField(label = u'Гарчиг', widget = forms.TextInput(attrs = {'class':'form-control'}))
 	body = forms.CharField(label = u'Мэдээ',widget = RedactorEditor(attrs = {'class':'form-control'}))
 	
 
-class AboutForm(forms.Form):
 
-	pass
 
 class LessonForm(forms.Form):
 	video_name= forms.CharField(widget = forms.TextInput(attrs = {'class':'form-control'}))
@@ -40,23 +43,41 @@ class LessonForm(forms.Form):
 	category = forms.ChoiceField(required=True)
 
 
+
+
 class ResearchForm(forms.Form):
+
 	name = forms.CharField(label = u'нэр', widget = forms.TextInput(attrs = {'class':'form-control'}))
 	
 
+
+
 class NewsCategoryForm(forms.Form):
+
 	angilal = forms.CharField(label = u'Ангилал', widget = forms.TextInput(attrs = {'class':'form-control'}))
 
 
+
+
 class LessonCategoryForm(forms.Form):
+
 	pass
 
+
+
+
 class ResearchCategoryForm(forms.Form):
+
 	pass
 
 
+
+
 class ResearchCategoryForm(forms.Form):
+
 	name = forms.CharField(label = u'Гарчиг', widget = forms.TextInput(attrs = {'class':'form-control'}))
+
+
 
 
 class LessonMailForm(forms.Form):

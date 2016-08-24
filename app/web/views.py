@@ -3,16 +3,18 @@
 
 
 from datetime import datetime, date, timedelta
+
+
 from django.views.generic import TemplateView, FormView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse_lazy
-from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render_to_response
 from django.core.mail import send_mail, BadHeaderError, EmailMessage
-from django.template import RequestContext
-from .forms import BagtsForm, LessonMailForm
-from app.competition.forms import CompetitionRegisterForm
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib import messages
 
 
 from django_modalview.generic.base import ModalTemplateView
@@ -20,99 +22,54 @@ from django_modalview.generic.edit import ModalFormView, ModalCreateView, ModalU
 from django_modalview.generic.component import ModalResponse, ModalButton
 from django_modalview.generic.response import ModalJsonResponseRedirect
 
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib import messages
 
-from app.competition.token import competition_register_token as c
+#from app.competition.token import competition_register_token as c
 from app.user.views import UserLoginRequired
+from .forms import BagtsForm, LessonMailForm
+from app.competition.forms import CompetitionRegisterForm
 
 
+#Exports
+__all__ = []
 
 
-def handler404(request):
-	template = 'manager/handler/404.html'
-
-	response = render_to_response(template, {},
-                                  context_instance=RequestContext(request))
-	response.status_code = 404
-	return response
-
-
-def handler500(request):
-    response = render_to_response('manager/handler/505.html', {},
-                                  context_instance=RequestContext(request))
-    response.status_code = 500
-    return response
-
-
-
-
-
-class Web(TemplateView):
-
-	def get_context_data(self, *args, **kwargs):
-		context = super(Web, self).get_context_data(*args, **kwargs)
-		return context
 
 
 class Home(TemplateView):
 	template_name = 'web/home/home.html'
-	
-	
-	def get_context_data(self, *args, **kwargs):
-		context = super(Home, self).get_context_data(*args, **kwargs)
-		return context
-
-
-	#def form_valid(self, form):
-	#	user = form.save()
-	#	uid = urlsafe_base64_encode(force_bytes(user.pk))
-	#	token = default_token_generator.make_token(user)
-	#	text = 'http://127.0.0.1:8000/reset/%s/%s/' %(uid, token)
-	#	send_mail('subject', text, 'uuganaaaaaa@gmail.com', [user.email])
-	#	messages.success(self.request,
-	#		u'Бүртгэл амжилттай хийгдлээ. %s мэйл хаяг руу орж бүртгэлээ баталгаажуулна уу.' %user.email)
-	#	return super(Home, self).form_valid(form)
-
-	def form_invalid(self, form):
-		messages.error(self.request, 'Бүртгүүлэх формд алдаа гарлаа')
-		return super(Home, self).form_invalid(form)
 
 
 
-class News(Web, TemplateView):
+
+class News(TemplateView):
 	template_name = 'web/news/news.html'
-	menu_num = 4
 
-class NewsSelf(Web, TemplateView):
+
+
+
+class NewsSelf(TemplateView):
 	template_name = 'web/news/news_self.html'
 
-	def get_context_data(self, *args, **kwargs):
-		context = super(NewsSelf, self).get_context_data(*args, **kwargs)
-		return context
 
 
-class Research(UserLoginRequired, Web, TemplateView):
+
+class Research(UserLoginRequired, TemplateView):
 	template_name = 'web/research/research.html'
 
-	def get_context_data(self, **kwargs):
-		context = super(Research, self).get_context_data(**kwargs)
-		return context
+
 
 
 class ResearchFilter(Research):
 	template_name = 'web/research/research_filter.html'
 
 
-class Lesson(Web, FormView):
+
+
+class Lesson(FormView):
 	template_name = 'web/lesson/lesson.html'
 	form_class = LessonMailForm
 
-	def get_context_data(self, *args, **kwargs):
-		context = super(Lesson, self).get_context_data(*args, **kwargs)
-		return context
+
 
 
 class LessonFilter(Lesson):
@@ -121,12 +78,10 @@ class LessonFilter(Lesson):
 
 
 
-class WebCompetitionCalendar(Web, TemplateView):
+class WebCompetitionCalendar(TemplateView):
 	template_name = 'web/competition/competition.html'
 
-	def get_context_data(self, *args, **kwargs):
-		context = super(WebCompetitionCalendar, self).get_context_data(*args, **kwargs)
-		return context
+
 
 
 class WebCompetitionCalendarFilter(WebCompetitionCalendar):
@@ -135,16 +90,16 @@ class WebCompetitionCalendarFilter(WebCompetitionCalendar):
 
 
 
-class Calendar(Web, TemplateView):
+class Calendar(TemplateView):
 	template_name = 'web/calendar/calendar.html'
 
-	def get_context_data(self, *args, **kwargs):
-		context = super(Calendar, self).get_context_data(*args, **kwargs)
-		return context
+
 
 
 class CalendarFilter(Calendar):
 	template_name = 'web/calendarWWW/calendar_filter.html'
+
+
 
 
 class BagtsView(ModalFormView):
@@ -162,6 +117,8 @@ class BagtsView(ModalFormView):
 		self.save(form)
 		self.response = ModalResponse("{obj} is created".format(obj=self.object), 'success')
 		return super(BagtsView, self).form_valid(form, commit = False, **kwargs)
+
+
 
 
 class WebCompetitionRegisterView(UserLoginRequired, ModalFormView):
@@ -187,6 +144,8 @@ class WebCompetitionRegisterView(UserLoginRequired, ModalFormView):
 			return super(WebCompetitionRegisterView, self).form_valid(form)
 		else:
 			return super(WebCompetitionRegisterView, self).form_invalid(form)
+
+
 
 
 class LessonMailView(ModalFormView):

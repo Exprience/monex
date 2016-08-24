@@ -1,0 +1,67 @@
+@font-face {
+  font-family: 'ubuntu-b';
+  src: url("../../fonts/ubuntu/Ubuntu-B.ttf");
+}
+
+@font-face {
+  font-family: 'ubuntu-l';
+  src: url("../../fonts/ubuntu/Ubuntu-L.ttf");
+}
+
+html, body {
+	font-family: 'ubuntu-l';
+}
+
+.member-actions .dropdown-menu>li>a, .navbar-default .navbar-nav .open .dropdown-menu {
+  color:#333;
+}
+
+.hero {
+  min-height: 750px;
+  background: url("../img/hero.jpg") center center;
+  background-size: cover;
+  position: relative; 
+}
+
+.hero .down-arrow a {
+	color: #fff; 
+}
+
+.hero h1 {
+	color: #fff;
+	margin-bottom: 40px; 
+}
+
+.hero h2 {
+	color: #fff; 
+}
+
+.hero p.intro {
+	color: #fff;
+	font-size: 20px;
+	font-weight: 300;
+	margin-bottom: 80px; 
+}
+
+.hero .hero-content {
+	padding-top: 12%; 
+}
+
+.member-actions .dropdown-menu>li>a, .navbar-default .navbar-nav .open .dropdown-menu {
+  color:#333;
+}
+
+
+footer .social-share a.youtube-share:hover, footer .social-share a.youtube-share:focus {
+  background-color: #AB151A; 
+}
+footer .social-share a.youtube-share {
+  height: 60px;
+  width: 60px;
+  background-color: #cc181e;
+  border-radius: 3px;
+  font-size: 22px;
+  display: inline-block;
+  text-align: center;
+  margin-left: 20px; 
+}

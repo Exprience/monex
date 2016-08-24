@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import local_settings
+from django.core.urlresolvers import reverse_lazy
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -47,13 +48,14 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'app.chat',
+    #'app.chat',
+    'app.config',
     'app.user',
     'app.manager',
     'app.web',
     'app.competition',
-    'app.platform',
-    'app.online_support',
+    #'app.online_support',
+    
     'redactor',
     'django_modalview',
     'captcha',
@@ -73,7 +75,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 
 
-    'monex.get_username.RequestMiddleware',
+    'app.config.get_username.RequestMiddleware',
     'app.user.middleware.UserAuthMiddleware',
 )
 
@@ -85,6 +87,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'app/user/templates'),
+            os.path.join(BASE_DIR, 'app/config/templates'),
             os.path.join(BASE_DIR, 'app/manager/templates'),
             os.path.join(BASE_DIR, 'app/competition/templates'),
             os.path.join(BASE_DIR, 'app/web/templates'),
@@ -125,15 +128,14 @@ USE_I18N = True
 
 USE_L10N = True
 
+LOGGING_PATH = os.path.join(BASE_DIR, '.store', 'logs')
+
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s] %(message)s'
         },
     },
     'filters': {
@@ -142,67 +144,53 @@ LOGGING = {
         }
     },
     'handlers': {
-        'console':{
+        'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        },
-        # I always add this handler to facilitate separating loggings
-        'log_file':{
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, '.store/logs/app.log'),
-            'maxBytes': '16777216', # 16megabytes
-            'formatter': 'verbose'
+            'formatter': 'standard'
         },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True,
-        }
+        },
+        'file_app': {
+            'level':'DEBUG',
+            'class':'logging.FileHandler',
+            'formatter':'standard',
+            'filename': os.path.join(LOGGING_PATH, 'app.log'),
+        },
     },
-    'loggers': {
+    'loggers': get_local('LOGGERS', {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
         },
-        'apps': { # I keep all my of apps under 'apps' folder, but you can also add them one by one, and this depends on how your virtualenv/paths are set
-            'handlers': ['log_file'],
-            'level': 'INFO',
+        'app': {
+            'handlers': ['file_app'],
+            'level': 'DEBUG',
             'propagate': True,
         },
-    },
-    # you can also shortcut 'loggers' and just configure logging for EVERYTHING at once
-    'root': {
-        'handlers': ['console', 'mail_admins'],
-        'level': 'INFO'
-    },
+    }),
 }
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+
 STATIC_URL = '/static/'
-
-
 STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-    )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 MEDIA_URL = '/media/'
-
 
 
 REDACTOR_OPTIONS = {'lang': 'en'}
 REDACTOR_UPLOAD = 'uploads/'
-
 
 
 EMAIL_HOST = 'smtp.gmail.com'
@@ -214,7 +202,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 
-from django.core.urlresolvers import reverse_lazy
 
 LOGIN_URL = reverse_lazy('user:login')
 
@@ -222,7 +209,7 @@ LOGIN_URL = reverse_lazy('user:login')
 CAPTCHA_FONT_SIZE = 30
 CAPTCHA_IMAGE_SIZE = (90, 36)
 CAPTCHA_LETTER_ROTATION = 0
-CAPTCHA_TEXT_FIELD_TEMPLATE = 'web/captcha/captcha_text_field.html'
+CAPTCHA_TEXT_FIELD_TEMPLATE = 'config/captcha/captcha_text_field.html'
 
 
 WS_SERVER=get_local('WS_SERVER', '192.168.1.20')

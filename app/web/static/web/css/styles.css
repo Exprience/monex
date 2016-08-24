@@ -1,13 +1,9 @@
-@font-face {
-  font-family: 'ubuntu-b';
-  src: url("../../fonts/ubuntu/Ubuntu-B.ttf");
-}
-
-@font-face {
-  font-family: 'ubuntu-l';
-  src: url("../../fonts/ubuntu/Ubuntu-L.ttf");
-}
-
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800);
+@import url(http://fonts.googleapis.com/css?family=Merriweather:400,300,400italic,300italic,700,700italic);
+@import url(http://fonts.googleapis.com/css?family=Nunito:400,300,700);
+/* ==========================================================================
+Typography
+========================================================================== */
 p {
   font-size: 15px;
   line-height: 29px;
@@ -115,7 +111,7 @@ a:hover, a:focus {
   text-decoration: none; }
 
 body {
-  font-family: 'ubuntu-l';
+  font-family: "Open Sans", sans-serif;
   font-weight: 300;
   color: rgba(28, 54, 83, 0.6);
   -webkit-text-size-adjust: 100%; }
@@ -360,15 +356,13 @@ Hero
   .hero h1 {
     color: #fff;
     margin-bottom: 40px; }
-  .hero h2 {
-    color: #fff; }
   .hero p.intro {
     color: #fff;
     font-size: 20px;
     font-weight: 300;
     margin-bottom: 80px; }
   .hero .hero-content {
-    padding-top: 12%; }
+    padding-top: 26%; }
 
 .navigation {
   -webkit-transition: all 300ms ease-in-out;
@@ -713,14 +707,6 @@ Sign up form
         -ms-transform: translateY(-50%);
             transform: translateY(-50%);
     margin-left: 20px; }
-    .sign-up .signup-form .form-input-group i.fa-user {
-    font-size: 14px;
-    position: absolute;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-            transform: translateY(-50%);
-    margin-left: 20px; }
   .sign-up .signup-form .form-input-group input {
     padding-left: 68px;
     width: 100%;
@@ -736,12 +722,6 @@ Sign up form
   .sign-up .signup-form .form-input-group input:-ms-input-placeholder {
     color: #BCC1C3; }
 
-  .sign-up .errorlist {
-    color: #FF5274;
-  }
-  .sign-up .signup-form .form-input-group.error {
-    border: 1px solid #FF5274;
-  }
 /* ==========================================================================
 To top
 ========================================================================== */
@@ -831,17 +811,6 @@ footer {
       border-radius: 3px;
       font-size: 22px;
       display: inline-block;
-      text-align: center;
-      margin-right: 20px; }
-    footer .social-share a.youtube-share:hover, footer .social-share a.youtube-share:focus {
-      background-color: #AB151A; }
-    footer .social-share a.youtube-share {
-      height: 60px;
-      width: 60px;
-      background-color: #cc181e;
-      border-radius: 3px;
-      font-size: 22px;
-      display: inline-block;
       text-align: center; }
     footer .social-share a {
       color: #fff; }
@@ -855,9 +824,15 @@ footer {
 /* ==========================================================================
 Icon font (http://www.elegantthemes.com/blog/freebie-of-the-week/free-line-style-icons)
 ========================================================================== */
+@font-face {
+  font-family: 'et-line';
+  src: url("../fonts/et-line.eot");
+  src: url("../fonts/et-line.eot?#iefix") format("embedded-opentype"), url("../fonts/et-line.woff") format("woff"), url("../fonts/et-line.ttf") format("truetype"), url("../fonts/et-line.svg#et-line") format("svg");
+  font-weight: normal;
+  font-style: normal; }
 /* Use the following CSS code if you want to use data attributes for inserting your icons */
 [data-icon]:before {
-  font-family: 'ubuntu-l';
+  font-family: 'et-line';
   content: attr(data-icon);
   speak: none;
   font-weight: normal;
@@ -875,7 +850,7 @@ you can use the generic selector below, but it's slower:
 [class*="icon-"] {
 */
 .icon-mobile, .icon-laptop, .icon-desktop, .icon-tablet, .icon-phone, .icon-document, .icon-documents, .icon-search, .icon-clipboard, .icon-newspaper, .icon-notebook, .icon-book-open, .icon-browser, .icon-calendar, .icon-presentation, .icon-picture, .icon-pictures, .icon-video, .icon-camera, .icon-printer, .icon-toolbox, .icon-briefcase, .icon-wallet, .icon-gift, .icon-bargraph, .icon-grid, .icon-expand, .icon-focus, .icon-edit, .icon-adjustments, .icon-ribbon, .icon-hourglass, .icon-lock, .icon-megaphone, .icon-shield, .icon-trophy, .icon-flag, .icon-map, .icon-puzzle, .icon-basket, .icon-envelope, .icon-streetsign, .icon-telescope, .icon-gears, .icon-key, .icon-paperclip, .icon-attachment, .icon-pricetags, .icon-lightbulb, .icon-layers, .icon-pencil, .icon-tools, .icon-tools-2, .icon-scissors, .icon-paintbrush, .icon-magnifying-glass, .icon-circle-compass, .icon-linegraph, .icon-mic, .icon-strategy, .icon-beaker, .icon-caution, .icon-recycle, .icon-anchor, .icon-profile-male, .icon-profile-female, .icon-bike, .icon-wine, .icon-hotairballoon, .icon-globe, .icon-genius, .icon-map-pin, .icon-dial, .icon-chat, .icon-heart, .icon-cloud, .icon-upload, .icon-download, .icon-target, .icon-hazardous, .icon-piechart, .icon-speedometer, .icon-global, .icon-compass, .icon-lifesaver, .icon-clock, .icon-aperture, .icon-quote, .icon-scope, .icon-alarmclock, .icon-refresh, .icon-happy, .icon-sad, .icon-facebook, .icon-twitter, .icon-googleplus, .icon-rss, .icon-tumblr, .icon-linkedin, .icon-dribbble {
-  font-family: 'ubuntu-l';
+  font-family: 'et-line';
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -1185,7 +1160,3 @@ you can use the generic selector below, but it's slower:
 
 .icon-dribbble:before {
   content: "\e063"; }
-
-.member-actions .dropdown-menu>li>a, .navbar-default .navbar-nav .open .dropdown-menu {
-  color:#333;
-}

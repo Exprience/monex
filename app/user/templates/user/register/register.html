@@ -17,7 +17,7 @@
       {% endif %}
       <form method="post">{% csrf_token %}
         {% for f in form %}
-        <div class="form-group {% if form.username.errors %}has-error{% endif %} has-feedback">
+        <div class="form-group {% if f.errors %}has-error{% endif %} has-feedback">
           {% if f.errors %}
           <label class="control-label errors" for="inputError"><i class="fa fa-times-circle-o"></i>
             {% for error in f.errors %}

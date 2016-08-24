@@ -28,10 +28,10 @@ $(function(){
     },
   });
 });
-$(function() {
-  $.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
-  $.fn.modal.Constructor.DEFAULTS.class = 'modal-lg';
-});
+//$(function() {
+//  $.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
+//  $.fn.modal.Constructor.DEFAULTS.class = 'modal-lg';
+//});
 
 
 $(function() {

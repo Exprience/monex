@@ -69,19 +69,12 @@ class BaseDataManager(object):
             client = BaseDataManager.get_instance().setup_client('/MX_Check_User_LoginService/MX_Check_User_LoginPort?wsdl')
             result = client.service.MX_Check_User_LoginOperation(username, hashlib.md5(password).hexdigest(), datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             user = User()
+            if hasattr(result.firstname, 'value'):
+                print result.firstname.value
             user.fill_user(result)
-            print user.firstname
             return user
         except:
-            user = User()
-            user.id = 1
-            user.isHavePrivilege = True,
-            user.last_login = ''
-            user.is_superuser = False
-            user.is_staff = False
-            user.is_active = False
-            user.firstname = 'uuganaa'
-            return user
+            return None
 
     @staticmethod
     def register(username, email, password):
@@ -103,7 +96,10 @@ class User(object):
         self.id = None
         self.isHavePrivilege = data.isHavePrivilege
         self.last_login = data.last_login
-        self.is_superuser = data.is_superuser
-        self.is_staff = data.is_staff
-        self.is_active = data.is_active
-        self.firstname =  data.firstname
+        self.is_superuser = data.is_superuser.value
+        self.is_staff = data.is_staff.value
+        self.is_active = data.is_active.value
+        if hasattr(data.firstname, 'value'):
+            self.firstname =  data.firstname.value
+        else:
+            self.firstname = None
