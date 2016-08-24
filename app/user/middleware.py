@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-import session
+from app.config import session
 
 
 class UserAuthMiddleware(object):
