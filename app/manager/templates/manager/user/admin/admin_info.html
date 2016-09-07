@@ -1,0 +1,125 @@
+{% extends 'manager/base.html' %}
+{% load i18n %}
+{% block content %}
+<section class="content-header">
+  <h1>
+    {% trans 'Миний мэдээлэл' %}
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li><a href="{% url 'manager:manager_list' %}">{% trans 'Админ хэрэглэгч' %}</a></li>
+    <li class="active">{{ user.email }}</li>
+  </ol>
+</section>
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-body">
+          {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <i class="icon fa fa-ban"></i> {{ error }}
+            </div>
+            {% endfor %}
+          {% endif %}
+          <label>{{ form.email.label }}</label>
+          <div class="form-group {% if form.email.errors %}has-error{% endif %} has-feedback">
+            {% if form.email.errors %}
+            <label class="control-label errors" for="inputError"><i class="fa fa-times-circle-o"></i>
+              {% for error in form.email.errors %}
+                {{ error }}
+              {% endfor %}
+            </label>
+            {% endif %}
+            {{ form.email }}
+          </div>
+          <label>{{ form.is_active.label }}:</label> {{ form.is_active }}
+          <div class="row">
+            <div class="col-lg-6">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <td></td>
+                    <td>{% trans 'Нэмэх' %}</td>
+                    <td>{% trans 'Засварлах' %}</td>
+                    <td>{% trans 'Устгах' %}</td>
+                  </tr>  
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{% trans 'Мэдээ' %}</td>
+                    <td>{{ form.news_create }}</td>
+                    <td>{{ form.news_update }}</td>
+                    <td>{{ form.news_delete }}</td>
+                  </tr>
+                  <tr>
+                    <td>{% trans 'Cудалгаа' %}</td>
+                    <td>{{ form.research_create }}</td>
+                    <td>{{ form.research_update }}</td>
+                    <td>{{ form.research_delete }}</td>
+                  </tr>
+                  <tr>
+                    <td>{% trans 'Cургалт' %}</td>
+                    <td>{{ form.lesson_create }}</td>
+                    <td>{{ form.lesson_update }}</td>
+                    <td>{{ form.lesson_delete }}</td>
+                  </tr>
+                  <tr>
+                    <td>{% trans 'Тэмцээний ангилал' %}</td>
+                    <td>{{ form.competition_type_create }}</td>
+                    <td>{{ form.competition_type_update }}</td>
+                    <td>{{ form.competition_type_delete }}</td>
+                  </tr>
+                  <tr>
+                    <td>{% trans 'Тэмцээн' %}</td>
+                    <td>{{ form.competition_create }}</td>
+                    <td>{{ form.competition_update }}</td>
+                    <td>{{ form.competition_delete }}</td>
+                  </tr>
+                  <tr>
+                    <td>{% trans 'Тэмцээний бүртгэл' %}</td>
+                    <td>{{ form.competition_approval_create }}</td>
+                    <td>{{ form.competition_approval_update }}</td>
+                    <td>{{ form.competition_approval_delete }}</td>
+                  </tr>
+                  <tr>
+                    <td>{% trans 'Хувьцаа' %}</td>
+                    <td>{{ form.stock_create }}</td>
+                    <td>{{ form.stock_update }}</td>
+                    <td>{{ form.stock_delete }}</td>
+                  </tr>
+                  <tr>
+                    <td>{% trans 'Валют' %}</td>
+                    <td>{{ form.currency_create }}</td>
+                    <td>{{ form.currency_update }}</td>
+                    <td>{{ form.currency_delete }}</td>
+                  </tr>
+                  <tr>
+                    <td>{% trans 'Банк' %}</td>
+                    <td>{{ form.bank_create }}</td>
+                    <td>{{ form.bank_update }}</td>
+                    <td>{{ form.bank_delete }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extrajs %}
+<script>
+  $(function () {
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-blue',
+      radioClass: 'iradio_square-blue',
+      increaseArea: '20%' // optional
+    });
+  });
+</script>
+{% endblock %}

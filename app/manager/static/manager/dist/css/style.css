@@ -44,13 +44,30 @@ select {
   display: inline;
 }
 
-.errors{
-  font-size: 9px;
-}
 .errorlist {
   color: red;
-  font-size: 10px;
 }
+
 .modal {
   background: none;
+}
+.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right),
+.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
+  width: 210px;
+}
+
+
+.buttons button{
+  margin-left: -3px;
+  margin-right: -3px;
+  margin-bottom: 10px;
+  border-radius: 0;
+  border: 1px;
+}
+.buttons a{
+  margin-left: -3px;
+  margin-right: -3px;
+  margin-bottom: 10px;
+  border-radius: 0;
+  border: 1px;
 }

@@ -16,7 +16,7 @@ def handler404(request):
 
 
 def handler500(request):
-    response = render_to_response('config/handler/505.html', {},
+    response = render_to_response('config/handler/500.html', {},
                                   context_instance=RequestContext(request))
     response.status_code = 500
     return response

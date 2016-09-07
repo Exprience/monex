@@ -18,10 +18,8 @@ from django.conf import settings
 
 
 from app.config import session
-from managers import BaseDataManager as manager
+from managers import UserBaseDataManager as manager
 from forms import UserRegisterForm,  UserLoginForm, UserPasswordResetForm, UserPasswordChangeForm, UserSetPasswordForm
-
-
 
 
 class UserLoginRequired(object):
@@ -34,13 +32,9 @@ class UserLoginRequired(object):
 		return super(UserLoginRequired, self).dispatch(request, *args, **kwargs)
 
 
-
-
 class UserHome(g.TemplateView):
 
 	template_name = 'user/base/home.html'
-
-
 
 
 class UserLogin(g.FormView):
@@ -66,8 +60,6 @@ class UserLogin(g.FormView):
 		return HttpResponseRedirect(reverse_lazy('web:home'))
 
 
-
-
 class UserRegisterView(g.FormView):
 	form_class = UserRegisterForm
 	template_name = "user/register/register.html"
@@ -78,13 +70,13 @@ class UserRegisterView(g.FormView):
 		email = form.cleaned_data['email']
 		password = form.cleaned_data['password']
 		user = manager.register(username, email, password)
-		if user.isSuccess:
-			return super(UserRegisterView, self).form_valid(form)
+		if user:
+			if user.isSuccess:
+				return super(UserRegisterView, self).form_valid(form)
+			else:
+				return super(UserRegisterView, self).form_invalid(form)
 		else:
 			return super(UserRegisterView, self).form_invalid(form)
-
-
-
 
 class UserResetPasswordView(g.FormView):
 	form_class = UserPasswordResetForm
@@ -92,18 +84,16 @@ class UserResetPasswordView(g.FormView):
 	post_change_redirect = reverse_lazy('web:home')
 
 
-
-
 class UserSetPassView(g.FormView):
+	
 	form_class = UserSetPasswordForm
+
 	def password_change(request, template_name="user/password/password_reset_confirm.html", post_change_redirect=None):
 		if post_change_redirect is None:
 			post_change_redirect = reverse_lazy('web:home')
 			if form.is_valid():
 				form.save()
 				return HttpResponseRedirect(post_change_redirect)
-
-
 
 
 class UserChangePasswordView(UserLoginRequired, g.FormView):

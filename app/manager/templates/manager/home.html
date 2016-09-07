@@ -52,10 +52,11 @@
         </div>
       </div>
     </div>
-    <a id="my_modal_runner" class='btn btn-primary btn-flat' href='{% url "manager:mymodal"%}'>Display modal </a>
+    <a id="my_modal_runner" class='btn btn-primary btn-flat' href='#'>Display modal </a>
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
       Launch demo modal
     </button>
+    <button id="uuganaa">Clickme</button>
     <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
     <div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-sm">
@@ -128,19 +129,4 @@
       </div>
     </div>
   </section>
-  <script type="text/javascript">
-   	$(function(){
-	    $('#my_modal_runner').DjangoModalRunner({
-        //on_submit: function(){
-        //  $("#generic-modal").modal('hide');
-        //},
-      });
-		});
-  </script>
-{% endblock %}
-{% block extrajs %}
-<script type="text/javascript">
-  $("#myModal").draggable({ handle: ".modal-header" });
-  $("#generic-modal").draggable({ handle: ".modal-header" });
-</script>
 {% endblock %}

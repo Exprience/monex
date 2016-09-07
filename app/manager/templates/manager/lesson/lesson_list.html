@@ -2,7 +2,12 @@
 {% load i18n %}
 {% block content %}
 <section class="content-header">
-  <h1>{% trans 'Сургалт' %}</h1>
+  <h1>
+    {% trans 'Сургалт' %}
+    {% if user.is_lesson_create %}
+    <a href="{% url 'manager:lesson_create' %}"><i class="fa fa-plus"></i></a>
+    {% endif %}
+  </h1>
   <ol class="breadcrumb">
     <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
     <li class="active">{% trans 'Сургалт' %}</li>
@@ -12,14 +17,8 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box">
-				<div class="box-header with-border">
-					<h3 class="box-title">
-            {% trans 'Сургалт' %}
-            <a href="{% url 'manager:manager_lesson_create' %}"><i class="fa fa-plus-circle"></i></a>
-          </h3>
-				</div>
 				<div class="box-body">
-					<table class="table table-bordered table-hover">
+					<table id="lesson_table" class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th>№</th>
@@ -30,16 +29,23 @@
               </tr>
             </thead>
             <tbody>
-              {% for o in object_list %}
+              {% for lesson in lessons %}
               <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ o.angilal }}</td>
-                <td>{{ o.video_name }}</td>
-                <td><a href="{{ o.url }}">{{ o.url }}</a></td>
+                <td>{{ lesson.category }}</td>
+                <td>{{ lesson.title }}</td>
+                <td><a href="{{ lesson.url }}">{{ lesson.url }}</a></td>
                 <td>
-                  <a href="{% url 'manager:manager_lesson_update' o.id %}" class="btn btn-flat btn-primary btn-xs">
+                  {% if user.is_lesson_update %}
+                  <a href="{% url 'manager:lesson_update' lesson.id %}" class="btn btn-flat btn-primary btn-xs">
                     <i class="fa fa-edit"></i> Засварлах
                   </a>
+                  {% endif %}
+                  {% if user.is_lesson_delete %}
+                  <a href="{% url 'manager:lesson_delete' lesson.id %}" class="btn btn-flat btn-danger btn-xs">
+                    <i class="fa fa-edit"></i> Устгах
+                  </a>
+                  {% endif %}
                 </td>
               </tr>
               {% endfor %}
@@ -50,4 +56,11 @@
 		</div>
 	</div>
 </div>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    managerDatatable('#lesson_table');
+  });
+</script>
 {% endblock %}

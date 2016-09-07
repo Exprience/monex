@@ -12,10 +12,6 @@
   <!--jQuery-->
   <script src="{% static 'js/jQuery-2.2.0.min.js' %}"></script>
   
-  <!--jQuery-ui-->
-  <!--link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
-  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script-->
-  
   <!--Bootstrap-->
   <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.css' %}">
   <script src="{% static 'assets/bootstrap/js/bootstrap.min.js ' %}"></script>
@@ -28,7 +24,7 @@
 
   <!--Style manager-->
   <link rel="stylesheet" href="{% static 'manager/dist/css/AdminLTE.min.css' %}">
-  <link rel="stylesheet" href="{% static 'manager/dist/css/skins/_all-skins.css' %}">
+  <link rel="stylesheet" href="{% static 'manager/dist/css/skins/_all-skins.min.css' %}">
   <link rel="stylesheet" href="{% static 'manager/dist/css/style.css' %}">
   <script src="{% static 'manager/dist/js/manager.js' %}"></script>
 
@@ -51,22 +47,16 @@
   <!--app-->
   <script src="{% static 'manager/dist/js/app.min.js' %}"></script>
 
-  <!--django admin-->
-  <script type="text/javascript" src="/admin/jsi18n/"></script>
-  <script type="text/javascript" src="/static/admin/js/core.js"></script>
-  <script src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
-  <script src="{% static 'admin/js/jquery.init.js' %}"></script>
-  <script src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>
-
-  <!--modal view-->
-  <link href="{% static 'django_modalview/css/modal.css' %}" rel="stylesheet"/>
-  <script src="{% static 'django_modalview/js/django_modal_view.js' %}"></script>
-  <script src="{% static 'django_modalview/js/jquery.form.js' %}"></script>
-  <script src="{% static 'notifications/notify.js' %}"></script>
 
   <!--Pace-->
   <link rel="stylesheet" href="{% static 'manager/plugins/pace/pace.min.css' %}">
   <script src="{% static 'manager/plugins/pace/pace.min.js' %}"></script>
+
+
+  <link rel="stylesheet" href="{% static 'manager/plugins/iCheck/square/blue.css' %}">
+  <script src="{% static 'manager/plugins/iCheck/icheck.min.js' %}"></script>
+
+  <script src="{% static 'js/bootstrap-notify.min.js' %}"></script>
   {% endblock %}
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -94,5 +84,25 @@
   </div>
 </body>
 </html>
+<script type="text/javascript">
+  {% if messages %}
+    {% for m in messages %}
+      $(document).ready(function(){
+        $.notify(
+          {
+            message: '{{ m }}'
+          },
+          {
+            type: '{% if m.tags == "error" %}danger{% else %}{{ m.tags }}{% endif %}',
+            placement: {
+              from: "top",
+              align: "right"
+            },
+          }
+        );
+      });
+    {% endfor %}
+  {% endif %}
+</script>
 {% block extrajs %}
 {% endblock %}

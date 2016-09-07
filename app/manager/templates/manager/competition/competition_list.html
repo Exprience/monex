@@ -1,31 +1,12 @@
 {% extends 'manager/base.html' %}
 {% load i18n %}
 {% block content %}
-{% comment %}
-{% load pagination_tags %}
-{% autopaginate object_list 2 %}
-{% endcomment %}
 <form id="competition_form" method="get">
   <input id="id_filter_type" type="hidden" name="filter_type" value="0">
   <input type="hidden" name="start" id="id_start">
   <input type="hidden" name="end" id="id_end">  
 </form>
-<style type="text/css">
-  .buttons button{
-    margin-left: -3px;
-    margin-right: -3px;
-    margin-bottom: 10px;
-    border-radius: 0;
-    border: 1px;
-  }
-  .buttons a{
-    margin-left: -3px;
-    margin-right: -3px;
-    margin-bottom: 10px;
-    border-radius: 0;
-    border: 1px;
-  }
-</style>
+
 <section class="content-header">
   <h1>
     {% trans 'Тэмцээн' %}
@@ -59,11 +40,9 @@
         </div>
       </div>
     </div>
-    <div class="clearfix visible-sm-block"></div>
     <div class="col-md-3 col-sm-6 col-xs-12">
       <div class="info-box">
         <span class="info-box-icon bg-aqua"><i class="ion ion-ios-people-outline"></i></span>
-
         <div class="info-box-content">
           <span class="info-box-text text-sm">Эхэлсэн тэмцээн</span>
           <span class="info-box-number">{{ start_count }}</span>
@@ -107,9 +86,6 @@
           {% include 'manager/competition/competition_filter.html' %}
         </div>
         <div class="box-footer">
-          {% comment %}
-          {% paginate %}
-          {% endcomment %}
         </div>
       </div>
     </div>

@@ -33,6 +33,7 @@
           <span>Тэмцээний бүртгэл</span>
         </a>
       </li>
+      {% if user.is_superuser %}
       <li class="treeview">
         <a href="#">
           <i class="fa fa-circle-o text-aqua"></i>
@@ -40,18 +41,11 @@
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li>
-            <a href="{% url 'manager:manager_admin_user_list' %}">
-              <i class="fa fa-circle-o"></i> Админ хэрэглэгчид
-            </a>
-          </li>
-          <li>
-            <a href="{% url 'manager:manager_user_list' %}">
-              <i class="fa fa-circle-o"></i> Системийн хэрэглэгчид
-            </a>
-          </li>
+          <li><a href="{% url 'manager:manager_list' %}"><i class="fa fa-circle-o"></i> Админ хэрэглэгчид</a></li>
+          <li><a href="{% url 'manager:user_list' %}"><i class="fa fa-circle-o"></i> Системийн хэрэглэгчид</a></li>
         </ul>
       </li>
+      {% endif %}
       <li class="treeview">
         <a href="#">
           <i class="fa fa-circle-o text-aqua"></i>
@@ -59,9 +53,13 @@
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li><a href="{% url 'manager:manager_news' %}"><i class="fa fa-circle-o"></i> Мэдээлэл</a></li>
-          <li><a href="{% url 'manager:manager_lesson' %}"><i class="fa fa-circle-o"></i> Сургалт</a></li>
+          {% if user.is_news_select %}
+          <li><a href="{% url 'manager:news' %}"><i class="fa fa-circle-o"></i> Мэдээлэл</a></li>
+          {% endif %}
           <li><a href="{% url 'manager:manager_research' %}"><i class="fa fa-circle-o"></i> Судалгаа</a></li>
+          {% if user.is_lesson_select %}
+          <li><a href="{% url 'manager:lesson_list' %}"><i class="fa fa-circle-o"></i> Сургалт</a></li>
+          {% endif %}
         </ul>
       </li>
       <li>

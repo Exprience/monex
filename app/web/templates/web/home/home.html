@@ -35,7 +35,7 @@
                 <li><a href="#categorys">Мэдээлэл</a></li>
                 <li><a href="#categorys">Судалгаа</a></li>
                 <li><a href="#categorys">Cургалт</a></li>
-                <li><a href="{% url 'chat:room' %}">Форум</a></li>
+                <li><a href="http://idp.example.com:8090/openam/idpssoinit?metaAlias=/idp&spEntityID=http://sp.example.com:8080/opensso&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-REDIRECT&RelayState=http://localhost:8000{% url 'chat:room' %}">Форум</a></li>
               </ul>
               <ul class="member-actions">
                 {% if user.is_authenticated %}

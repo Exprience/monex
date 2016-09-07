@@ -9,14 +9,10 @@ from django.contrib import messages
 
 
 from app.config.get_username import get_username as gu
-from managers import BaseDataManager as manager
+from managers import UserBaseDataManager as manager
 
 
-forms.Field.default_error_messages = {
-    'required': u"Энэ талбарыг бөглөнө үү.",
-}
-
-
+forms.Field.default_error_messages = {'required': u"Энэ талбарыг бөглөнө үү."}
 
 
 class UserPasswordResetForm(forms.Form):
@@ -29,8 +25,6 @@ class UserPasswordResetForm(forms.Form):
 			if not User.objects.filter(email = email):
 				raise forms.ValidationError(_('Э-мэйл хаяг бүртгэлгүй байна'), code='invalid')
 			return cleaned_data
-
-
 
 
 class UserPasswordChangeForm(forms.Form):
@@ -48,9 +42,9 @@ class UserPasswordChangeForm(forms.Form):
 		return cleaned_data
 
 
-
-
 class UserSetPasswordForm(forms.Form):
+	new_password1 = forms.CharField()
+	new_password2 = forms.CharField()
 
 	def __init__(self, *args , **kwargs):
 		super(UserSetPasswordForm, self).__init__(*args, **kwargs)
@@ -62,8 +56,6 @@ class UserSetPasswordForm(forms.Form):
 	def save(self, *args, **kwargs):
 		messages.success(gu(), _('Нууц үг амжилттай хадгалагдлаа'))
 		return super(UserSetPasswordForm, self).save(*args, **kwargs)
-
-
 
 
 class UserLoginForm(forms.Form):
@@ -89,27 +81,30 @@ class UserLoginForm(forms.Form):
 		return cleaned_data
 
 
-
-
 class UserRegisterForm(forms.Form):
 	username = forms.CharField(widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нэвтрэх нэр'}) )
-	email = forms.EmailField(widget = forms.EmailInput(attrs = {'class':'form-control', 'placeholder':'Э-мэйл'}))
+	email = forms.EmailField(widget = forms.EmailInput(attrs = {'class':'form-control', 'placeholder':'Имэйл'}))
 	password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}))
 	repeat_password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг давтах'}))
 		
 
 
 	def clean_username(self):
-		username = self.cleaned_data['username']
-		print manager.check_unique_user(True, username)
-		if not manager.check_unique_user(True, username):
-			raise forms.ValidationError(_(u'Хэрэглэгч бүртгэлтэй байна'), code='invalid')
+		username = manager.check_unique_user(True, self.cleaned_data['username'])
+		if username:
+			if not username:
+				raise forms.ValidationError(_(u'Хэрэглэгч бүртгэлтэй байна'), code='invalid')
+		else:
+			raise forms.ValidationError(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү', code='invalid')
 		return username
 
 	def clean_email(self):
-		email = self.cleaned_data['email']
-		if not manager.check_unique_user(False, email):
-			raise forms.ValidationError(_(u'Э-мэйл хаяг бүртгэлтэй байна'), code='invalid')
+		email = manager.check_unique_user(False, self.cleaned_data['email'])
+		if email:
+			if not email:
+				raise forms.ValidationError(_(u'Э-мэйл хаяг бүртгэлтэй байна'), code='invalid')
+		else:
+			raise forms.ValidationError(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү', code='invalid')
 		return email
 
 	def clean(self):

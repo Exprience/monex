@@ -36,15 +36,15 @@
       {% endfor %}
       {% endif %}
       <form method="post">{% csrf_token %}
-        <div class="form-group {% if form.username.errors %}has-error{% endif %} has-feedback">
-          {% if form.username.errors %}
+        <div class="form-group {% if form.email.errors %}has-error{% endif %} has-feedback">
+          {% if form.email.errors %}
           <label class="control-label errors" for="inputError"><i class="fa fa-times-circle-o"></i>
-            {% for error in form.username.errors %}
+            {% for error in form.email.errors %}
               {{ error }}
             {% endfor %}
           </label>
           {% endif %}
-          {{ form.username }}
+          {{ form.email }}
         </div>
         <div class="form-group {% if form.password.errors %}has-error{% endif %} has-feedback">
           {% if form.password.errors %}

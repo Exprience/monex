@@ -1,0 +1,52 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns0="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://j2ee.netbeans.org/wsdl/MX_ShowNewsResearchLessonCategory/src/MX_ShowNewsResearchLessonCategoryWSDL" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MX_ShowNewsResearchLessonCategoryWSDL" targetNamespace="http://j2ee.netbeans.org/wsdl/MX_ShowNewsResearchLessonCategory/src/MX_ShowNewsResearchLessonCategoryWSDL">
+<types>
+<xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/MX_ShowNewsResearchLessonCategory/src/MX_ShowNewsResearchLessonCategoryWSDL">
+<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="http://a-PC:9080/MX_ShowNewsResearchLessonCategoryCA-sun-http-binding/MX_ShowNewsResearchLessonCategory/MXSelectNewsCategoryForShow.xsd"/>
+<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="http://a-PC:9080/MX_ShowNewsResearchLessonCategoryCA-sun-http-binding/MX_ShowNewsResearchLessonCategory/MXSelectResearchCategoryForShow.xsd"/>
+<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="http://a-PC:9080/MX_ShowNewsResearchLessonCategoryCA-sun-http-binding/MX_ShowNewsResearchLessonCategory/MXSelectLessonCategoryForShow.xsd"/>
+<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="http://a-PC:9080/MX_ShowNewsResearchLessonCategoryCA-sun-http-binding/MX_ShowNewsResearchLessonCategory/MXSelectCompetitionCategoryForShow.xsd"/>
+</xsd:schema>
+</types>
+<message name="MX_ShowNewsResearchLessonCategoryWSDLOperationRequest">
+<part name="manager_id" type="xsd:string"></part>
+<part name="category_type" type="xsd:string"></part>
+</message>
+<message name="MX_ShowNewsResearchLessonCategoryWSDLOperationResponse">
+<part name="status" type="xsd:string"></part>
+<part element="ns0:MXSelectNewsCategoryForShow_Response" name="news_category"></part>
+<part element="ns0:MXSelectResearchCategoryForShow_Response" name="research_category"></part>
+<part element="ns0:MXSelectLessonCategoryForShow_Response" name="lesson_category"></part>
+<part element="ns0:MXSelectCompetitionCategoryForShow_Response" name="competition_category"></part>
+</message>
+<portType name="MX_ShowNewsResearchLessonCategoryWSDLPortType">
+<operation name="MX_ShowNewsResearchLessonCategoryWSDLOperation">
+<input message="tns:MX_ShowNewsResearchLessonCategoryWSDLOperationRequest" name="input1"></input>
+<output message="tns:MX_ShowNewsResearchLessonCategoryWSDLOperationResponse" name="output1"></output>
+</operation>
+</portType>
+<binding name="MX_ShowNewsResearchLessonCategoryWSDLBinding" type="tns:MX_ShowNewsResearchLessonCategoryWSDLPortType">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+<operation name="MX_ShowNewsResearchLessonCategoryWSDLOperation">
+<soap:operation/>
+<input name="input1">
+<soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_ShowNewsResearchLessonCategory/src/MX_ShowNewsResearchLessonCategoryWSDL" use="literal"/>
+</input>
+<output name="output1">
+<soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_ShowNewsResearchLessonCategory/src/MX_ShowNewsResearchLessonCategoryWSDL" use="literal"/>
+</output>
+</operation>
+</binding>
+<service name="MX_ShowNewsResearchLessonCategoryWSDLService">
+<port binding="tns:MX_ShowNewsResearchLessonCategoryWSDLBinding" name="MX_ShowNewsResearchLessonCategoryWSDLPort">
+<soap:address location="http://a-PC:9080/MX_ShowNewsResearchLessonCategoryWSDLService/MX_ShowNewsResearchLessonCategoryWSDLPort"/>
+</port>
+</service>
+<plnk:partnerLinkType name="MX_ShowNewsResearchLessonCategoryWSDL">
+<!--
+ A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.
+-->
+<plnk:role name="MX_ShowNewsResearchLessonCategoryWSDLPortTypeRole" portType="tns:MX_ShowNewsResearchLessonCategoryWSDLPortType"/>
+</plnk:partnerLinkType>
+</definitions>

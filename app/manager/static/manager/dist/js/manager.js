@@ -1,38 +1,3 @@
-$(function(){
-  $('a[data-modal="modalview"]').DjangoModalRunner({
-    //alert($(this).attr('class'));
-    on_show_modal: function(){
-      $('#generic-modal .modal-dialog').addClass('modal-lg')
-    },
-    //on_hide_modal: function(){
-    //  location.reload();
-    //},
-    //on_hide_modal_after_submit: function(){
-    //  location.reload();
-    //},
-    on_submit: function(){
-      alert("uuganaa");
-    //  $('#modal-form').submit(function(event){
-    //    event.preventDefault();
-    //    $.ajax({
-    //      url: $(this).attr('action'),
-    //      method: 'post',
-    //      data: $(this).serialize()
-    //    }).done(function(response){
-    //      $('#generic-modal').modal("hide");
-    //    });
-    //  });
-      //location.reload();
-    //}
-    //on_done: function(){
-    },
-  });
-});
-//$(function() {
-//  $.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
-//  $.fn.modal.Constructor.DEFAULTS.class = 'modal-lg';
-//});
-
 
 $(function() {
   var pgurl = window.location.pathname;
@@ -127,3 +92,59 @@ function managerDatatable(table_id){
 
 
 $(document).ajaxStart(function() { Pace.restart(); });
+
+
+function popup(mylink, windowname) { 
+  if (! window.focus)return true;
+  var href;
+  if (typeof(mylink) == 'string') href=mylink;
+  else href=mylink.href; 
+  window.open(href, windowname, 'width=800,height=500,resizable=yes,scrollbars=yes'); 
+  return false; 
+}
+
+
+
+function dismissAddRelatedObjectPopup(win, id, value, text) {
+  $(id).append($('<option>', {
+    value: value,
+    text: text
+  }));
+  $(id).val(value);
+  $.notify(
+    {
+      message: 'Мэдээлэл амжилттай хадгалагдлаа' 
+    },
+    {
+      type: 'success'
+    }
+  );
+  win.close();
+}
+
+function dismissChangeRelatedObjectPopup(win, id, value, text) {
+  $(id + ' option:selected').text(text);
+  $(id).val(value);
+  $.notify(
+    {
+      message: 'Мэдээлэл амжилттай хадгалагдлаа' 
+    },
+    {
+      type: 'success'
+    }
+  );
+  win.close();
+}
+
+function dismissDeleteRelatedObjectPopup(win, id, value, text) {
+  $(id + " option[value='"+ value +"']").remove();
+  $.notify(
+    {
+      message: 'Мэдээлэл амжилттай хадгалагдлаа' 
+    },
+    {
+      type: 'success'
+    }
+  );
+  win.close();
+}

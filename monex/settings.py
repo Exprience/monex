@@ -48,16 +48,15 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #'app.chat',
+    'app.chat',
     'app.config',
     'app.user',
     'app.manager',
     'app.web',
     'app.competition',
-    #'app.online_support',
+    'app.online_support',
     
     'redactor',
-    'django_modalview',
     'captcha',
     
 )
@@ -77,6 +76,7 @@ MIDDLEWARE_CLASSES = (
 
     'app.config.get_username.RequestMiddleware',
     'app.user.middleware.UserAuthMiddleware',
+    'app.manager.middleware.ManagerAuthMiddleware',
 )
 
 ROOT_URLCONF = 'monex.urls'
@@ -183,6 +183,7 @@ LOGGING = {
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATIC_DOMAIN_URL = get_local('STATIC_DOMAIN_URL', '%s') % '/static/'
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

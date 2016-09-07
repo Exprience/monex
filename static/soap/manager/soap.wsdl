@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns0="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://j2ee.netbeans.org/wsdl/MX_Admin_Show_Manager_Lists/src/MX_Admin_Show_Manager_Lists_WSDL" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MX_Admin_Show_Manager_Lists_WSDL" targetNamespace="http://j2ee.netbeans.org/wsdl/MX_Admin_Show_Manager_Lists/src/MX_Admin_Show_Manager_Lists_WSDL">
+	<types>
+		<xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/MX_Admin_Show_Manager_Lists/src/MX_Admin_Show_Manager_Lists_WSDL">
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/manager/soap.xsd"/>
+		</xsd:schema>
+	</types>
+	<message name="MX_Admin_Show_Manager_Lists_WSDLOperationResponse">
+		<part element="ns0:MXAdminSelectManagers_ResponseR" name="ManagerLists"></part>
+		<part name="isSuccess" type="xsd:boolean"></part>
+	</message>
+	<message name="MX_Admin_Show_Manager_Lists_WSDLOperationRequest">
+		<part name="input" type="xsd:string"></part>
+	</message>
+	<portType name="MX_Admin_Show_Manager_Lists_WSDLPortType">
+		<operation name="MX_Admin_Show_Manager_Lists_WSDLOperation">
+			<input message="tns:MX_Admin_Show_Manager_Lists_WSDLOperationRequest" name="input1"></input>
+			<output message="tns:MX_Admin_Show_Manager_Lists_WSDLOperationResponse" name="output1"></output>
+		</operation>
+	</portType>
+	<binding name="MX_Admin_Show_Manager_Lists_WSDLBinding" type="tns:MX_Admin_Show_Manager_Lists_WSDLPortType">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="MX_Admin_Show_Manager_Lists_WSDLOperation">
+			<soap:operation/>
+			<input name="input1">
+				<soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_Admin_Show_Manager_Lists/src/MX_Admin_Show_Manager_Lists_WSDL" use="literal"/>
+			</input>
+			<output name="output1">
+				<soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_Admin_Show_Manager_Lists/src/MX_Admin_Show_Manager_Lists_WSDL" use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="MX_Admin_Show_Manager_Lists_WSDLService">
+		<port binding="tns:MX_Admin_Show_Manager_Lists_WSDLBinding" name="MX_Admin_Show_Manager_Lists_WSDLPort">
+			<soap:address location="http://a-PC:9080/MX_Admin_Show_Manager_Lists_WSDLService/MX_Admin_Show_Manager_Lists_WSDLPort"/>
+		</port>
+	</service>
+	<plnk:partnerLinkType name="MX_Admin_Show_Manager_Lists_WSDL">
+		<!--
+		 A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+		In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+		A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.
+		-->
+		<plnk:role name="MX_Admin_Show_Manager_Lists_WSDLPortTypeRole" portType="tns:MX_Admin_Show_Manager_Lists_WSDLPortType"/>
+	</plnk:partnerLinkType>
+</definitions>

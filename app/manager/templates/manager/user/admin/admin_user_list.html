@@ -4,7 +4,7 @@
 <section class="content-header">
   <h1>
     {% trans 'Админ хэрэглэгчид' %}
-    <a href="{% url 'manager:manager_admin_user_create' %}"><i class="fa fa-plus-circle"></i></a>
+    <a href="{% url 'manager:manager_create' %}"><i class="fa fa-plus"></i></a>
   </h1>
   <ol class="breadcrumb">
     <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
@@ -15,49 +15,33 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box">
-				{% comment %}
-        <div class="box-header with-border">
-          
-					<h1 class="box-title">{% trans 'Админ хэрэглэгчид' %} 
-            <a href="{% url 'manager:manager_admin_user_create' %}"><i class="fa fa-plus-circle"></i></a>
-          </h1>
-          
-				</div>
-        {% endcomment %}
 				<div class="box-body">
-					<table class="table table-bordered table-hover">
+					<table id="managers" class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th>№</th>
-                <th>Нэвтрэх нэр</th>
                 <th>Э-мэйл</th>
-                <th>Хандах эрх</th>
-                <th>Бүртгэгдсэн огноо</th>
                 <th>Сүүлд нэвтэрсэн огноо</th>
-                <th>Түүх</th>
+                <th>Системд нэвтрэх эрх</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {% for o in object_list %}
+              {% for manager in managers %}
               <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ o.username }}</td>
-                <td>{{ o.email }}</td>
+                <td>{{ manager.email }}</td>
+                <td>{{ manager.last_login }}</td>
+                <td><label class="label label-{{ manager.class }}">{{ manager.is_active }}</label></td>
                 <td>
-                  <ul>
-                    {% for g in o.groups.all %}
-                    <li>{{ g }}</li>
-                    {% endfor %}
-                  </ul>
-                </td>
-                <td>{{ o.date_joined|date:"Y-m-d H:i:s" }}</td>
-                <td>{{ o.last_login|date:"Y-m-d H:i:s" }}</td>
-                <td><a href="#history_{{ o.id }}" data-toggle="modal" class="text-sm">Түүх</a></td>
-                <td>
-                  <a href="{% url 'manager:manager_admin_user_update' o.id %}" class="btn btn-flat btn-primary btn-xs">
+                  <a href="{% url 'manager:manager_update' manager.id %}" class="btn btn-flat btn-primary btn-xs">
                     <i class="fa fa-edit"></i> Засварлах
                   </a>
+                  {% comment %}
+                  <a href="#" class="btn btn-flat btn-danger btn-xs">
+                    <i class="fa fa-trash-o"></i> Устгах
+                  </a>
+                  {% endcomment %}
                 </td>
               </tr>
               {% endfor %}
@@ -68,53 +52,11 @@
 		</div>
 	</div>
 </div>
-{% for o in object_list %}
-<div class="modal fade" id="history_{{ o.id }}">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Түүх</h4>
-      </div>
-      <div class="modal-body">
-        {% if o.history.all %}
-        <table class="table table-bordered table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Нэвтрэх нэр</th>
-              <th>Э-мэйл</th>
-              <th>Хэн</th>
-              <th>Хэзээ</th>
-              <th>Төлөв</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for i in o.history.all %}
-            <tr>
-              <td>{{ i.username }}</td>
-              <td>{{ i.email }}</td>
-              <td>{{ i.history_user }}</td>
-              <td>{{ i.history_date|date:"Y-m-d H:i:s" }}</td>
-              <td>
-                {% if i.history_type == "+" %}
-                {% trans 'Үүсгэсэн' %}
-                {% elif i.history_type == "~" %}
-                {% trans 'Засварласан' %}
-                {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        {% else %}
-        Түүх байхгүй байна
-        {% endif %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Хаах</button>
-      </div>
-    </div>
-  </div>
-</div>
-{% endfor %}
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    managerDatatable('#managers');
+  });
+</script>
 {% endblock %}

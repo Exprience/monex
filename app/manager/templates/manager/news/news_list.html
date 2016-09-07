@@ -4,7 +4,9 @@
 <section class="content-header">
   <h1>
     {% trans 'Мэдээ' %}
-    <a href="{% url 'manager:manager_news_create' %}"><i class="fa fa-plus-circle"></i></a>
+    {% if user.is_news_create %}
+    <a href="{% url 'manager:news_create' %}"><i class="fa fa-plus"></i></a>
+    {% endif %}
   </h1>
   <ol class="breadcrumb">
     <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
@@ -16,16 +18,8 @@
     <div class="col-xs-12">
       <div class="space10"></div>
       <div class="box">
-        {% comment %}
-        <div class="box-header">
-          <h3 class="box-title">
-            {% trans 'Мэдээ' %}
-            
-          </h3>
-        </div>
-        {% endcomment %}
         <div class="box-body">
-          <table id="news_table" class="table table-bordered table-hover text-sm">
+          <table id="news_table" class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th>{% trans '№' %}</th>
@@ -37,17 +31,22 @@
               </tr>
             </thead>
             <tbody>
-              {% for o in object_list %}
+              {% for o in news %}
               <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ o.angilal }}</td>
+                <td>{{ o.category }}</td>
                 <td>{{ o.title }}</td>
-                <td>{{ o.created_at|date:"Y:m:d   f" }}</td>
+                <td>{{ o.created_at }}</td>
                 <td>{{ o.created_by }}</td>
                 <td>
-                  {% if user.id == o.created_by.id %}
-                  <a href="{% url 'manager:manager_news_update' o.id %}" class="btn btn-flat btn-primary btn-xs">
+                  {% if user.is_news_update %}
+                  <a href="{% url 'manager:news_update' o.id %}" class="btn btn-flat btn-primary btn-xs">
                     <i class="fa fa-edit"></i> {% trans 'Засварлах' %}
+                  </a>
+                  {% endif %}
+                  {% if user.is_news_delete %}
+                  <a href="{% url 'manager:news_delete' o.id %}" class="btn btn-flat btn-danger btn-xs">
+                    <i class="fa fa-trash-o"></i> {% trans 'Устгах' %}
                   </a>
                   {% endif %}
                 </td>

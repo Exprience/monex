@@ -1,7 +1,13 @@
+# !/usr/bin/python/env
+# -*- coding:utf-8 -*-
+
+
 from django.conf.urls import url
 import views as v
 
+
 app_name = 'user'
+
 
 urlpatterns = [
 	url(r'^$', v.UserHome.as_view(), name = 'home'),
