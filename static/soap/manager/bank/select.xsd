@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xsd:schema xmlns="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://j2ee.netbeans.org/xsd/tableSchema">
-	<xsd:element name="MXAdminSelectManagers_Request">
+	<xsd:element name="MXManagerSelectAll_Request">
 		<xsd:complexType>
 			<xsd:sequence/>
 		</xsd:complexType>
 	</xsd:element>
-	<xsd:complexType name="MXAdminSelectManagers_ResponseR">
+	<xsd:complexType name="MXManagerSelectAll_ResponseR">
 		<xsd:sequence>
-			<xsd:element name="MXAdminSelectManagers_Response" ></xsd:element>
+			<xsd:element name="MXManagerSelectAll_Response" ></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	<xsd:element name="MXAdminSelectManagers_Response">
+	<xsd:element name="MXManagerSelectAll_Response">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element maxOccurs="unbounded" ref="MXAdminSelectManagers_Record"/>
+				<xsd:element maxOccurs="unbounded" ref="MXManagerSelectAll_Record"/>
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
-	<xsd:element name="MXAdminSelectManagers_Record">
+	<xsd:element name="MXManagerSelectAll_Record">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element name="ID">
+				<xsd:element name="id">
 					<xsd:complexType>
 						<xsd:simpleContent>
 							<xsd:extension base="xsd:int">
@@ -30,7 +30,7 @@
 						</xsd:simpleContent>
 					</xsd:complexType>
 				</xsd:element>
-				<xsd:element name="EMAIL">
+				<xsd:element name="name">
 					<xsd:complexType>
 						<xsd:simpleContent>
 							<xsd:extension base="xsd:string">
@@ -40,17 +40,17 @@
 						</xsd:simpleContent>
 					</xsd:complexType>
 				</xsd:element>
-				<xsd:element name="IS_ACTIVE">
+				<xsd:element name="short_name">
 					<xsd:complexType>
 						<xsd:simpleContent>
-							<xsd:extension base="xsd:boolean">
+							<xsd:extension base="xsd:string">
 								<xsd:attribute name="isNull" type="xsd:boolean"/>
 								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
 							</xsd:extension>
 						</xsd:simpleContent>
 					</xsd:complexType>
 				</xsd:element>
-				<xsd:element name="LAST_LOGIN">
+				<xsd:element name="icon">
 					<xsd:complexType>
 						<xsd:simpleContent>
 							<xsd:extension base="xsd:string">

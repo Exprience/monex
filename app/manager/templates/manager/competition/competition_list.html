@@ -10,8 +10,8 @@
 <section class="content-header">
   <h1>
     {% trans 'Тэмцээн' %}
-    <a href="{% url 'manager:manager_competition_create' %}">
-      <i class="fa fa-plus-circle"></i>
+    <a href="{% url 'manager:competition_create' %}">
+      <i class="fa fa-plus"></i>
     </a>
   </h1>
   <ol class="breadcrumb">
@@ -187,7 +187,7 @@
   $(document).ready(function(){
     managerDatatable('#competition_table');
     managerDaterange('#filter5');
-    form_submit('#competition_form', '#competition_filter', '{% url "manager:manager_competition_filter" %}');
+    form_submit('#competition_form', '#competition_filter', '{% url "manager:competition_filter" %}');
     $('ul.pagination').addClass('pagination-sm pull-right');
     $('.daterangepicker.dropdown-menu').addClass('text-sm');
   });

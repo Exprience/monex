@@ -28,3 +28,13 @@ def convert_10_2(value):
 		list.append(str(i))
 	list = list[2:5]
 	return list
+
+
+def get_dict(values):
+	lists = []
+	for value in values:
+		context = {}
+		for key in value.__keylist__:
+			context[key] = getattr(value, key).value
+		lists.append(context)
+	return lists

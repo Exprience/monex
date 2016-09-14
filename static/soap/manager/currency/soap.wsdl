@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://j2ee.netbeans.org/wsdl/MX_Manager_CUDS_Currency/src/MX_Manager_CUDS_CurrencyWSDL" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MX_Manager_CUDS_CurrencyWSDL" targetNamespace="http://j2ee.netbeans.org/wsdl/MX_Manager_CUDS_Currency/src/MX_Manager_CUDS_CurrencyWSDL">
+	<types>
+		<xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/MX_Manager_CUDS_Currency/src/MX_Manager_CUDS_CurrencyWSDL">
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/manager/currency/update.xsd"/>
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/manager/currency/select.xsd"/>
+		</xsd:schema>
+	</types>
+	<message name="MX_Manager_CUDS_CurrencyWSDLOperationRequest">
+		<part name="managerId" type="xsd:string"></part>
+		<part name="CUDS" type="xsd:string"></part>
+		<part type="ns:MXManagerUpdateToCurrency_RequestR" name="currencyInfo"></part>
+	</message>
+	<message name="MX_Manager_CUDS_CurrencyWSDLOperationResponse">
+		<part name="isSuccess" type="xsd:string"></part>
+		<part name="id" type="xsd:string"></part>
+		<part type="ns:MXManagerCurrencySelectAll_ResponseR" name="currencyList"></part>
+	</message>
+	<portType name="MX_Manager_CUDS_CurrencyWSDLPortType">
+		<operation name="MX_Manager_CUDS_CurrencyWSDLOperation">
+			<input message="tns:MX_Manager_CUDS_CurrencyWSDLOperationRequest" name="input1"></input>
+			<output message="tns:MX_Manager_CUDS_CurrencyWSDLOperationResponse" name="output1"></output>
+		</operation>
+	</portType>
+	<binding name="MX_Manager_CUDS_CurrencyWSDLBinding" type="tns:MX_Manager_CUDS_CurrencyWSDLPortType">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="MX_Manager_CUDS_CurrencyWSDLOperation">
+			<soap:operation/>
+			<input name="input1">
+				<soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_Manager_CUDS_Currency/src/MX_Manager_CUDS_CurrencyWSDL" use="literal"/>
+			</input>
+			<output name="output1">
+				<soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_Manager_CUDS_Currency/src/MX_Manager_CUDS_CurrencyWSDL" use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="MX_Manager_CUDS_CurrencyWSDLService">
+		<port binding="tns:MX_Manager_CUDS_CurrencyWSDLBinding" name="MX_Manager_CUDS_CurrencyWSDLPort">
+			<soap:address location="http://a-PC:9080/MX_Manager_CUDS_CurrencyWSDLService/MX_Manager_CUDS_CurrencyWSDLPort"/>
+		</port>
+	</service>
+	<plnk:partnerLinkType name="MX_Manager_CUDS_CurrencyWSDL">
+		<!--
+		 A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+		In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+		A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.
+		-->
+		<plnk:role name="MX_Manager_CUDS_CurrencyWSDLPortTypeRole" portType="tns:MX_Manager_CUDS_CurrencyWSDLPortType"/>
+	</plnk:partnerLinkType>
+</definitions>

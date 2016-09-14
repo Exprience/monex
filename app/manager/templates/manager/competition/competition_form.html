@@ -1,7 +1,6 @@
 {% extends 'manager/base.html' %}
 {% load i18n %}
 {% block content %}
-{{ form.media }}
 <section class="content-header">
   <h1>
   	{% if object %}
@@ -12,7 +11,7 @@
   </h1>
   <ol class="breadcrumb">
     <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
-    <li><a href="{% url 'manager:manager_competition' %}">{% trans 'Тэмцээн' %}</a></li>
+    <li><a href="{% url 'manager:competition_list' %}">{% trans 'Тэмцээн' %}</a></li>
     <li class="active">
     {% if object %}
     {% trans 'Тэмцээн засварлах' %}
@@ -26,21 +25,9 @@
 	<div class="row">
 		<div class="col-md-12">
 		  <div class="box">
-		  	{% comment %}
-		    <div class="box-header with-border">
-		      <h3 class="box-title">
-		      	
-		      </h3>
-		    </div>
-		    {% endcomment %}
 		    <form method="post">{% csrf_token %}
 		      <div class="box-body">
-		      	{% for f in form %}
-		        <div class="form-group">
-		        	<label>{{ f.label_tag }}</label>
-              {{ f }}{{ f.errors }}
-		        </div>
-		        {% endfor %}
+		      	{% include 'manager/form.html' %}
 		      </div>
 		      <div class="box-footer">
 		      	<div class="pull-right">
@@ -52,4 +39,13 @@
 		</div>
 	</div>
 </section>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+  $('select').on('change', function() {
+    $('#related_change').attr('href', '/manager/competition/category/update/'+ this.value);
+    $('#related_delete').attr('href', '/manager/competition/category/delete/'+ this.value);
+  });
+</script>
+{{ form.media }}
 {% endblock %}

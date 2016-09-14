@@ -1,0 +1,8 @@
+# !/usr/bin/python/env
+# -*- coding:utf-8 -*-
+
+
+COMPETITION_START_REGISTER = 1
+COMPETITION_START = 2
+COMPETITION_REGISTER = 3
+COMPETITION_END = 4

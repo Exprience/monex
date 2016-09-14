@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://j2ee.netbeans.org/wsdl/MX_Manager_User_Show_Currency_Stock_Value/src/MX_Manager_User_Show_Currency_Stock_Value_WSDL" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MX_Manager_User_Show_Currency_Stock_Value_WSDL" targetNamespace="http://j2ee.netbeans.org/wsdl/MX_Manager_User_Show_Currency_Stock_Value/src/MX_Manager_User_Show_Currency_Stock_Value_WSDL">
+  <types>
+    <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/MX_Manager_User_Show_Currency_Stock_Value/src/MX_Manager_User_Show_Currency_Stock_Value_WSDL">
+      <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/manager/list_stock.xsd"/>
+      <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/manager/list_currency.xsd"/>
+    </xsd:schema>
+  </types>
+  <message name="MX_Manager_User_Show_Currency_Stock_Value_WSDLOperationResponse">
+    <part name="isSuccess" type="xsd:boolean"></part>
+    <part type="ns:MXManagerUserShowCurrency_ResponseR" name="Currency"></part>
+    <part type="ns:MXManagerUserShowStock_ResponseR" name="Stock"></part>
+  </message>
+  <message name="MX_Manager_User_Show_Currency_Stock_Value_WSDLOperationRequest">
+    <part name="CUDS" type="xsd:string"></part>
+    <part name="id" type="xsd:string"></part>
+    <part name="start_date" type="xsd:string"></part>
+    <part name="end_date" type="xsd:string"></part>
+    <part name="isCurrency" type="xsd:boolean"></part>
+  </message>
+  <portType name="MX_Manager_User_Show_Currency_Stock_Value_WSDLPortType">
+    <operation name="MX_Manager_User_Show_Currency_Stock_Value_WSDLOperation">
+      <input message="tns:MX_Manager_User_Show_Currency_Stock_Value_WSDLOperationRequest" name="input1"></input>
+      <output message="tns:MX_Manager_User_Show_Currency_Stock_Value_WSDLOperationResponse" name="output1"></output>
+    </operation>
+  </portType>
+  <binding name="MX_Manager_User_Show_Currency_Stock_Value_WSDLBinding" type="tns:MX_Manager_User_Show_Currency_Stock_Value_WSDLPortType">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="MX_Manager_User_Show_Currency_Stock_Value_WSDLOperation">
+      <soap:operation/>
+      <input name="input1">
+        <soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_Manager_User_Show_Currency_Stock_Value/src/MX_Manager_User_Show_Currency_Stock_Value_WSDL" use="literal"/>
+      </input>
+      <output name="output1">
+        <soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_Manager_User_Show_Currency_Stock_Value/src/MX_Manager_User_Show_Currency_Stock_Value_WSDL" use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="MX_Manager_User_Show_Currency_Stock_Value_WSDLService">
+    <port binding="tns:MX_Manager_User_Show_Currency_Stock_Value_WSDLBinding" name="MX_Manager_User_Show_Currency_Stock_Value_WSDLPort">
+      <soap:address location="http://a-PC:9080/MX_Manager_User_Show_Currency_Stock_Value_WSDLService/MX_Manager_User_Show_Currency_Stock_Value_WSDLPort"/>
+    </port>
+  </service>
+  <plnk:partnerLinkType name="MX_Manager_User_Show_Currency_Stock_Value_WSDL">
+    <!--
+     A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+    In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+    A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.
+    -->
+    <plnk:role name="MX_Manager_User_Show_Currency_Stock_Value_WSDLPortTypeRole" portType="tns:MX_Manager_User_Show_Currency_Stock_Value_WSDLPortType"/>
+  </plnk:partnerLinkType>
+</definitions>

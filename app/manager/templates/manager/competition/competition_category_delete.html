@@ -4,10 +4,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>MONEX</title>
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<link rel="stylesheet" href="{% static 'assets/assets/bootstrap/css/bootstrap.css' %}">
-<link rel="stylesheet" href="{% static 'assets/admin/dist/css/AdminLTE.css' %}">
-<link rel="stylesheet" href="{% static 'assets/admin/dist/css/skins/_all-skins.min.css' %}">
-<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'manager/dist/css/AdminLTE.min.css' %}">
+<link rel="stylesheet" href="{% static 'manager/dist/css/skins/_all-skins.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
 <body class="hold-transition skin-blue layout-top-nav">
   <div class="wrapper">
     <div class="content-wrapper">
@@ -17,22 +17,26 @@
             <div class="box">
               <div class="box-header with-border">
                 <h1 class="box-title">
-                  {% if object %}
-                  {% trans 'Тэмцээний ангилал засварлах' %}
-                  {% else %}
-                  {% trans 'Тэмцээний ангилал нэмэх' %}
-                  {% endif %}
+                  {% trans 'Тэмцээний ангилал устгах' %}
                   </h1>
               </div>
-              <form class="form-horizontal" method="post">{% csrf_token %}
+              <form method="post">{% csrf_token %}
                 <div class="box-body">
                   <input type="hidden" name="_popup" value="1" />
                   <input type="hidden" name="_to_field" value="id" />
-                  {{ form }}
+                  {% if form.non_field_errors %}
+                  {% for error in form.non_field_errors %}
+                  <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <i class="icon fa fa-ban"></i> {{ error }}
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  {{ form.category }}
                 </div>
                 <div class="box-footer">
                   <div class="pull-right">
-                    <button class="btn btn-success btn-flat" type="submit">Хадгалах</button>
+                    <button class="btn btn-danger btn-flat" type="submit">{% trans 'Устгах' %}</button>
                   </div>
                 </div>
               </form>

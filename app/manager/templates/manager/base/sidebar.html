@@ -16,16 +16,11 @@
           <i class="fa fa-circle-o text-aqua"></i> <span>Нүүр</span>
         </a>
       </li>
-      <li class="treeview">
-        <a href="#">
+      <li>
+        <a href="{% url 'manager:competition_list' %}">
           <i class="fa fa-circle-o text-aqua"></i>
           <span>Тэмцээн</span>
-          <i class="fa fa-angle-left pull-right"></i>
         </a>
-        <ul class="treeview-menu">
-          <li><a href="{% url 'manager:manager_rank_list' %}"><i class="fa fa-circle-o"></i> Ангилал</a></li>
-          <li><a href="{% url 'manager:manager_competition' %}"><i class="fa fa-circle-o"></i> Тэмцээн үүсгэх</a></li>
-        </ul>
       </li>
       <li>
         <a href="{% url 'manager:manager_competition_register' %}">
@@ -56,11 +51,43 @@
           {% if user.is_news_select %}
           <li><a href="{% url 'manager:news' %}"><i class="fa fa-circle-o"></i> Мэдээлэл</a></li>
           {% endif %}
-          <li><a href="{% url 'manager:manager_research' %}"><i class="fa fa-circle-o"></i> Судалгаа</a></li>
+          {% if user.is_research_select %}
+          <li><a href="{% url 'manager:research_list' %}"><i class="fa fa-circle-o"></i> Судалгаа</a></li>
+          {% endif %}
           {% if user.is_lesson_select %}
           <li><a href="{% url 'manager:lesson_list' %}"><i class="fa fa-circle-o"></i> Сургалт</a></li>
           {% endif %}
         </ul>
+      </li>
+      <li class="treeview">
+        <a href="#">
+          <i class="fa fa-circle-o text-aqua"></i>
+          <span>Ханш</span>
+          <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu">
+          {% if user.is_bank_select %}
+          <li><a href="{% url 'manager:bank_list' %}"><i class="fa fa-circle-o"></i> Банк</a></li>
+          {% endif %}
+          {% if user.is_currency_select %}
+          <li><a href="{% url 'manager:currency_list' %}"><i class="fa fa-circle-o"></i> Валют</a></li>
+          {% endif %}
+          {% if user.is_stock_select %}
+          <li><a href="{% url 'manager:stock_list' %}"><i class="fa fa-circle-o"></i> Хувьцаа</a></li>
+          {% endif %}
+        </ul>
+      </li>
+      <li>
+        <a href="{% url 'manager:currency_value_list' %}">
+          <i class="fa fa-circle-o text-aqua"></i>
+          <span>Валютын ханш</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'manager:stock_value_list' %}">
+          <i class="fa fa-circle-o text-aqua"></i>
+          <span>Хувьцааны ханш</span>
+        </a>
       </li>
       <li>
         <a href="{% url 'manager:manager_finance' %}">

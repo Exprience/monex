@@ -122,5 +122,86 @@ class Manager(object):
 			return True
 		return False
 
+	def is_research_create(self):
+		if self.news in CREATE:
+			return True
+		return False
+
+	def is_research_update(self):
+		if self.news in UPDATE:
+			return True
+		return False
+
+	def is_research_delete(self):
+		if self.news in DELETE:
+			return True
+		return False
+
+	def is_research_select(self):
+		if self.news != SELECT:
+			return True
+		return False
+
+	def is_bank_create(self):
+		if self.bank in CREATE:
+			return True
+		return False
+
+	def is_bank_update(self):
+		if self.bank in UPDATE:
+			return True
+		return False
+
+	def is_bank_delete(self):
+		if self.bank in DELETE:
+			return True
+		return False
+
+	def is_bank_select(self):
+		if self.bank != SELECT:
+			return True
+		return False
+
+	def is_currency_create(self):
+		#if self.currency in CREATE:
+		#	return True
+		return True
+
+	def is_currency_update(self):
+	#	if self.currency in UPDATE:
+	#		return True
+		return True
+
+	def is_currency_delete(self):
+	#	if self.currency in DELETE:
+	#		return True
+		return True
+
+	def is_currency_select(self):
+	#	if self.currency != SELECT:
+	#		return True
+		return True
+
+	def is_stock_create(self):
+		if self.stock in CREATE:
+			return True
+		return False
+
+	def is_stock_update(self):
+		if self.stock in UPDATE:
+			return True
+		return False
+
+	def is_stock_delete(self):
+		if self.stock in DELETE:
+			return True
+		return False
+
+	def is_stock_select(self):
+		if self.stock != SELECT:
+			return True
+		return False
+
+
 	def is_manager(self):
 		return True

@@ -2,7 +2,10 @@
 {% load i18n %}
 {% block content %}
 <section class="content-header">
-  <h1>{% trans 'Судалгаа' %}</h1>
+  <h1>
+    {% trans 'Судалгаа' %}
+    <a href="{% url 'manager:research_create' %}"><i class="fa fa-plus"></i></a>
+  </h1>
   <ol class="breadcrumb">
     <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
     <li>{% trans 'Судалгаа' %}</li>
@@ -12,14 +15,8 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box">
-				<div class="box-header with-border">
-					<h3 class="box-title">
-            {% trans 'Судалгаа' %}
-            <a href="{% url 'manager:manager_research_create' %}"><i class="fa fa-plus-circle"></i></a>
-          </h3>
-				</div>
 				<div class="box-body">
-					<table class="table table-bordered table-hover">
+					<table id="research_table" class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th>№</th>
@@ -50,4 +47,11 @@
 		</div>
 	</div>
 </div>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    managerDatatable('#research_table');
+  });
+</script>
 {% endblock %}

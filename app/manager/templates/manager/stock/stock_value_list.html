@@ -1,0 +1,66 @@
+{% extends 'manager/base.html' %}
+{% load i18n %}
+{% block content %}
+<section class="content-header">
+  <h1>
+    {% trans 'Хувьцааны ханш ' %}
+    {% if user.is_stock_create %}
+    <a href="{% url 'manager:stock_value_create' %}"><i class="fa fa-plus"></i></a>
+    {% endif %}
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li class="active">{% trans 'Хувьцааны ханш' %}</li>
+  </ol>
+</section>
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="space10"></div>
+      <div class="box">
+        <div class="box-body">
+          <table id="currency_value_table" class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>{% trans '№' %}</th>
+                <th>{% trans 'Хувьцаа' %}</th>
+                <th>{% trans 'Нээлтийн ханш' %}</th>
+                <th>{% trans 'Авах' %}</th>
+                <th>{% trans 'Зарах' %}</th>
+                <th>{% trans 'Дээд' %}</th>
+                <th>{% trans 'Доод' %}</th>
+                <th>{% trans 'Сүүлийн' %}</th>
+                <th>{% trans 'Хаалтын ханш' %}</th>
+                <th>{% trans 'Үүсгэсэн' %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for stock in stocks %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ stock.stock_id }}</td>
+                <td>{{ stock.open }}</td>
+                <td>{{ stock.buy }}</td>
+                <td>{{ stock.sell }}</td>
+                <td>{{ stock.high }}</td>
+                <td>{{ stock.low }}</td>
+                <td>{{ stock.last }}</td>
+                <td>{{ stock.close }}</td>
+                <td>{{ stock.created_at }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    managerDatatable('#currency_value_table');
+  });
+</script>
+{% endblock %}

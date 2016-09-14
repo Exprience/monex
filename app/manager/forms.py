@@ -19,6 +19,7 @@ from django.utils.safestring import mark_safe
 
 from app.config import session
 from widget import PopUpWidget
+from bootstrap3_datetime.widgets import DateTimePicker
 
 
 class ManagerLoginForm(forms.Form):
@@ -279,6 +280,17 @@ class CategoryForm(forms.Form):
 			self.fields['category'].initial = delete_id
 
 
+class CompetitionCategoryForm(forms.Form):
+	category = forms.CharField(label = u'Ангилал', widget = forms.TextInput(attrs = {'class':'form-control'}))
+	wallet_val = forms.IntegerField(label = u'Түрийвч', widget = forms.TextInput(attrs = {'class':'form-control'}))
+
+	def __init__(self, id = None, delete_id = None, *args, **kwargs):
+		super(CompetitionCategoryForm, self).__init__(*args, **kwargs)
+		if delete_id:
+			self.fields['category'].disabled = True
+			self.fields['category'].initial = delete_id
+
+
 class NewsForm(forms.Form):
 	category = forms.ChoiceField()
 	title = forms.CharField(label = u'Гарчиг', widget = forms.TextInput(attrs = {'class':'form-control'}))
@@ -312,6 +324,26 @@ class ResearchForm(forms.Form):
 		self.fields['category'] = forms.ChoiceField(label = u'Ангилал', choices = tuple(manager.show_category(manager_id, type)), widget = forms.Select(attrs = {'class':'form-control', 'style':'width:90%'}))
 		widget = self.fields['category'].widget
 		self.fields['category'].widget = PopUpWidget(widget, 'research', can_add_related = True, can_change_related = True, can_delete_related = True)
+
+
+class CompetitionForm(forms.Form):
+	category = forms.ChoiceField()
+	fee = forms.IntegerField(label = u'Бүртгэлийн хураамж', widget = forms.TextInput(attrs = {'class':'form-control'}))
+	prize = forms.IntegerField(label = u'Эхлэх данс', widget = forms.TextInput(attrs = {'class':'form-control'}))
+	start_date = forms.DateTimeField(label = u'Эхлэх өдөр', widget = DateTimePicker(attrs = {'class':'form-control'}, options={"format": "YYYY-MM-DD HH:mm", "pickSeconds": False}))
+	end_date = forms.DateTimeField(label = u'Дуусах өдөр', widget = DateTimePicker(attrs = {'class':'form-control'}, options={"format": "YYYY-MM-DD HH:mm", "pickSeconds": False}))
+	register_low = forms.IntegerField(label = u'Бүртгэлийн доод хязгаар', widget = forms.TextInput(attrs = {'class':'form-control'}))
+
+	def __init__(self, manager_id = None, type = None, id = None,*args, **kwargs):
+		super(CompetitionForm, self).__init__(*args, **kwargs)
+		self.fields['category'] = forms.ChoiceField(label = u'Ангилал', choices = tuple(manager.show_category(manager_id, type)), widget = forms.Select(attrs = {'class':'form-control', 'style':'width:90%'}))
+		widget = self.fields['category'].widget
+		self.fields['category'].widget = PopUpWidget(widget, 'competition', can_add_related = True, can_change_related = True, can_delete_related = True)
+		#if id:
+		#	result = manager.show_item(manager_id, 'C', id)
+		#	self.fields['category'].initial = result.category.text
+		#	self.fields['fee'].initial = result.fee.text
+		#	self.fields['prize'].initial = result.prize.text
 
 
 class LessonForm(forms.Form):
@@ -362,3 +394,101 @@ class PasswordUpdateForm(forms.Form):
 		result = manager.set_password(request.user.id, self.cleaned_data['new_password1'], self.cleaned_data['old_password'])
 		messages.success(request, u"Нууц үг амжилттай шинэчлэгдлээ.")
 		return result
+
+
+class BankForm(forms.Form):
+	name = forms.CharField(label = u"Нэр", widget = forms.TextInput(attrs = {'class':'form-control'}))
+	short_name = forms.CharField(label = u"Товчилсон нэр", widget = forms.TextInput(attrs = {'class':'form-control'}))
+	icon = forms.CharField(label = u"Icon", widget = forms.TextInput(attrs = {'class':'form-control'}))
+
+	def __init__(self, manager_id = None, id = None, is_delete = False, *args, **kwargs):
+		super(BankForm, self).__init__(*args, **kwargs)
+		if id:
+			result = manager.bank(manager_id, 'I', id = id)
+			bank = result.bankList.MXManagerSelectAll_Response.MXManagerSelectBankIndividually_Record
+			self.fields['name'].initial = bank.name.value
+			self.fields['short_name'].initial = bank.short_name.value
+			self.fields['icon'].initial = bank.icon.value
+			if is_delete:
+				self.fields['name'].disabled = True
+				self.fields['short_name'].disabled = True
+				self.fields['icon'].disabled = True
+
+
+class CurrencyForm(forms.Form):
+	name = forms.CharField(label = u"Нэр", widget = forms.TextInput(attrs = {'class':'form-control'}))
+	short_name = forms.CharField(label = u"Товчилсон нэр", widget = forms.TextInput(attrs = {'class':'form-control'}))
+	symbol = forms.CharField(label = u"Тэмдэгт", widget = forms.TextInput(attrs = {'class':'form-control'}))
+	icon = forms.CharField(label = u"Icon", widget = forms.TextInput(attrs = {'class':'form-control'}))
+
+	def __init__(self, manager_id = None, id = None, is_delete = False, *args, **kwargs):
+		super(CurrencyForm, self).__init__(*args, **kwargs)
+		if id:
+			result = manager.currency(manager_id, 'I', id = id)
+			bank = result.currencyList.MXManagerCurrencySelectAll_Response.MXManagerSelectCurrencyIndividually_Record
+			self.fields['name'].initial = bank.name.value
+			self.fields['short_name'].initial = bank.short_name.value
+			self.fields['symbol'].initial = bank.symbol.value
+			self.fields['icon'].initial = bank.icon.value
+			if is_delete:
+				self.fields['name'].disabled = True
+				self.fields['short_name'].disabled = True
+				self.fields['symbol'].disabled = True
+				self.fields['icon'].disabled = True
+
+class CurrencyValueForm(forms.Form):
+	bank = forms.ChoiceField()
+	currency = forms.ChoiceField()
+	buy = forms.CharField(label = u'Авах', widget = forms.TextInput(attrs = {'class':'form-control'}))
+	sell = forms.CharField(label = u'Зарах',widget = forms.TextInput(attrs = {'class':'form-control'}))
+	
+	def __init__(self, manager_id = 0, *args, **kwargs):
+		super(CurrencyValueForm, self).__init__(*args, **kwargs)
+		bank_list = []
+		currency_list = []
+		banks = manager.bank(manager_id, 'S')
+		currencys = manager.currency(manager_id, 'S')
+		for bank in banks:
+			b = ('%s'%bank['id'], '%s'%bank['name'])
+			bank_list.append(b)
+		for currency in currencys:
+			c = ('%s'%currency['id'], '%s'% currency['name'])
+			currency_list.append(c)
+		self.fields['bank'] = forms.ChoiceField(label = u'Банк', choices = tuple(bank_list), widget = forms.Select(attrs = {'class':'form-control'}))
+		self.fields['currency'] = forms.ChoiceField(label = u'Валют', choices = tuple(currency_list), widget = forms.Select(attrs = {'class':'form-control'}))
+
+
+class StockForm(forms.Form):
+	name = forms.CharField(label = u"Нэр", widget = forms.TextInput(attrs = {'class':'form-control'}))
+	symbol = forms.CharField(label = u"Тэмдэгт", widget = forms.TextInput(attrs = {'class':'form-control'}))
+	
+	def __init__(self, manager_id = None, id = None, is_delete = False, *args, **kwargs):
+		super(StockForm, self).__init__(*args, **kwargs)
+		if id:
+			result = manager.stock(manager_id, 'I', id = id)
+			stock = result.stockList.MXManagerSelectAllStock_Response.MXManagerSelectStockIndividually_Record
+			self.fields['name'].initial = stock.name.value
+			self.fields['symbol'].initial = stock.symbol.value
+			if is_delete:
+				self.fields['name'].disabled = True
+				self.fields['symbol'].disabled = True
+
+class StockValueForm(forms.Form):
+	stock = forms.ChoiceField()
+	open = forms.CharField(label = u'Нээлтйин ханш', widget = forms.TextInput(attrs = {'class':'form-control'}))
+	buy = forms.CharField(label = u'Авах', widget = forms.TextInput(attrs = {'class':'form-control'}))
+	sell = forms.CharField(label = u'Зарах',widget = forms.TextInput(attrs = {'class':'form-control'}))
+	high = forms.CharField(label = u'Дээд',widget = forms.TextInput(attrs = {'class':'form-control'}))
+	low = forms.CharField(label = u'Доод',widget = forms.TextInput(attrs = {'class':'form-control'}))
+	last = forms.CharField(label = u'Сүүлийн',widget = forms.TextInput(attrs = {'class':'form-control'}))
+	close = forms.CharField(label = u'Хаалтын ханш',widget = forms.TextInput(attrs = {'class':'form-control'}))
+	
+	def __init__(self, manager_id = 0, *args, **kwargs):
+		super(StockValueForm, self).__init__(*args, **kwargs)
+		stock_list = []
+		stocks = manager.stock(manager_id, 'S')
+		for stock in stocks:
+			s = ('%s'%stock['id'], '%s'%stock['name'])
+			stock_list.append(s)
+		self.fields['stock'] = forms.ChoiceField(label = u'Хувьцаа', choices = tuple(stock_list), widget = forms.Select(attrs = {'class':'form-control'}))
+

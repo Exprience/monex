@@ -58,6 +58,7 @@ INSTALLED_APPS = (
     
     'redactor',
     'captcha',
+    'bootstrap3_datetime',
     
 )
 

@@ -1,5 +1,5 @@
 {% load i18n %}
-<table id="competition_table" class="table table-bordered table-hover table-striped text-sm">
+<table id="competition_table" class="table table-bordered table-hover table-striped">
   <thead>
     <tr>
       <th>{% trans '№' %}</th>
@@ -7,61 +7,31 @@
       <th>{% trans 'Эхлэх огноо' %}</th>
       <th>{% trans 'Дуусах огноо' %}</th>
       <th>{% trans 'Төлөв' %}</th>
-      <th>{% trans 'Түүх' %}</th>
+      <th>{% trans 'Хураамж' %}</th>
       <th>{% trans 'Шагналын сан' %}</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    {% for o in object_list %}
-    {% if o.started %}
+    {% for competition in competitions %}
     <tr>
       <td>{{ forloop.counter }}</td>
-      <td>{{ o.last_ranked.name }}</td>
-      <td>{{ o.historys.start|date:"Y-m-d H:i:s" }}</td>
-      <td>{{ o.historys.end|date:"Y-m-d H:i:s" }}</td>
+      <td>{{ competition.category }}</td>
+      <td>{{ competition.start_date }}</td>
+      <td>{{ competition.end_date }}</td>
       <td>
-        <span class='label label-pill label-{% if o.competition_status == "0" %}success{% elif o.competition_status == "1" %}info{% else %}primary{% endif %}'>
-        {{ o.historys.get_competition_status_display }}
-        </span>
-      </td>
-      <td>
-        <a href="#history_{{ o.id }}" data-toggle="modal" class="btn btn-flat btn-xs btn-warning">
-          {% trans 'Түүх' %}
-        </a>
-        {% comment %}
-        <a href="{% url 'manager:competition_history' o.id %}" data-modal="modalview" class="btn btn-flat btn-xs btn-warning">
-          {% trans 'Түүх' %}
-        </a>
-        {% endcomment %}
-      </td>
-      <td>{{ o.last_ranked.shagnal }}</td>
-      <td></td>
-    </tr>
-    {% else %}
-    <tr>
-      <td>{{ forloop.counter }}</td>
-      <td>{{ o.rank.name }}</td>
-      <td>{{ o.start|date:"Y-m-d H:i:s" }}</td>
-      <td>{{ o.end|date:"Y-m-d H:i:s" }}</td>
-      <td>
-        <span class='label label-pill label-{% if o.competition_status == "0" %}success{% elif o.competition_status == "1" %}info{% else %}primary{% endif %}'>
-        {{ o.historys.get_competition_status_display }}
+        <span class='label label-pill label-{% if competition.competition_status == "0" %}success{% elif competition.competition_status == "1" %}info{% else %}primary{% endif %}'>
+        {{ competition.status }}
       </span>
       </td>
+      <td>{{ competition.fee }}</td>
+      <td>{{ competition.prize }}</td>
       <td>
-        <a href="#history_{{ o.id }}" data-toggle="modal" class="btn btn-warning btn-flat btn-xs">
-          {% trans 'Түүх' %}
-        </a>
-      </td>
-      <td>{{ o.rank.shagnal }}</td>
-      <td>
-        <a href="{% url 'manager:manager_competition_update' o.id %}" class="big btn btn-flat btn-primary btn-xs">
+        <a href="{% url 'manager:competition_update' competition.id %}" class="big btn btn-flat btn-primary btn-xs">
           <i class="fa fa-edit"></i> Засварлах
         </a>
       </td>
     </tr>
-    {% endif %}
     {% endfor %}
   </tbody>
 </table>

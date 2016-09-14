@@ -1,0 +1,43 @@
+{% extends 'manager/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<section class="content-header">
+  <h1>
+    {% if object %}
+    {% trans 'Хувьцаа засварлах' %}
+    {% else %}
+    {% trans 'Хувьцаа нэмэх' %}
+    {% endif %}
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li><a href="{% url 'manager:bank_list' %}">{% trans 'Хувьцаа' %}</a></li>
+    <li class="active">
+      {% if object %}
+      {% trans 'Хувьцаа засварлах' %}
+      {% else %}
+      {% trans 'Хувьцаа нэмэх' %}
+      {% endif %}
+    </li>
+  </ol>
+</section>
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <form method="post">{% csrf_token %}
+          <div class="box-body">
+            {% include 'manager/form.html' %}
+          </div>
+          <div class="box-footer">
+            <div class="pull-right">
+              <button class="btn btn-success btn-flat" type="submit">{% trans 'Хадгалах' %}</button>
+            </div>
+          </div>
+        </form> 
+      </div>    
+    </div>
+  </div>
+</div>
+{% endblock %}
