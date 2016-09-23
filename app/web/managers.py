@@ -6,7 +6,6 @@ import base64
 
 from django.conf import settings
 from app.config.managers import BaseDataManager
-from app.config import NOW
 from app.config import status, config
 
 
@@ -30,7 +29,7 @@ class WebBaseDataManager(BaseDataManager):
 		except:
 			request.file = file
 		request.status = status.CR_NOT_APPROVED
-		request.created_at = NOW
+		request.created_at = config.NOW
 		register.competition_register = request
 		result = client.service.MX_User_Manager_Competition_Register_CUS_WSDLOperation(is_manager, types, register, manager_id, is_approved)
 		if result.Response == 3:

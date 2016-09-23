@@ -21,7 +21,7 @@ from django.contrib.auth.tokens import default_token_generator
 import forms as mf
 from models import ResearchModel
 from managers import ManagerBaseDataManager as m
-from app.config import session, status as s, views as v, NOW, PREVIOUS, config
+from app.config import session, status as s, views as v, config
 from app.web.managers import WebBaseDataManager as wm
 
 
@@ -108,7 +108,7 @@ class CompetitionCreateView(FormView):
 		start_date = form.cleaned_data['start_date']
 		end_date = form.cleaned_data['end_date']
 		fee = form.cleaned_data['fee']
-		m.create('C', self.request.user.id, NOW, category, status = s.COMPETITION_START_REGISTER, register_low = register_low, start_date = start_date, end_date = end_date, prize = prize, fee = fee)
+		m.create('C', self.request.user.id, config.NOW, category, status = s.COMPETITION_START_REGISTER, register_low = register_low, start_date = start_date, end_date = end_date, prize = prize, fee = fee)
 		return super(CompetitionCreateView, self).form_valid(form)
 
 class CompetitionUpdateView(FormView):
@@ -254,7 +254,7 @@ class NewsCreateView(FormView):
 		category = form.cleaned_data['category']
 		title = form.cleaned_data['title']
 		body = form.cleaned_data['body']
-		m.create('N', self.request.user.id, NOW, category, title = title, body = body)
+		m.create('N', self.request.user.id, config.NOW, category, title = title, body = body)
 		return super(NewsCreateView, self).form_valid(form)
 
 class NewsUpdateView(FormView):
@@ -395,7 +395,7 @@ class LessonCreateView(FormView):
 		url = form.cleaned_data['url']
 		author_name = form.cleaned_data['author_name']
 		author_email = form.cleaned_data['author_email']
-		m.create('L', self.request.user.id, NOW, category, title = title, url = url, author_name = author_name, author_email = author_email)
+		m.create('L', self.request.user.id, config.NOW, category, title = title, url = url, author_name = author_name, author_email = author_email)
 		return super(LessonCreateView, self).form_valid(form)
 
 class LessonUpdateView(FormView):
@@ -727,7 +727,7 @@ class CurrencyValueListView(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(CurrencyValueListView, self).get_context_data(*args, **kwargs)
-		context['currencys'] = m.list("S", PREVIOUS, NOW)
+		context['currencys'] = m.list("S", config.PREVIOUS, config.NOW)
 		return context
 
 class CurrencyValueCreateView(FormView):
@@ -808,7 +808,7 @@ class StockValueListView(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(StockValueListView, self).get_context_data(*args, **kwargs)
-		context['stocks'] = m.list("S", PREVIOUS, NOW, is_currency = False)
+		context['stocks'] = m.list("S", config.PREVIOUS, config.NOW, is_currency = False)
 		return context
 
 class StockValueCreateView(FormView):
@@ -831,7 +831,7 @@ class StockValueCreateView(FormView):
 		low = form.cleaned_data['low']
 		last = form.cleaned_data['last']
 		close = form.cleaned_data['close']
-		m.stock_create(self.request.user.id, stock, open, buy, sell, high, low, last, close, NOW)
+		m.stock_create(self.request.user.id, stock, open, buy, sell, high, low, last, close, config.NOW)
 		return super(StockValueCreateView, self).form_valid(form)
 
 
