@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns0="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://j2ee.netbeans.org/wsdl/MXManagerShowNewsResearchLessonIndividually/src/MXManagerShowNewsResearchLessonIndividuallyWSDL" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MXManagerShowNewsResearchLessonIndividuallyWSDL" targetNamespace="http://j2ee.netbeans.org/wsdl/MXManagerShowNewsResearchLessonIndividually/src/MXManagerShowNewsResearchLessonIndividuallyWSDL">
+	<types>
+		<xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/MXManagerShowNewsResearchLessonIndividually/src/MXManagerShowNewsResearchLessonIndividuallyWSDL">
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URL/soap/manager/individually/news.xsd"/>
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URL/soap/manager/individually/research.xsd"/>
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URL/soap/manager/individually/lesson.xsd"/>
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URL/soap/manager/individually/competition.xsd"/>
+		</xsd:schema>
+	</types>
+	<message name="MXManagerShowNewsResearchLessonIndividuallyWSDLOperationRequest">
+		<part name="which_to_show" type="xsd:string"></part>
+		<part name="manager_id" type="xsd:string"></part>
+		<part name="id" type="xsd:string"></part>
+	</message>
+	<message name="MXManagerShowNewsResearchLessonIndividuallyWSDLOperationResponse">
+		<part name="isSuccess" type="xsd:boolean"></part>
+		<part type="ns0:MXManagerSelectNewsIndividually_ResponseR" name="News"></part>
+		<part type="ns0:MXManagerSelectResearchIndividually_ResponseR" name="Research"></part>
+		<part type="ns0:MXManagerSelectLessonIndividually_ResponseR" name="Lesson"></part>
+		<part type="ns0:MXManagerSelectCompetitionIndividually_ResponseR" name="Competition"></part>
+	</message>
+	<portType name="MXManagerShowNewsResearchLessonIndividuallyWSDLPortType">
+		<operation name="MXManagerShowNewsResearchLessonIndividuallyWSDLOperation">
+			<input message="tns:MXManagerShowNewsResearchLessonIndividuallyWSDLOperationRequest" name="input1"></input>
+			<output message="tns:MXManagerShowNewsResearchLessonIndividuallyWSDLOperationResponse" name="output1"></output>
+		</operation>
+	</portType>
+	<binding name="MXManagerShowNewsResearchLessonIndividuallyWSDLBinding" type="tns:MXManagerShowNewsResearchLessonIndividuallyWSDLPortType">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="MXManagerShowNewsResearchLessonIndividuallyWSDLOperation">
+			<soap:operation/>
+			<input name="input1">
+				<soap:body namespace="http://j2ee.netbeans.org/wsdl/MXManagerShowNewsResearchLessonIndividually/src/MXManagerShowNewsResearchLessonIndividuallyWSDL" use="literal"/>
+			</input>
+			<output name="output1">
+				<soap:body namespace="http://j2ee.netbeans.org/wsdl/MXManagerShowNewsResearchLessonIndividually/src/MXManagerShowNewsResearchLessonIndividuallyWSDL" use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="MXManagerShowNewsResearchLessonIndividuallyWSDLService">
+		<port binding="tns:MXManagerShowNewsResearchLessonIndividuallyWSDLBinding" name="MXManagerShowNewsResearchLessonIndividuallyWSDLPort">
+			<soap:address location="http://a-PC:9080/MXManagerShowNewsResearchLessonIndividuallyWSDLService/MXManagerShowNewsResearchLessonIndividuallyWSDLPort"/>
+		</port>
+	</service>
+	<plnk:partnerLinkType name="MXManagerShowNewsResearchLessonIndividuallyWSDL">
+		<!--
+		 A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+		In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+		A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.
+		-->
+		<plnk:role name="MXManagerShowNewsResearchLessonIndividuallyWSDLPortTypeRole" portType="tns:MXManagerShowNewsResearchLessonIndividuallyWSDLPortType"/>
+	</plnk:partnerLinkType>
+</definitions>

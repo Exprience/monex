@@ -1,0 +1,51 @@
+{% extends 'competition/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12">
+			<!-- tabs left -->
+			<div class="panel panel-default">
+				<div class="col-lg-4">
+					<div class="tabbable">
+						<ul class="nav nav-pills nav-stacked">
+							<li class="active"><a href="#a" data-toggle="tab">Хувийн Мэдээлэл</a></li>
+							<li><a href="#b" data-toggle="tab">Тэмцээний мэдээлэл</a></li>
+							<li><a href="#c" data-toggle="tab">Дансны мэдээлэл</a></li>
+							<li><a href="#d" data-toggle="tab">Тэмцээнд оролцсон түүх</a></li>
+							<li><a href="#e" data-toggle="tab">Дансны Хуулга</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="panel-body">
+				<div class="tab-content">
+				
+					
+						<div class="tab-pane active" id="a">
+						<div class="col-lg-8">
+					
+							<p>
+								{% include 'competition/account/untitled.html' %}
+							</p>
+							</div>
+						</div>
+						<div class="tab-pane" id="b">
+						<div class="col-lg-8">
+						</div>
+					</div>
+						<div class="tab-pane" id="c">
+						<div class="col-lg-8">
+						Thirdamuno, ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum auctor accumsan. Duis pharetra
+							varius quam sit amet vulputate. Quisque mauris augue, molestie tincidunt condimentum vitae. </div>
+						</div>
+						</div>
+					</div>
+					<!-- /tabs -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /row -->
+	{% endblock %}

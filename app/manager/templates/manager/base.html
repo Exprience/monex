@@ -1,62 +1,9 @@
-{% load static %}
 {% load i18n %}
 <!DOCTYPE html>
 <html>
 <head>
   {% block head %}
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>MONEX</title>
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  
-  <!--jQuery-->
-  <script src="{% static 'js/jQuery-2.2.0.min.js' %}"></script>
-  
-  <!--Bootstrap-->
-  <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.css' %}">
-  <script src="{% static 'assets/bootstrap/js/bootstrap.min.js ' %}"></script>
-  
-  <!--Font-awesome-->
-  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
-
-  <!--Ionicons-->
-  <link rel="stylesheet" href="{% static 'manager/dist/css/ionicons.min.css' %}">
-
-  <!--Style manager-->
-  <link rel="stylesheet" href="{% static 'manager/dist/css/AdminLTE.min.css' %}">
-  <link rel="stylesheet" href="{% static 'manager/dist/css/skins/_all-skins.min.css' %}">
-  <link rel="stylesheet" href="{% static 'manager/dist/css/style.css' %}">
-  <script src="{% static 'manager/dist/js/manager.js' %}"></script>
-
-  <!--Bootstrap date range-->
-  <link href="{% static 'assets/bootstrap-daterange/css/daterangepicker.css' %}" rel="stylesheet">
-  <script src="{% static 'assets/bootstrap-daterange/js/moment.min.js' %}"></script>
-  <script src="{% static 'assets/bootstrap-daterange/js/daterangepicker.js' %}"></script>
-
-  <!--Datatables-->  
-  <link href="{% static 'manager/plugins/datatables/dataTables.bootstrap.css' %}" rel="stylesheet">
-  <script src="{% static 'manager/plugins/datatables/jquery.dataTables.min.js' %}"></script>
-  <script src="{% static 'manager/plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
-  
-  <!--slimScrol-->
-  <script src="{% static 'manager/plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>
-  
-  <!--fastclick-->
-  <script src="{% static 'manager/plugins/fastclick/fastclick.js' %}"></script>
-  
-  <!--app-->
-  <script src="{% static 'manager/dist/js/app.min.js' %}"></script>
-
-
-  <!--Pace-->
-  <link rel="stylesheet" href="{% static 'manager/plugins/pace/pace.min.css' %}">
-  <script src="{% static 'manager/plugins/pace/pace.min.js' %}"></script>
-
-
-  <link rel="stylesheet" href="{% static 'manager/plugins/iCheck/square/blue.css' %}">
-  <script src="{% static 'manager/plugins/iCheck/icheck.min.js' %}"></script>
-
-  <script src="{% static 'js/bootstrap-notify.min.js' %}"></script>
+  {% include "manager/scripts.html" %}
   {% endblock %}
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -84,25 +31,7 @@
   </div>
 </body>
 </html>
-<script type="text/javascript">
-  {% if messages %}
-    {% for m in messages %}
-      $(document).ready(function(){
-        $.notify(
-          {
-            message: '{{ m }}'
-          },
-          {
-            type: '{% if m.tags == "error" %}danger{% else %}{{ m.tags }}{% endif %}',
-            placement: {
-              from: "top",
-              align: "right"
-            },
-          }
-        );
-      });
-    {% endfor %}
-  {% endif %}
-</script>
+{% include "config/error.html" %}
+{% include "config/messages.html" %}
 {% block extrajs %}
 {% endblock %}

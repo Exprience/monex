@@ -3,49 +3,17 @@
 <div class="col-md-9">
 	<div class="wall">
 		<h2 class="title">Мэдээлэл</h2>
-		{% comment %}
-		<div class="row">
-			<div class="col-md-3">
-				<div class="wall">
-					<h3 class="title">Ангилал</h3>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-9">
-			<div class="wall">
-				<h3 class="title">Мэдээ</h3>
-			</div>
-			<div class="pull-right">
-		    {% paginate %}
-		  </div>
-		</div>
 	</div>
-	{% endcomment %}
 	<div class="row">
 		<div class="col-md-12">
-			<div class="tabs-left">
-				<ul class="nav nav-tabs text-sm" style="width:25%;">
-					{% for i in news_category %}
-					<li>
-						<a href="#tabs_{{ i.id }}" data-toggle="tab">{{ i }}</a>
-					</li>
-					{% endfor %}
-				</ul>
-				<div class="tab-content">
-					{% for i in news_category %}
-         	<div class="tab-pane" id="tabs_{{ i.id }}">
-         		{% for m in i.medee_set.all %}
-         		<div class="wall-wall">
-							<span class="service-image"><img src="{{ m.img_url }}" alt="{{ m.img_url }}"></span>
-				    	<span class="accordion-title"><a href="{% url 'web:news_self' m.id %}">{{ m.title|truncatechars:60 }}</a></span>
-				    	<p>{{ m.remove_html|truncatechars:200|safe }}</p>
-				    </div>
-				    <hr>
-         		{% endfor %}
-         	</div>
-					{% endfor %}
-        </div>
+			{% for news in newss %}
+			<div class="wall-wall">
+				<span class="service-image"><img src="{{ m.img_url }}" alt="{{ m.img_url }}"></span>
+				<span class="accordion-title"><a href="{% url 'web:news_view' news.id %}">{{ news.title|truncatechars:60 }}</a></span>
+				<p>{{ news.body|truncatechars:200|striptags }}</p>
 			</div>
+			<hr>
+			{% endfor %}
 		</div>
 	</div>
 </div>

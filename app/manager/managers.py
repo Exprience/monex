@@ -1,18 +1,17 @@
 # !/usr/bin/python/env
 # -*- coding:utf-8 -*-
 
-
-import base64
 import hashlib
-from datetime import datetime
+import base64
+from urllib2 import URLError
+
+
 from BeautifulSoup import BeautifulStoneSoup
-from suds.sax.element import Element
 
 from django.conf import settings
 from app.config.managers import BaseDataManager
+from app.config import config
 from models import Manager
-from app.config import texts, extra_func
-
 
 class ManagerBaseDataManager(BaseDataManager):
 
@@ -21,19 +20,23 @@ class ManagerBaseDataManager(BaseDataManager):
 	def register(email, password, news = "", research = "", lesson = "", competition_type = "", competition = "", currency = "", stock = "", bank = "", competition_approval = "", is_superuser = "0", is_active = True, is_create = "0", id = ""):
 		try:
 			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Admin_Create_ManagerWSDLService/MX_Admin_Create_ManagerWSDLPort?wsdl')
-			print is_active
 			result = client.service.MX_Admin_Create_ManagerWSDLOperation(email, hashlib.md5(password).hexdigest(), is_superuser, is_active, news, research, lesson, competition_type, competition, currency, stock, bank, competition_approval, is_create, id)
+			print dir(result.status)
 			if result.status == "true":
 				user = Manager()
-				user.fill_manager(result)
+				user.id = int(result.manager_id.value)
+				user.pk = int(result.manager_id.value)
+				user.last_login = None
 				user.password = hashlib.md5(password).hexdigest()
 				return user
+			else:
+				return None
 		except:
 			return None
 
 
 	@staticmethod
-	def check_unique_user(value):
+	def unique(value):
 		try:
 			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Check_Duplicate_Username_Email_HTTPService/MX_Check_Duplicate_Username_Email_HTTPPort?wsdl')
 			result = client.service.MX_Check_Duplicate_Username_Email_HTTPOperation(False, value, False)
@@ -43,55 +46,33 @@ class ManagerBaseDataManager(BaseDataManager):
 
 
 	@staticmethod
-	def manager_list():
+	def admins():
 		try:
-			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Admin_Show_Manager_Lists_WSDLService/MX_Admin_Show_Manager_Lists_WSDLPort?wsdl')
-			client.set_options(retxml=True)
+			client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/admin/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
 			result = client.service.MX_Admin_Show_Manager_Lists_WSDLOperation('')
-			soup = BeautifulStoneSoup(result)
-			values = soup.findAll('mxadminselectmanagers_record')
-			manager_list = []
-			for i in values:
-				context = {}
-				context['id'] = i.id.text
-				context['email'] = i.email.text
-				
-				if i.last_login.text == '':
-					context['last_login'] = u'Бичлэг байхгүй байна'
-				else:
-					context['last_login'] = i.last_login.text
-				
-				if i.is_active.text == '0':
-					context['is_active'] = u'Нэвтрэх эрхгүй'
-					context['class'] = 'warning'
-				else:
-					context['is_active'] = u'Нэвтрэх эрхтэй'
-					context['class'] = 'success'
-				
-				manager_list.append(context)
-			return manager_list
+			if result.isSuccess:
+				records = config.get_dict(result.ManagerLists.MXAdminSelectManagers_Response.MXAdminSelectManagers_Record)
+				return records
 		except:
 			return None
 
 
 	@staticmethod
-	def loginManager(username, password):
+	def login(username, password):
 		try:
-			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Manager_Check_Login_WSDLService/MX_Manager_Check_Login_WSDLPort?wsdl')
-			client.set_options(retxml=True)
-			result = client.service.MX_Manager_Check_Login_WSDLOperation(username, hashlib.md5(password).hexdigest(), datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-			soup = BeautifulStoneSoup(result)
-			user_xml = soup.findAll('mxcheckifemailandpassisgood_record')
-			issuccess = soup.findAll('issuccess')
+			client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/login/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
+			result = client.service.MX_Manager_Check_Login_WSDLOperation(username, hashlib.md5(password).hexdigest(), config.NOW)
 			manager = Manager()
-			try:
-				manager.fill_manager(user_xml[0])
-				manager.issuccess = issuccess[0].text
-			except:
-				manager.issuccess = issuccess[0].text
+			if result.isSuccess:
+				manager.fill_manager(result.manager_info.MXCheckIfEmailAndPassIsGood_Response.MXCheckIfEmailAndPassIsGood_Record)
+			else:
+				return "false"
 			return manager
-		except:
-			return None
+		except URLError:
+			return config.URL_ERROR
+
+		except Exception, e:
+			return config.SYSTEM_ERROR
 
 
 	@staticmethod
@@ -100,7 +81,7 @@ class ManagerBaseDataManager(BaseDataManager):
 			client = ManagerBaseDataManager.get_instance().setup_client('/MX_ADMIN_Send_Validation_EmailService/MX_ADMIN_Send_Validation_EmailPort?wsdl')
 			result = client.service.MX_ADMIN_Send_Validation_EmailOperation(email, link, token)
 		except:
-			pass
+			return None
 
 
 	@staticmethod
@@ -119,13 +100,13 @@ class ManagerBaseDataManager(BaseDataManager):
 
 
 	@staticmethod
-	def set_password(id, new_password, old_password = '', is_create = '0'):
-		try:
-			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Manager_Set_PasswordWSDLService/MX_Manager_Set_PasswordWSDLPort?wsdl')
-			result = client.service.MX_Manager_Set_PasswordWSDLOperation(is_create, hashlib.md5(new_password).hexdigest(), hashlib.md5(old_password).hexdigest(), id)
-			return result
-		except:
-			return False
+	def set_password(id, new_password, old_password = '', is_create = True):
+		#try:
+		client = ManagerBaseDataManager.get_instance().setup_client('/MX_Manager_Set_PasswordWSDLService/MX_Manager_Set_PasswordWSDLPort?wsdl')
+		result = client.service.MX_Manager_Set_PasswordWSDLOperation(is_create, hashlib.md5(new_password).hexdigest(), hashlib.md5(old_password).hexdigest(), id)
+		return result
+		#except:
+		#	return False
 
 
 	@staticmethod
@@ -183,123 +164,125 @@ class ManagerBaseDataManager(BaseDataManager):
 
 
 	@staticmethod
-	def show_item(manager_id, type, id):
+	def individually(manager_id, type, id):
 		try:
-			client = ManagerBaseDataManager.get_instance().setup_client('/MXManagerShowNewsResearchLessonIndividuallyWSDLService/MXManagerShowNewsResearchLessonIndividuallyWSDLPort?wsdl')
-			client.set_options(retxml=True)
+			client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/individually/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
 			result = client.service.MXManagerShowNewsResearchLessonIndividuallyWSDLOperation(type, manager_id, id)
-			soup = BeautifulStoneSoup(result)
 			if type == 'N':
-				category = soup.findAll('mxmanagerselectnewsindividually_record')
+				result = result.News.MXManagerSelectNewsIndividually_Response.MXManagerSelectNewsIndividually_Record
+			if type == 'R':
+				result = result.Research.MXManagerSelectResearchIndividually_Response.MXManagerSelectResearchIndividually_Record
 			if type == 'L':
-				category = soup.findAll('mxmanagerselectlessonindividually_record')
+				result = result.Lesson.MXManagerSelectLessonIndividually_Response.MXManagerSelectLessonIndividually_Record
 			if type == 'C':
-				category = soup.findAll('mxmanagerselectcompetitionindividually_record')
-			return category[0]
-		except:
-			return False	
-
-
-	@staticmethod
-	def select(manager_id, type):
-		try:
-			category = None
-			client = ManagerBaseDataManager.get_instance().setup_client('/MXManagerShowNewsResearchLessonListsWSDLService/MXManagerShowNewsResearchLessonListsWSDLPort?wsdl')
-			client.set_options(retxml=True)
-			result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id)
-			soup = BeautifulStoneSoup(result)
-			lists = []
-			if type == 'N':
-				news = soup.findAll('mxmanagershownewslists_record')
-				for i in news:
-					context = {}
-					context['id'] = i.id.text
-					context['category'] = i.category.text
-					context['title'] = i.title.text
-					context['created_at'] = i.created_at.text
-					context['created_by'] = ManagerBaseDataManager.manager_info(i.created_by.text).email
-					lists.append(context)
-			if type == 'L':
-				lesson = soup.findAll('mxmanagershowlessonlists_record')
-				for i in lesson:
-					context = {}
-					context['id'] = i.id.text
-					context['category'] = i.lesson_category_id.text
-					context['title'] = i.title.text
-					context['url'] = i.url.text
-					context['created_at'] = i.created_at.text
-					context['created_by'] = ManagerBaseDataManager.manager_info(i.created_by.text).email
-					lists.append(context)
-			if type == 'C':
-				competition = soup.findAll('mxmanagershowcompetitionlists_record')
-				for i in competition:
-					context = {}
-					context['id'] = i.id.text
-					context['category'] = i.competition_category_id.text
-					context['start_date'] = i.start_date.text
-					context['end_date'] = i.end_date.text
-					context['status'] = i.status.text
-					context['fee'] = i.fee.text
-					context['prize'] = i.prize.text
-					context['created_by'] = ManagerBaseDataManager.manager_info(i.created_by.text).email
-					lists.append(context)
-			return lists
+				result = result.Competition.MXManagerSelectCompetitionIndividually_Response.MXManagerSelectCompetitionIndividually_Record
+				print result
+			return result
 		except:
 			return None
 
 
 	@staticmethod
-	def create(type, created_by, created_at, category, body = "", title = "", author_email = "", author_name = "", url = "", fee = "", prize="", start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S") , end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S"), register_low = "", status=""):
-		try:
-			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Insert_Into_News_Research_LessonService/MX_Insert_Into_News_Research_LessonPort?wsdl')
+	def select(manager_id, type):
+		#try:
+		client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/select/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
+		result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id)
+		print result
+		if type == 'N':
+			if manager_id == "":
+				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXUserShowNews_Record)
+			else:
+				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXManagerShowNewsLists_Record)				
+		if type == 'R':
+			if manager_id == "":
+				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXUserShowResearchLists_Record)
+			else:
+				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXManagerShowResearchLists_Record)
+		if type == 'L':
+			if manager_id == "":
+				records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXUserShowLessonLists_Record)
+			else:
+				records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXManagerShowLessonLists_Record)
+		if type == 'C':
+			if manager_id == "":
+				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXUserShowCompetitionLists_Record)
+			else:
+				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXManagerShowCompetitionLists_Record)
 			
-			news = client.factory.create('ns1:NewsRecord')
-			news.created_by = created_by
-			news.created_at = created_at
-			news.category = category
-			news.title = title
-			news.body = body
-
-			research = client.factory.create('ns1:ResearchRecord')
-			research.created_by = created_by
-			research.created_at = created_at
-			research.file_type = ""
-			research.pdf_file = ""
-			research.author_name = author_name
-			research.title = title
-			research.research_category_id = category
-
-			lesson = client.factory.create('ns1:LessonRecord')
-			lesson.created_by = created_by
-			lesson.created_at = created_at
-			lesson.author_email = author_email
-			lesson.author_name = author_name
-			lesson.url = url
-			lesson.title = title
-			lesson.lesson_category_id = category
-
-			competition = client.factory.create('ns1:CompetitionRecord')
-			competition.status = status
-			competition.register_low = register_low
-			competition.created_by = created_by
-			competition.created_at = created_at
-			competition.end_date = end_date
-			competition.start_date = start_date
-			competition.prize = prize
-			competition.fee = fee
-			competition.competition_category_id = category
-
-			result = client.service.MX_Insert_Into_News_Research_LessonOperation(type, news, research, lesson, competition, created_by)
-			return result
-		except Exception, e:
-			return False
+		return records
+		#except:
+		#	return None
 
 
 	@staticmethod
-	def update(type, manager_id, id, category, title = "", body = "", url = "", author_name = "", author_email = "", fee = "", prize="", start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S") , end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S"), register_low = ""):
+	def create(type, created_by, category, body = "", title = "", author_email = "", author_name = "", url = "", fee = "", prize="", start_date = config.NOW , end_date = config.NOW, register_low = "", status="", file = ""):
+		#try:
+		client = ManagerBaseDataManager.get_instance().setup_client('/MX_Insert_Into_News_Research_LessonService/MX_Insert_Into_News_Research_LessonPort?wsdl')
+		
+		news = client.factory.create('ns1:NewsRecord')
+		news.created_by = created_by
+		news.created_at = config.NOW
+		news.category = category
+		news.title = title
+		news.body = body
+
+		research = client.factory.create('ns1:ResearchRecord')
+		research.created_by = created_by
+		research.created_at = config.NOW
+		#try:
+		with open(u"media/%s" %file, "rb") as f:
+			data = f.read()
+			research.pdf_file = base64.b64encode(data)
+		print "#########################################"
+		print research.pdf_file
+		print "#########################################"
+
+		#except:
+		#	research.pdf_file = file
+		import os
+		
+		print os.path.splitext(u"media/%s" %file)[1]
+		
+		print "#########################################"
+		research.file_type = os.path.splitext(u"media/%s" %file)[1]
+		research.author_name = author_name
+		research.title = title
+		research.research_category_id = category
+		print title
+		print category
+		print author_name
+
+		lesson = client.factory.create('ns1:LessonRecord')
+		lesson.created_by = created_by
+		lesson.created_at = config.NOW
+		lesson.author_email = author_email
+		lesson.author_name = author_name
+		lesson.url = url
+		lesson.title = title
+		lesson.lesson_category_id = category
+
+		competition = client.factory.create('ns1:CompetitionRecord')
+		competition.status = status
+		competition.register_low = register_low
+		competition.created_by = created_by
+		competition.created_at = config.NOW
+		competition.end_date = end_date
+		competition.start_date = start_date
+		competition.prize = prize
+		competition.fee = fee
+		competition.competition_category_id = category
+
+		result = client.service.MX_Insert_Into_News_Research_LessonOperation(type, news, research, lesson, competition, created_by)
+		return result
+		#except Exception, e:
+		#	return False
+
+
+	@staticmethod
+	def update(type, manager_id, id, category, title = "", body = "", url = "", author_name = "", author_email = "", fee = "", prize="", start_date = config.NOW , end_date = config.NOW, register_low = ""):
 		try:
 			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Manager_Update_News_Research_LessonService/MX_Manager_Update_News_Research_LessonPort?wsdl')
-			print client
+			
 			news = client.factory.create('ns0:News')
 			news.MXManagerUpdateNews_Request.id = id
 			news.MXManagerUpdateNews_Request.category = category
@@ -349,15 +332,13 @@ class ManagerBaseDataManager(BaseDataManager):
 
 
 	@staticmethod
-	def check_manager(id):
+	def get_manager(id):
 		try:
-			client = ManagerBaseDataManager.get_instance().setup_client('/MX_ManagerGetIdLastLoginCredentialsWSDLService/MX_ManagerGetIdLastLoginCredentialsWSDLPort?wsdl')
-			client.set_options(retxml=True)
+			client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/get/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
 			result = client.service.MX_ManagerGetIdLastLoginCredentialsWSDLOperation(id)
-			soup = BeautifulStoneSoup(result)
-			values = soup.findAll('mxmanagerselectcredentials_record')
 			user = Manager()
-			user.fill_manager(values[0])
+			user.pk = result.Credentials.MXManagerSelectCredentials_Response.MXManagerSelectCredentials_Record.id.value
+			user.fill_manager(result.Credentials.MXManagerSelectCredentials_Response.MXManagerSelectCredentials_Record)
 			return user
 		except:
 			return False
@@ -507,7 +488,7 @@ class ManagerBaseDataManager(BaseDataManager):
 			request.currency_id = currency
 			request.buy = buy
 			request.sell = sell
-			request.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+			request.created_at = config.NOW
 			request.created_by = manager_id
 			currency_value.MXManagerInsertIntoCurrencyValue_Request = request
 			result = client.service.MX_Manager_Add_Currency_ValueOperation(manager_id, currency_value)
@@ -515,24 +496,29 @@ class ManagerBaseDataManager(BaseDataManager):
 		except:
 			return None
 
+
 	@staticmethod
 	def stock_create(manager_id, stock, open, buy, sell, high, low, last, close, now):
-		client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/stock/create.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
-		stock = client.factory.create('ns:MXManagerInsertIntoStockValue_RequestR')
-		request = client.factory.create('ns:MXManagerInsertIntoStockValue_Request')
-		request.stock_id = stock
-		request.open = open
-		request.buy = buy
-		request.sell = sell
-		request.high = high
-		request.low = low
-		request.last = last
-		request.close = close
-		request.created_at = now
-		request.created_by = manager_id
-		stock.MXManagerInsertIntoStockValue_Request = request
-		result = client.service.MX_Manager_Add_Stock_ValueWSDLOperation(stock)
-		return result
+		try:
+			client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/stock/create.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
+			stock = client.factory.create('ns:MXManagerInsertIntoStockValue_RequestR')
+			request = client.factory.create('ns:MXManagerInsertIntoStockValue_Request')
+			request.stock_id = stock
+			request.open = open
+			request.buy = buy
+			request.sell = sell
+			request.high = high
+			request.low = low
+			request.last = last
+			request.close = close
+			request.created_at = config.NOW
+			request.created_by = manager_id
+			stock.MXManagerInsertIntoStockValue_Request = request
+			result = client.service.MX_Manager_Add_Stock_ValueWSDLOperation(stock)
+			return result
+		except:
+			return None
+	
 
 	@staticmethod
 	def list(type, start_date, end_date, id = "", is_currency = True):
@@ -540,9 +526,9 @@ class ManagerBaseDataManager(BaseDataManager):
 			client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/list.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
 			result = client.service.MX_Manager_User_Show_Currency_Stock_Value_WSDLOperation(type, id, start_date, end_date, is_currency)
 			if is_currency:
-				records = extra_func.get_dict(result.Currency.MXManagerUserShowCurrency_Response.MXManagerUserShowCurrency_Record)
+				records = config.get_dict(result.Currency.MXManagerUserShowCurrency_Response.MXManagerUserShowCurrency_Record)
 			else:
-				records = extra_func.get_dict(result.Stock.MXManagerUserShowStock_Response.MXManagerUserShowStock_Record)
+				records = config.get_dict(result.Stock.MXManagerUserShowStock_Response.MXManagerUserShowStock_Record)
 			return records
 		except:
 			return None

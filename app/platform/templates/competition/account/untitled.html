@@ -1,0 +1,16 @@
+
+{% load static %}
+{% block content %}
+	
+<div class="row">
+	<div class="col-lg-8">
+	<form role="container">
+
+
+						{% csrf_token %}
+						{{ form.as_p }} 
+						</form>
+						</div>
+						</div>
+						
+{% endblock %}

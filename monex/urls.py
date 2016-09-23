@@ -23,6 +23,8 @@ urlpatterns = [
 
     url(r'^competition/', include('app.competition.urls', namespace = 'competition')),
 
+    url(r'^platform/', include('app.platform.urls', namespace = 'platform')),
+
     url(r'^online_support/', include('app.online_support.urls', namespace = 'online_support')),
 
     url(r'^redactor/', include('redactor.urls')),

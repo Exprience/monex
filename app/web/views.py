@@ -2,58 +2,55 @@
 # -*- coding: utf-8 -*-
 
 
-from datetime import datetime, date, timedelta
-
-
-from django.views.generic import TemplateView, FormView
+from django.views import generic as g
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse_lazy
-from django.utils.decorators import method_decorator
 from django.shortcuts import render_to_response
-from django.core.mail import send_mail, BadHeaderError, EmailMessage
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib import messages
 
 
-from django_modalview.generic.base import ModalTemplateView
-from django_modalview.generic.edit import ModalFormView, ModalCreateView, ModalUpdateView
-from django_modalview.generic.component import ModalResponse, ModalButton
-from django_modalview.generic.response import ModalJsonResponseRedirect
-
-
-#from app.competition.token import competition_register_token as c
-from app.user.views import UserLoginRequired
-from .forms import BagtsForm, LessonMailForm
-from app.competition.forms import CompetitionRegisterForm
-
+from app.user import views as user_v
+import forms as f
+from app.manager.managers import ManagerBaseDataManager as mm
+from managers import WebBaseDataManager as m
 
 #Exports
 __all__ = []
 
+class NotManager(object):
+
+	def dispatch(self, request, *args, **kwargs):
+		if request.user and hasattr(request.user, 'is_manager'):
+			return HttpResponseRedirect(reverse_lazy('manager:manager_home'))
+		return super(NotManager, self).dispatch(request, *args, **kwargs)
 
 
 
-class Home(TemplateView):
+class Home(NotManager, g.TemplateView):
 	template_name = 'web/home/home.html'
 
 
+class News(NotManager, g.TemplateView):
 
-
-class News(TemplateView):
 	template_name = 'web/news/news.html'
 
+	def get_context_data(self, *args, **kwargs):
+		context = super(News, self).get_context_data(*args, **kwargs)
+		context['newss'] = mm.select("", 'N')
+		return context
 
 
 
-class NewsSelf(TemplateView):
+
+class NewsSelf(NotManager, g.TemplateView):
 	template_name = 'web/news/news_self.html'
 
+	def get_context_data(self, *args, **kwargs):
+		context = super(NewsSelf, self).get_context_data(*args, **kwargs)
+		context['news'] = mm.individually("", 'N', self.kwargs['pk'])
+		return context
 
 
-
-class Research(UserLoginRequired, TemplateView):
+class Research(NotManager, user_v.LoginRequired, g.TemplateView):
 	template_name = 'web/research/research.html'
 
 
@@ -65,9 +62,14 @@ class ResearchFilter(Research):
 
 
 
-class Lesson(FormView):
+class Lesson(NotManager, g.FormView):
 	template_name = 'web/lesson/lesson.html'
-	form_class = LessonMailForm
+	form_class = f.LessonMailForm
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(Lesson, self).get_context_data(*args, **kwargs)
+		context['lessons'] = mm.select("", 'L')
+		return context
 
 
 
@@ -78,21 +80,25 @@ class LessonFilter(Lesson):
 
 
 
-class WebCompetitionCalendar(TemplateView):
+class Competition(NotManager, g.TemplateView):
 	template_name = 'web/competition/competition.html'
 
+	def get_context_data(self, *args, **kwargs):
+		context = super(Competition, self).get_context_data(*args, **kwargs)
+		context['competitions'] = mm.select("", 'C')
+		return context
 
 
-
-class WebCompetitionCalendarFilter(WebCompetitionCalendar):
+class WebCompetitionCalendarFilter(Competition):
 	template_name = 'web/competition/competition_filter.html'
 
 
 
 
-class Calendar(TemplateView):
+class Calendar(NotManager, g.TemplateView):
 	template_name = 'web/calendar/calendar.html'
 
+	
 
 
 
@@ -102,7 +108,7 @@ class CalendarFilter(Calendar):
 
 
 
-class BagtsView(ModalFormView):
+class BagtsView(NotManager, g.FormView):
 	def __init__(self, *args, **kwargs):
 		super(BagtsView, self).__init__(*args, **kwargs)
 		self.title = "Тэмцээний ангилал"
@@ -119,41 +125,28 @@ class BagtsView(ModalFormView):
 		return super(BagtsView, self).form_valid(form, commit = False, **kwargs)
 
 
+class CompetitionRegisterView(NotManager, user_v.LoginRequired, g.FormView):
+	template_name = "web/competition/competition_register.html"
+	form_class = f.CompetitionRegisterForm
+	success_url = reverse_lazy('web:competition')
 
-
-class WebCompetitionRegisterView(UserLoginRequired, ModalFormView):
-
-	def __init__(self, *args, **kwargs):
-		super(WebCompetitionRegisterView, self).__init__(*args, **kwargs)
-		self.title = "Тэмцээний ангилал"
-		self.form_class = CompetitionRegisterForm
-		self.submit_button = ModalButton(value=u'Хадгалах', loading_value = "Уншиж байна...",
-			button_type='success btn-flat')
-		self.close_button = ModalButton(value=u'Хаах', button_type ='default btn-flat')
+	def get_context_data(self, *args, **kwargs):
+		context = super(CompetitionRegisterView, self).get_context_data(*args, **kwargs)
+		return context
 
 	def form_valid(self, form):
-		object = form.save(commit = False)
-		if SystemUser.objects.filter(username = self.request.user.username) and \
-		Competition.objects.filter(id =self.kwargs['id']):	
-			object.user = SystemUser.objects.get(username = self.request.user.username)
-			object.competition = Competition.objects.get(id = self.kwargs.pop('id', None))
-			object.auto_increment()
-			object.save()
-			#competition_register_token(object.user.id, object.account, )
-			self.response = ModalResponse('Амжилттай хадгалагдлаа', 'success')
-			return super(WebCompetitionRegisterView, self).form_valid(form)
-		else:
-			return super(WebCompetitionRegisterView, self).form_invalid(form)
+		obj = form.save()
+		m.register("C", file = obj.reciept, competition_id = self.kwargs['pk'], user_id = self.request.user.id)
+		return super(CompetitionRegisterView, self).form_valid(form)
 
 
 
-
-class LessonMailView(ModalFormView):
+class LessonMailView(NotManager, g.FormView):
 
 	def __init__(self, *args, **kwargs):
 		super(LessonMailView, self).__init__(*args, **kwargs)
 		self.title = u"Санал хүсэлт"
-		self.form_class = LessonMailForm
+		self.form_class = f.LessonMailForm
 		self.submit_button = ModalButton(value=u'Илгээх', loading_value = "Уншиж байна...",
 			button_type='primary btn-flat')
 		self.close_button = ModalButton(value=u'Хаах', button_type ='default btn-flat')

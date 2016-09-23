@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'app.web',
     'app.competition',
     'app.online_support',
+    'app.platform',
     
     'redactor',
     'captcha',
@@ -75,9 +76,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 
 
-    'app.config.get_username.RequestMiddleware',
-    'app.user.middleware.UserAuthMiddleware',
-    'app.manager.middleware.ManagerAuthMiddleware',
+    'app.config.middleware.AuthMiddleware',
+    'app.config.middleware.FlashMiddleware',
 )
 
 ROOT_URLCONF = 'monex.urls'

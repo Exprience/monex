@@ -21,8 +21,11 @@
             <li><a href="{% url 'user:login' %}" class="top-icon-word fa fa-user"> Нэвтрэх</a></li>
           {% else %}
           <div class="dropdown">
-            <a href="javascript:;" data-toggle="dropdown">{{ user.firstname }}
-            <span class="caret"></span></a>
+            <a href="javascript:;" data-toggle="dropdown">
+              <span class="top-icon fa fa-user"></span>
+              {{ user.firstname }}
+              <span class="caret"></span>
+            </a>
             <ul class="dropdown-menu">
               <li><a href="#">Минии мэдээлэл</a></li>
               <li><a href="{% url 'user:password_change' %}">Нууц үг солих</a></li>
@@ -56,27 +59,27 @@
 <header id="main-menu" class="main-menu">
   <div class="container">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-7">
         <nav id="menu" class="menu collapse navbar-collapse">
-          <ul id="headernavigation" class="menu-list nav navbar-nav">
+          <ul id="headernavigation" class="menu-list nav navbar-nav font-bold">
             <li><a href="{% url 'web:home' %}">Нүүр</a></li>
-            {% comment %}
-            <li><a href="{% url 'web:about' %}">Бидний тухай</a></li>
-            {% endcomment %}
-            <li><a href="{% url 'web:competition_calendar' %}">Тэмцээн</a></li>
+            <li><a href="{% url 'web:competition' %}">Тэмцээн</a></li>
             <li><a href="{% url 'web:news' %}">Мэдээлэл</a></li>
-            {% if user.is_authenticated %}
-            <li><a href="{% url 'web:research' %}">Судалгаа</a></li>
-            {% endif %}
             <li><a href="{% url 'web:lesson' %}">Сургалт</a></li>
-            <li><a href="{% url 'web:calendar' %}">Э/З календарь</a></li>
-            <li><a href="{% url 'chat:room' %}">М-чат</a></li>
             {% comment %}
-            <li><a href="{% url 'web:contact' %}">Холбоо барих</a></li>
+            <li><a href="{% url 'web:calendar' %}">Э/З календарь</a></li>
             {% endcomment %}
+            <li><a href="{% url 'chat:room' %}">Форум</a></li>
           </ul><!-- /.menu-list -->
         </nav><!-- /.menu-list -->
       </div>
+      <div class="col-md-5">
+        <div class="menu-search pull-right">
+         <form role="search" class="search-form" action="#" method="get">
+          <input class="search-field" type="text" name="s" id="s" placeholder="Хайх" required>
+          <button class="btn search-btn" type="submit"><i class="fa fa-search"></i></button>
+        </form><!-- /.search-form -->
+      </div><!-- /.menu-search -->
     </div><!-- /.row -->
   </div><!-- /.container -->
 </header><!-- /#main-menu -->

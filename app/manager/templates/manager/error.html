@@ -1,0 +1,19 @@
+<script type="text/javascript">
+  {% if flash.has_error %}
+  $(document).ready(function(){
+    $.notify(
+    {
+      icon: 'icon fa fa-ban',
+      message: "{{ flash.get_error|safe }}"
+    },
+    {
+      type: 'danger',
+      placement: {
+        from: "top",
+        align: "right"
+      },
+    }
+    );
+  });
+  {% endif %}
+</script>

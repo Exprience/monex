@@ -1,0 +1,57 @@
+{% extends 'manager/base.html' %}
+{% load i18n %}
+{% block content %}
+<section class="content-header">
+  <h1>{% trans 'Бүртгүүлсэн хэрэглэгчид' %}</h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li class="active">{% trans 'Бүртгүүлсэн хэрэглэгчид' %}</li>
+  </ol>
+</section>
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-body">
+          <table id="competition_register_table" class="table table-bordered table-hover table-striped">
+            <thead>
+              <tr>
+                <th>{% trans '№' %}</th>
+                <th>{% trans 'Хэрэглэгч' %}</th>
+                <th>{% trans 'Төлөв' %}</th>
+                <th>{% trans 'Бүртгүүлсэн огноо' %}</th>
+                <th>{% trans 'Баримт' %}</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ user.id }}</td>
+                <td><span class='label label-pill label-primary'>{{ user.status }}</span></td>
+                <td>{{ user.created_at }}</td>
+                <td>{{ user.file }}</td>
+                <td>
+                  <a href="{% url 'manager:approve' user.id %}" class="btn btn-flat btn-primary btn-xs">
+                    {% trans 'Зөвшөөрөх' %}
+                  </a>
+                  <a href="{% url 'manager:decline' user.id %}" class="btn btn-flat btn-danger btn-xs">
+                    {% trans 'Цуцлах' %}
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+  managerDatatable('#competition_register_table');
+</script>
+{% endblock %}

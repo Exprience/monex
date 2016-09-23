@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:tns="http://xml.netbeans.org/schema/MX_User_Manager_Competition_Register_CUS" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://xml.netbeans.org/schema/MX_User_Manager_Competition_Register_CUS">
+	<xsd:complexType name="competition_registerR">
+		<xsd:sequence>
+			<xsd:element name="competition_register" ></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="competition_register">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="id">
+					<xsd:complexType>
+						<xsd:simpleContent>
+							<xsd:extension base="xsd:string">
+								<xsd:attribute name="isNull" type="xsd:boolean"/>
+								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+							</xsd:extension>
+						</xsd:simpleContent>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="competition_id">
+					<xsd:complexType>
+						<xsd:simpleContent>
+							<xsd:extension base="xsd:string">
+								<xsd:attribute name="isNull" type="xsd:boolean"/>
+								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+							</xsd:extension>
+						</xsd:simpleContent>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="user_id">
+					<xsd:complexType>
+						<xsd:simpleContent>
+							<xsd:extension base="xsd:string">
+								<xsd:attribute name="isNull" type="xsd:boolean"/>
+								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+							</xsd:extension>
+						</xsd:simpleContent>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="file">
+					<xsd:complexType>
+						<xsd:simpleContent>
+							<xsd:extension base="xsd:base64Binary">
+								<xsd:attribute name="isNull" type="xsd:boolean"/>
+								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+							</xsd:extension>
+						</xsd:simpleContent>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="status">
+					<xsd:complexType>
+						<xsd:simpleContent>
+							<xsd:extension base="xsd:string">
+								<xsd:attribute name="isNull" type="xsd:boolean"/>
+								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+							</xsd:extension>
+						</xsd:simpleContent>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="created_at">
+					<xsd:complexType>
+						<xsd:simpleContent>
+							<xsd:extension base="xsd:dateTime">
+								<xsd:attribute name="isNull" type="xsd:boolean"/>
+								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+							</xsd:extension>
+						</xsd:simpleContent>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

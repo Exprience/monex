@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xsd:schema xmlns="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://j2ee.netbeans.org/xsd/tableSchema">
 	<xsd:complexType name="MXManagerUpdateToBank_RequestR">
-    <xsd:sequence>
-		  <xsd:element name="MXManagerUpdateToBank_Request">
-		  	<xsd:complexType>
+		<xsd:sequence>
+			<xsd:element name="MXManagerUpdateToBank_Request">
+				<xsd:complexType>
 					<xsd:sequence>
 						<xsd:element name="name">
 							<xsd:complexType>
@@ -47,7 +47,7 @@
 						</xsd:element>
 					</xsd:sequence>
 				</xsd:complexType>
-		  </xsd:element>
+			</xsd:element>
 		</xsd:sequence>
-  </xsd:complexType>
+	</xsd:complexType>
 </xsd:schema>

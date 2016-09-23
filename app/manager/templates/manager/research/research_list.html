@@ -4,7 +4,9 @@
 <section class="content-header">
   <h1>
     {% trans 'Судалгаа' %}
+    {% if user.is_research_create %}
     <a href="{% url 'manager:research_create' %}"><i class="fa fa-plus"></i></a>
+    {% endif %}
   </h1>
   <ol class="breadcrumb">
     <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
@@ -21,22 +23,32 @@
               <tr>
                 <th>№</th>
                 <th>Ангилал</th>
-                <th>Нэр</th>
+                <th>Гарчиг</th>
                 <th>Файл</th>
-                <th></th>
+                <th>Судалгаа хийсэн багш</th>
+                <th>Судалгаа хийсэн багшийн и-мэйл</th>
               </tr>
             </thead>
             <tbody>
-              {% for o in object_list %}
+              {% for research in researchs %}
               <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ o.angilal }}</td>
-                <td>{{ o.name }}</td>
-                <td><a href="/media/{{ o.pdf_file }}">{{ o.pdf_file }}</a></td>
+                <td>{{ research.research_category_id }}</td>
+                <td>{{ research.title }}</td>
+                <td><a href="/media/{{ o.pdf_file }}">{{ research.pdf_file }}</a></td>
+                <td>{{ research.author_name }}</td>
+                <td>{{ research.author_email }}</td>
                 <td>
-                  <a href="{% url 'manager:manager_research_update' o.id %}" class="btn btn-flat btn-primary btn-xs">
+                  {% if user.is_research_update %}
+                  <a href="{% url 'manager:research_update' research.id %}" class="btn btn-flat btn-primary btn-xs">
                     <i class="fa fa-edit"></i> Засварлах
                   </a>
+                  {% endif %}
+                  {% if user.is_research_delete %}
+                  <a href="{% url 'manager:research_delete' research.id %}" class="btn btn-flat btn-danger btn-xs">
+                    <i class="fa fa-edit"></i> Устгах
+                  </a>
+                  {% endif %}
                 </td>
               </tr>
               {% endfor %}

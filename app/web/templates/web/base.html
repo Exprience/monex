@@ -2,26 +2,24 @@
 {% load i18n %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>MONEX</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="" content="">
-    {% block css %}
-    <!--CSS-->
-    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/bootstrap-year-calendar-master/css/bootstrap-year-calendar.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/bootstrap-daterange/css/daterangepicker.css' %}">
-    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/static/css/styles.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/scroll.css">
-    <link href="{% static 'manager/dist/css/AdminLTE.css' %}" rel="stylesheet">
-
-
-    <link rel="stylesheet" href="{% static 'django_modalview/css/modal.css' %}" type="text/css" />
-    {% endblock %}
-  </head>
+<head>
+  <meta charset="utf-8">
+  <title>MONEX</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="" content="">
+  {% block css %}
+  <!--CSS-->
+  <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/bootstrap-year-calendar-master/css/bootstrap-year-calendar.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/bootstrap-daterange/css/daterangepicker.css' %}">
+  <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/static/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/scroll.css">
+  <link href="{% static 'manager/dist/css/AdminLTE.min.css' %}" rel="stylesheet">
+  <link href="/static/css/styles.css" rel="stylesheet">
+  {% endblock %}
+</head>
 </html>
 <body class="header-fixed-top">
   {% block header %}{% include 'web/header.html' %}{% endblock %}
@@ -29,41 +27,6 @@
     <div class="row">
       <div class="col-md-9">
         {% block content %}
-        {% endblock %}
-        {% block stock %}
-        <aside class="widget">
-          <h3 class="widget-title">{% trans 'Хувьцаа/ТОП 20' %}</h3>
-          <table class="table table-bordered table-striped table-hover text-sm wall">
-            <thead>
-              <tr>
-                <th>{% trans 'Хувьцаа' %}</th>
-                <th>{% trans 'Авах' %}</th>
-                <th>{% trans 'Зарах' %}</th>
-                <th>{% trans 'Дээд' %}</th>
-                <th>{% trans 'Доод' %}</th>
-                <th>{% trans 'Сүүлийн ханш' %}</th>
-                <th>{% trans 'Өөрчлөлт' %}</th>
-                <th>{% trans '% Өөрчлөлт' %}</th>
-                <th>{% trans 'Сүүлд шинэчлэгдсэн' %}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for company in companys %}
-              <tr>
-                <td>{{ company.symbol }} <img src="/media/{{ company.icon }}" width="25" height="25"></td>
-                <td>{{ company.get_stock.stock_buy }}</td>
-                <td>{{ company.get_stock.stock_sell }}</td>
-                <td>{{ company.get_stock.stock_high }}</td>
-                <td>{{ company.get_stock.stock_low }}</td>
-                <td>{{ company.get_stock.stock_last }}</td>
-                <td>{{ company.get_change }}</td>
-                <td>{{ company.get_change_percent }}</td>
-                <td>{{ company.get_stock.stock_date|date:"Y-m-d H:i:s" }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </aside>
         {% endblock %}
       </div>
       <div class="col-md-3">
@@ -100,13 +63,13 @@
                       </thead>
                       <tbody>
                         {% for c in bank.get_currency %}
-                          <tr>
-                            <td>
-                              <img src="/media/{{c.currency.icon}}" width="20" height="20"> {{ c.currency.bill }}
-                            </td>
-                            <td>{{ c.buy }}</td>
-                            <td>{{ c.sell }}</td>
-                          </tr>
+                        <tr>
+                          <td>
+                            <img src="/media/{{c.currency.icon}}" width="20" height="20"> {{ c.currency.bill }}
+                          </td>
+                          <td>{{ c.buy }}</td>
+                          <td>{{ c.sell }}</td>
+                        </tr>
                         {% endfor %}
                       </tbody>
                     </table>
@@ -114,7 +77,6 @@
                   {% endfor %}
                 </div>
               </aside>
-              {% comment %}
               <aside class="widget">
                 <h3 class="widget-title">{% trans 'Хувьцаа/ТОП 20' %}</h3>
                 <table class="table table-bordered table-striped table-hover text-sm">
@@ -123,61 +85,12 @@
                       <th>{% trans 'Хувьцаа' %}</th>
                       <th>{% trans 'Авах' %}</th>
                       <th>{% trans 'Зарах' %}</th>
-                      <th>{% trans 'Дээд' %}</th>
-                      <th>{% trans 'Доод' %}</th>
-                      <th>{% trans 'Сүүлийн ханш' %}</th>
-                      <th>{% trans 'Өөрчлөлт' %}</th>
-                      <th>{% trans '% Өөрчлөлт' %}</th>
-                      <th>{% trans 'Сүүлд шинэчлэгдсэн' %}</th>
                     </tr>
                   </thead>
                 </table>
               </aside>
-              {% endcomment %}
-              
               <aside class="widget">
-                <h3 class="widget-title">Хамгийн их уншисан</h3><!-- /.widget-title -->
-                {% for m in medee_most %}
-                <div class="wall-wall-most">
-                  <span class="service-image"><img src="{{ m.img_url }}"></span>
-                  <span class="accordion-title"><a href="{% url 'web:news_self' m.id %}"><h5>{{ m.title|truncatechars:50 }}</h5></a></span>
-                  <p>{{ m.remove_html|safe|truncatechars:60 }}</p>
-                </div>
-                {% endfor %}
-              </aside><!-- /.widget -->
-
-              <aside class="widget">
-                <h3 class="widget-title">
-                  {% trans 'Судалгаа ангилал' %}
-                </h3>
-                <ul class="archive-list">
-                  {% for s in research_category %}
-                  <li><a href="/media/{{ s.pdf_file }}">{{ s.name|truncatechars:40 }}</a></li>
-                  {% endfor %}
-                </ul>
-                {% for u in users %}
-                {% endfor %}
-              </aside>
-              {% comment %}
-              <aside class="widget">
-                <h3 class="widget-title">Mэдээ ангилал</h3><!-- /.widget-title -->
-                <div class="container">
-                  <ul class="nav nav-tabs">
-                    <li class="nav active"><a href="#A" data-toggle="tab">A</a></li>
-                    <li class="nav"><a href="#B" data-toggle="tab">B</a></li>
-                    <li class="nav"><a href="#C" data-toggle="tab">C</a></li>
-                  </ul>
-                  <!-- Tab panes -->
-                  <div class="tab-content">
-                    <div class="tab-pane fade in active" id="A">Content inside tab A</div>
-                    <div class="tab-pane fade" id="B">Content inside tab B</div>
-                    <div class="tab-pane fade" id="C">Content inside tab C</div>
-                  </div>
-                </div>
-              </aside>
-              {% endcomment %}
-              <aside class="widget">
-                <h3 class="widget-title">Mэдээ ангилал</h3>
+                <h3 class="widget-title">{% trans "Суурь шинжилгээ" %}</h3>
                 <ul class="category-list">
                   {% for i in news_category %}
                   <li><a href="{% url 'web:news' i.id %}">{{ i.name }}</a></li>
@@ -185,12 +98,14 @@
                 </ul>
               </aside>
               <aside class="widget">
-                <h3 class="widget-title">Сургалт ангилал</h3>
-                <ul class="category-list">
-                  {% for i in surgalt_angilal %}
-                  <li><a href="{% url 'news' i.id %}">{{ i.name }}</a></li>
-                  {% endfor %}
-                </ul>
+                <h3 class="widget-title">{% trans "Мэдээллийн шинжилгээ" %}</h3><!-- /.widget-title -->
+                {% for m in medee_most %}
+                <div class="wall-wall-most">
+                  <span class="service-image"><img src="{{ m.img_url }}"></span>
+                  <span class="accordion-title"><a href="{% url 'web:news_self' m.id %}"><h5>{{ m.title|truncatechars:50 }}</h5></a></span>
+                  <p>{{ m.remove_html|safe|truncatechars:60 }}</p>
+                </div>
+                {% endfor %}
               </aside>
             </div>
           </div>
@@ -205,13 +120,15 @@
       <i class="fa fa-chevron-up"></i>    
     </span>
   </div>
+  {% comment %}
   {% if user.is_authenticated %}
   <a href="{% url 'web:bagts' %}" data-modal="modalview" class="btn btn-primary btn-flat" id="bagts-button">Багц</a>
   {% endif %}
-
+  {% endcomment %}
   {% endblock %}
 
   {% block support %}
+  {% comment %}
   {% if user.is_authenticated %}
   <div class="row">
     <div class="col-md-12">
@@ -222,6 +139,7 @@
     </div>
   </div>
   {% endif %}
+  {% endcomment %}
   {% endblock %}
 </body>
 {% block js %}
@@ -235,9 +153,6 @@
 <script src="/static/js/functions.js"></script>
 <script src="/static/js/web.js"></script>
 <script src="/static/js/scroll.js"></script>
-
-<script type="text/javascript" src="{% static 'django_modalview/js/django_modal_view.js' %}"></script>
-<script type="text/javascript" src="{% static 'django_modalview/js/jquery.form.js' %}"></script>
 {% endblock %}
 {% block extrajs %}
 

@@ -6,28 +6,9 @@
       <b>Monex</b>
     </div>
     <div class="login-box-body">
-      <p class="login-box-msg">Нууц үг</p>
-      {% if form.non_field_errors %}
-      {% for error in form.non_field_errors %}
-      <div class="alert alert-danger alert-dismissible">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <i class="icon fa fa-ban"></i> {{ error }}
-      </div>
-      {% endfor %}
-      {% endif %}
+      <p class="login-box-msg">Нэвтрэх цонх</p>
       <form method="post">{% csrf_token %}
-        {% for f in form %}
-        <div class="form-group {% if f.errors %}has-error{% endif %} has-feedback">
-          {% if f.errors %}
-          <label class="control-label errors" for="inputError"><i class="fa fa-times-circle-o"></i>
-            {% for error in f.errors %}
-              {{ error }}
-            {% endfor %}
-          </label>
-          {% endif %}
-          {{ f }}
-        </div>
-        {% endfor %}
+        {% include 'user/form.html' %}
         <div class="row">
           <div class="col-xs-8"><a href="{% url 'user:password_reset' %}">Нууц үгээ мартсан</a></div>
           <div class="col-xs-4"><a href="{% url 'user:register' %}">БҮРТГҮҮЛЭХ</a></div>

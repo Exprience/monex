@@ -1291,8 +1291,8 @@ h4.title {
 .dropdown a {
 	font-family: 'ubuntu-l';
 	padding: 20px;
-	border-left: 1px solid white;
-	border-right: 1px solid white;
+	/*border-left: 1px solid white;
+	border-right: 1px solid white;*/
 }
 
 #bagts-form input{
@@ -1442,4 +1442,9 @@ h4.title {
 }
 #online-footer{
 	display: none;
+}
+
+.font-bold {
+	font-size: 30px;
+	font-family: "ubuntu-b";
 }

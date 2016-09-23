@@ -2,24 +2,24 @@
 {% load i18n %}
 {% block content %}
 <section class="content-header">
-  <h1>
-  	{% if object %}
+	<h1>
+		{% if object %}
 		{% trans 'Судалгаа засварлах' %}
 		{% else %}
 		{% trans 'Судалгаа нэмэх' %}
 		{% endif %}
-  </h1>
-  <ol class="breadcrumb">
-    <li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
-    <li><a href="{% url 'manager:research_list' %}">{% trans 'Судалгаа' %}</a></li>
-    <li class="active">
-    	{% if object %}
-    	{% trans 'Судалгаа засварлах' %}
-    	{% else %}
-    	{% trans 'Судалгаа нэмэх' %}
-    	{% endif %}
-    </li>
-  </ol>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="{% url 'manager:manager_home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+		<li><a href="{% url 'manager:research_list' %}">{% trans 'Судалгаа' %}</a></li>
+		<li class="active">
+			{% if object %}
+			{% trans 'Судалгаа засварлах' %}
+			{% else %}
+			{% trans 'Судалгаа нэмэх' %}
+			{% endif %}
+		</li>
+	</ol>
 </section>
 <div class="content">
 	<div class="row">
@@ -42,9 +42,9 @@
 {% endblock %}
 {% block extrajs %}
 <script type="text/javascript">
-  $('select').on('change', function() {
-    $('#related_change').attr('href', '/manager/research/category/update/'+ this.value);
-    $('#related_delete').attr('href', '/manager/research/category/delete/'+ this.value);
-  });
+	$('select').on('change', function() {
+		$('#related_change').attr('href', '/manager/research/category/update/'+ this.value);
+		$('#related_delete').attr('href', '/manager/research/category/delete/'+ this.value);
+	});
 </script>
 {% endblock %}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns0="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://j2ee.netbeans.org/wsdl/MX_Manager_Check_Login/src/MX_Manager_Check_Login_WSDL" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MX_Manager_Check_Login_WSDL" targetNamespace="http://j2ee.netbeans.org/wsdl/MX_Manager_Check_Login/src/MX_Manager_Check_Login_WSDL">
+	<types>
+		<xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/MX_Manager_Check_Login/src/MX_Manager_Check_Login_WSDL">
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/manager/login/soap.xsd"/>
+		</xsd:schema>
+	</types>
+	<message name="MX_Manager_Check_Login_WSDLOperationResponse">
+		<part type="ns0:MXCheckIfEmailAndPassIsGood_ResponseR" name="manager_info"></part>
+		<part name="isSuccess" type="xsd:boolean"></part>
+	</message>
+	<message name="MX_Manager_Check_Login_WSDLOperationRequest">
+		<part name="email" type="xsd:string"></part>
+		<part name="password" type="xsd:string"></part>
+		<part name="last_login" type="xsd:string"></part>
+	</message>
+	<portType name="MX_Manager_Check_Login_WSDLPortType">
+		<operation name="MX_Manager_Check_Login_WSDLOperation">
+			<input message="tns:MX_Manager_Check_Login_WSDLOperationRequest" name="input1"></input>
+			<output message="tns:MX_Manager_Check_Login_WSDLOperationResponse" name="output1"></output>
+		</operation>
+	</portType>
+	<binding name="MX_Manager_Check_Login_WSDLBinding" type="tns:MX_Manager_Check_Login_WSDLPortType">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="MX_Manager_Check_Login_WSDLOperation">
+			<soap:operation/>
+			<input name="input1">
+				<soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_Manager_Check_Login/src/MX_Manager_Check_Login_WSDL" use="literal"/>
+			</input>
+			<output name="output1">
+				<soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_Manager_Check_Login/src/MX_Manager_Check_Login_WSDL" use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="MX_Manager_Check_Login_WSDLService">
+		<port binding="tns:MX_Manager_Check_Login_WSDLBinding" name="MX_Manager_Check_Login_WSDLPort">
+			<soap:address location="http://a-PC:9080/MX_Manager_Check_Login_WSDLService/MX_Manager_Check_Login_WSDLPort"/>
+		</port>
+	</service>
+	<plnk:partnerLinkType name="MX_Manager_Check_Login_WSDL">
+<!--
+ A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.
+-->
+<plnk:role name="MX_Manager_Check_Login_WSDLPortTypeRole" portType="tns:MX_Manager_Check_Login_WSDLPortType"/>
+</plnk:partnerLinkType>
+</definitions>

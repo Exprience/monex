@@ -3,19 +3,14 @@
 
 
 import urllib
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 
-
+from django import forms
+from django.forms.utils import ErrorList
+from django import http
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse_lazy
-from django.views import generic as g
-from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import redirect
-from django.forms.utils import ErrorList
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext as _
-from app.online_support.forms import SupportManagerMessageForm
 
 
 from django.utils.http import urlsafe_base64_decode
@@ -23,23 +18,15 @@ from django.utils.encoding import force_bytes, force_text
 from django.contrib.auth.tokens import default_token_generator
 
 
-import forms as manager_form
-from app.web import forms as web_form
-from app.config import session, status as s
-from managers import ManagerBaseDataManager as manager
+import forms as mf
+from models import ResearchModel
+from managers import ManagerBaseDataManager as m
+from app.config import session, status as s, views as v, NOW, PREVIOUS, config
+from app.web.managers import WebBaseDataManager as wm
 
 
-
-#Exports
-__all__ = []
-
-NOW = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-PREVIOUS = (datetime.now() - relativedelta(month=1)).strftime("%Y-%m-%d %H:%M:%S")
-
-
-
-class LoginView(g.FormView):
-	form_class = manager_form.ManagerLoginForm
+class LoginView(v.FormView):
+	form_class = mf.LoginForm
 	template_name = 'manager/login.html'
 	success_url = reverse_lazy('manager:manager_home')
 
@@ -47,40 +34,64 @@ class LoginView(g.FormView):
 		return self.request.GET.get('next', self.success_url)
 
 	def form_valid(self, form):
-		user = manager.loginManager(form.cleaned_data['email'], form.cleaned_data['password'])
+		user = m.login(form.cleaned_data['email'], form.cleaned_data['password'])
+		if user == config.URL_ERROR:
+			self.error(config.URL_ERROR_MESSAGE)
+			return super(LoginView, self).form_invalid(form)
+		if user == config.SYSTEM_ERROR:
+			self.error(config.SYSTEM_ERROR_MESSAGE)
+			return super(LoginView, self).form_invalid(form)
+		if user == "false":
+			self.form_error(form, u"Хэрэглэгчийн э-мэйл эсвэл нууц үг буруу байна")
+			return super(LoginView, self).form_invalid(form)
+		if user.is_active == '0':
+			self.form_error(form, u"Системд нэвтрэх эрхгүй байна. Бүртгэлээ баталгаажуулна уу!")
+			return super(LoginView, self).form_invalid(form)
 		session.put(self.request, 'manager', user)
 		return super(LoginView, self).form_valid(form)
 
 	@staticmethod
 	def logout(request):
 		session.pop(request, 'manager')
-		return HttpResponseRedirect(reverse_lazy('manager:manager_login'))
+		return http.HttpResponseRedirect(reverse_lazy('manager:manager_login'))
 
 
 class LoginRequired(object):
-
 	def dispatch(self, request, *args, **kwargs):
 		if request.user is None:
 			next_url = urllib.urlencode({'next': request.get_full_path()})
 			return redirect('%s?%s' % (reverse_lazy('manager:manager_login'), next_url))
+		if not hasattr(request.user, "is_manager"):
+			raise http.Http404
 		return super(LoginRequired, self).dispatch(request, *args, **kwargs)
 
 
-class HomeView(LoginRequired, g.TemplateView):
+class FormView(LoginRequired, SuccessMessageMixin, v.FormView):
 	
+	success_message = u"Мэдээлэл амжилттай хадгалагдлаа"
+
+
+class TemplateView(LoginRequired, v.TemplateView):
+
+	pass
+
+
+class HomeView(TemplateView):
+
 	template_name = 'manager/home.html'
 
 
-class CompetitionListView(LoginRequired, g.TemplateView):
+#Competitions
+class CompetitionListView(TemplateView):
 	template_name = 'manager/competition/competition_list.html'
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(CompetitionListView, self).get_context_data(*args, **kwargs)
-		context['competitions'] = manager.select(self.request.user.id, 'C')
+		context['competitions'] = m.select(self.request.user.id, 'C')
 		return context
 
-class CompetitionCreateView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.CompetitionForm
+class CompetitionCreateView(FormView):
+	form_class = mf.CompetitionForm
 	template_name = 'manager/competition/competition_form.html'
 	success_url = reverse_lazy('manager:competition_list')
 	success_message = u"Тэмцээн амжилттай шинэчлэгдлээ"
@@ -97,18 +108,14 @@ class CompetitionCreateView(SuccessMessageMixin, LoginRequired, g.FormView):
 		start_date = form.cleaned_data['start_date']
 		end_date = form.cleaned_data['end_date']
 		fee = form.cleaned_data['fee']
-		manager.create('C', self.request.user.id, NOW, category, status = s.COMPETITION_START_REGISTER, register_low = register_low, start_date = start_date, end_date = end_date, prize = prize, fee = fee)
+		m.create('C', self.request.user.id, NOW, category, status = s.COMPETITION_START_REGISTER, register_low = register_low, start_date = start_date, end_date = end_date, prize = prize, fee = fee)
 		return super(CompetitionCreateView, self).form_valid(form)
 
-class CompetitionUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.CompetitionForm
+class CompetitionUpdateView(FormView):
+	form_class = mf.CompetitionForm
 	template_name = 'manager/competition/competition_form.html'
 	success_url = reverse_lazy('manager:competition_list')
 	success_message = u"Тэмцээн амжилттай шинэчлэгдлээ"
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(CompetitionUpdateView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(CompetitionUpdateView, self).get_form_kwargs()
@@ -126,26 +133,21 @@ class CompetitionUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
 		prize = form.cleaned_data['prize']
 		start_date = form.cleaned_data['start_date']
 		end_date = form.cleaned_data['end_date']
-		print type(end_date.strftime("%Y-%m-%d %H:%M:%S"))
 		fee = form.cleaned_data['fee']
-		result = manager.update('C', self.request.user.id, self.pk, category, register_low = register_low, start_date = start_date.strftime("%Y-%m-%d %H:%M:%S"), end_date = end_date.strftime("%Y-%m-%d %H:%M:%S"), prize = prize, fee = fee)
+		result = m.update('C', self.request.user.id, self.pk, category, register_low = register_low, start_date = start_date.strftime("%Y-%m-%d %H:%M:%S"), end_date = end_date.strftime("%Y-%m-%d %H:%M:%S"), prize = prize, fee = fee)
 		if result:
 			if not result.isSuccess:
-				form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+				self.error(u'Үйлдэл амжилтгүй боллоо')
 				return self.form_invalid(form)
 		else:
-			form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
 		return super(CompetitionUpdateView, self).form_valid(form)
 
-class CompetitionCategoryCreateUpdateView(LoginRequired, g.FormView):
-	form_class = manager_form.CompetitionCategoryForm
+class CompetitionCategoryCreateUpdateView(FormView):
+	form_class = mf.CompetitionCategoryForm
 	template_name = 'manager/competition/competition_category_form.html'
 	success_url = reverse_lazy('manager:competition_list')
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(CompetitionCategoryCreateUpdateView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(CompetitionCategoryCreateUpdateView, self).get_form_kwargs()
@@ -160,34 +162,30 @@ class CompetitionCategoryCreateUpdateView(LoginRequired, g.FormView):
 	def form_valid(self, form):		
 		if "_popup" in self.request.POST:
 			if not self.pk:
-				result = manager.category_create(form.cleaned_data['category'], '', '4', wallet_val = form.cleaned_data['wallet_val'])
+				result = m.category_create(form.cleaned_data['category'], '', '4', wallet_val = form.cleaned_data['wallet_val'])
 				if not result:
-					form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+					self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 					return self.form_invalid(form)
 				else:
 					if result.isSuccess == 'false':
-						form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+						self.error(u'Үйлдэл амжилтгүй боллоо')
 						return self.form_invalid(form)
-				return HttpResponse('<script>opener.dismissAddRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(result.categoryId.value, form.cleaned_data['category']))
+				return http.HttpResponse('<script>opener.dismissAddRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(result.categoryId.value, form.cleaned_data['category']))
 			else:
-				result = manager.category_create(form.cleaned_data['category'], self.pk, '4', is_create = False)
+				result = m.category_create(form.cleaned_data['category'], self.pk, '4', is_create = False)
 				if not result:
-					form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+					self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 					return self.form_invalid(form)
 				else:
 					if result.isSuccess == 'false':
-						form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+						self.error(u'Үйлдэл амжилтгүй боллоо')
 						return self.form_invalid(form)
-				return HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(self.pk, form.cleaned_data['category']))
+				return http.HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(self.pk, form.cleaned_data['category']))
 
-class CompetitionCategoryDeleteView(LoginRequired, g.FormView):
+class CompetitionCategoryDeleteView(FormView):
 
 	template_name = 'manager/competition/competition_category_delete.html'
-	form_class = manager_form.CategoryForm
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(CompetitionCategoryDeleteView, self).dispatch(request, *args, **kwargs)
+	form_class = mf.CategoryForm
 
 	def get_form_kwargs(self):
 		kwargs = super(CompetitionCategoryDeleteView, self).get_form_kwargs()
@@ -196,17 +194,17 @@ class CompetitionCategoryDeleteView(LoginRequired, g.FormView):
 
 
 	def form_valid(self, form):
-		result = manager.category_delete(self.request.user.id, self.pk, '4')
+		result = m.category_delete(self.request.user.id, self.pk, '4')
 		if not result:
-			form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
 		else:
 			if result == '0':
-				form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+				self.error(u'Үйлдэл амжилтгүй боллоо')
 				return self.form_invalid(form)
-		return HttpResponse('<script>opener.dismissDeleteRelatedObjectPopup(window, "select", "%s");</script>' %self.pk)
+		return http.HttpResponse('<script>opener.dismissDeleteRelatedObjectPopup(window, "select", "%s");</script>' %self.pk)
 
-class CompetitionFilter(g.TemplateView):
+class CompetitionFilter(v.TemplateView):
 	template_name = 'manager/competition/competition_filter.html'
 
 	def get_context_data(self, *args, **kwargs):
@@ -214,17 +212,34 @@ class CompetitionFilter(g.TemplateView):
 		return context
 
 
-class NewsListView(LoginRequired, g.TemplateView):
+class ListView(TemplateView):
+	
+	template_name = 'manager/news/news_list.html'
+
+	def dispatch(self, request, *args, **kwargs):
+		self.name = self.kwargs.pop('name', None)
+		if self.name:
+			self.template_name = 'manager/%s/%s_list.html' %(self.name, self.name)
+		return super(ListView, self).dispatch(request, *args, **kwargs)
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(ListView, self).get_context_data(*args, **kwargs)
+		context[self.name] = m.select(self.request.user.id, 'N')
+		return context
+
+
+#News
+class NewsListView(TemplateView):
 	
 	template_name = 'manager/news/news_list.html'
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(NewsListView, self).get_context_data(*args, **kwargs)
-		context['news'] = manager.select(self.request.user.id, 'N')
+		context['news'] = m.select(self.request.user.id, 'N')
 		return context
 
-class NewsCreateView(SuccessMessageMixin ,LoginRequired, g.FormView):
-	form_class = manager_form.NewsForm
+class NewsCreateView(FormView):
+	form_class = mf.NewsForm
 	template_name = 'manager/news/news_form.html'
 	success_url = reverse_lazy('manager:news')
 	success_message = u'Мэдээ амжилттай хадгадагдлаа'
@@ -239,18 +254,14 @@ class NewsCreateView(SuccessMessageMixin ,LoginRequired, g.FormView):
 		category = form.cleaned_data['category']
 		title = form.cleaned_data['title']
 		body = form.cleaned_data['body']
-		manager.create('N', self.request.user.id, NOW, category, title = title, body = body)
+		m.create('N', self.request.user.id, NOW, category, title = title, body = body)
 		return super(NewsCreateView, self).form_valid(form)
 
-class NewsUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.NewsForm
+class NewsUpdateView(FormView):
+	form_class = mf.NewsForm
 	template_name = 'manager/news/news_form.html'
 	success_url = reverse_lazy('manager:news')
 	success_message = u'Мэдээ амжилттай шинэчлэгдлээ.'
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(NewsUpdateView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(NewsUpdateView, self).get_form_kwargs()
@@ -266,25 +277,21 @@ class NewsUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
 		category = form.cleaned_data['category']
 		title = form.cleaned_data['title']
 		body = form.cleaned_data['body']
-		result = manager.update('N', self.request.user.id, self.pk, category, title = title, body = body)
+		result = m.update('N', self.request.user.id, self.pk, category, title = title, body = body)
 		if result:
 			if not result.isSuccess:
-				form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+				self.error(u'Үйлдэл амжилтгүй боллоо')
 				return self.form_invalid(form)
 		else:
-			form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
 		return super(NewsUpdateView, self).form_valid(form)
 
-class NewsDeleteView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.NewsForm
+class NewsDeleteView(FormView):
+	form_class = mf.NewsForm
 	template_name = 'manager/news/news_delete.html'
 	success_url = reverse_lazy('manager:news')
 	success_message = u'Мэдээ амжилттай утслаа'
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(NewsDeleteView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(NewsDeleteView, self).get_form_kwargs()
@@ -292,23 +299,19 @@ class NewsDeleteView(SuccessMessageMixin, LoginRequired, g.FormView):
 		return kwargs
 
 	def form_valid(self, form):
-		result = manager.delete('N', self.request.user.id, self.pk)
+		result = m.delete('N', self.request.user.id, self.pk)
 		if result == False:
-			form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+			self.error(u'Үйлдэл амжилтгүй боллоо')
 			return self.form_invalid(form)
 		if result == None:
-			form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
 		return super(NewsDeleteView, self).form_valid(form)
 
-class NewsCategoryCreateUpdateView(LoginRequired, g.FormView):
-	form_class = manager_form.CategoryForm
+class NewsCategoryCreateUpdateView(FormView):
+	form_class = mf.CategoryForm
 	success_url = reverse_lazy('manager:news')
 	template_name = "manager/news/news_category_form.html"
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(NewsCategoryCreateUpdateView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(NewsCategoryCreateUpdateView, self).get_form_kwargs()
@@ -323,34 +326,30 @@ class NewsCategoryCreateUpdateView(LoginRequired, g.FormView):
 	def form_valid(self, form):		
 		if "_popup" in self.request.POST:
 			if not self.pk:
-				result = manager.category_create(form.cleaned_data['category'], '', '1')
+				result = m.category_create(form.cleaned_data['category'], '', '1')
 				if not result:
-					form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+					self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 					return self.form_invalid(form)
 				else:
 					if result.isSuccess == 'false':
-						form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+						self.error(u'Үйлдэл амжилтгүй боллоо')
 						return self.form_invalid(form)
-				return HttpResponse('<script>opener.dismissAddRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(result.categoryId.value, form.cleaned_data['category']))
+				return http.HttpResponse('<script>opener.dismissAddRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(result.categoryId.value, form.cleaned_data['category']))
 			else:
-				result = manager.category_create(form.cleaned_data['category'], self.pk, '1', is_create = False)
+				result = m.category_create(form.cleaned_data['category'], self.pk, '1', is_create = False)
 				if not result:
-					form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+					self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 					return self.form_invalid(form)
 				else:
 					if result.isSuccess == 'false':
-						form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+						self.error(u'Үйлдэл амжилтгүй боллоо')
 						return self.form_invalid(form)
-				return HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(self.pk, form.cleaned_data['category']))
+				return http.HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(self.pk, form.cleaned_data['category']))
 
-class NewsCategoryDeleteView(LoginRequired, g.FormView):
+class NewsCategoryDeleteView(FormView):
 
 	template_name = 'manager/news/news_category_delete.html'
-	form_class = manager_form.CategoryForm
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(NewsCategoryDeleteView, self).dispatch(request, *args, **kwargs)
+	form_class = mf.CategoryForm
 
 	def get_form_kwargs(self):
 		kwargs = super(NewsCategoryDeleteView, self).get_form_kwargs()
@@ -359,27 +358,28 @@ class NewsCategoryDeleteView(LoginRequired, g.FormView):
 
 
 	def form_valid(self, form):
-		result = manager.category_delete(self.request.user.id, self.pk, '1')
+		result = m.category_delete(self.request.user.id, self.pk, '1')
 		if not result:
-			form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
 		else:
 			if result == '0':
-				form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+				self.error(u'Үйлдэл амжилтгүй боллоо')
 				return self.form_invalid(form)
-		return HttpResponse('<script>opener.dismissDeleteRelatedObjectPopup(window, "select", "%s");</script>' %self.pk)
+		return http.HttpResponse('<script>opener.dismissDeleteRelatedObjectPopup(window, "select", "%s");</script>' %self.pk)
 
 
-class LessonListView(LoginRequired, g.TemplateView):
+#Lesson
+class LessonListView(TemplateView):
 	template_name = 'manager/lesson/lesson_list.html'
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(LessonListView, self).get_context_data(*args, **kwargs)
-		context['lessons'] = manager.select(self.request.user.id, 'L')
+		context['lessons'] = m.select(self.request.user.id, 'L')
 		return context
 
-class LessonCreateView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.LessonForm
+class LessonCreateView(FormView):
+	form_class = mf.LessonForm
 	template_name = 'manager/lesson/lesson_form.html'
 	success_url = reverse_lazy('manager:lesson_list')
 	success_message = u'Сургалт амжилттай хадгалагдлаа.'
@@ -395,18 +395,14 @@ class LessonCreateView(SuccessMessageMixin, LoginRequired, g.FormView):
 		url = form.cleaned_data['url']
 		author_name = form.cleaned_data['author_name']
 		author_email = form.cleaned_data['author_email']
-		manager.create('L', self.request.user.id, NOW, category, title = title, url = url, author_name = author_name, author_email = author_email)
+		m.create('L', self.request.user.id, NOW, category, title = title, url = url, author_name = author_name, author_email = author_email)
 		return super(LessonCreateView, self).form_valid(form)
 
-class LessonUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.LessonForm
+class LessonUpdateView(FormView):
+	form_class = mf.LessonForm
 	success_url = reverse_lazy('manager:lesson_list')
 	template_name = 'manager/lesson/lesson_form.html'
 	success_message = u'Сургалт амжилттай шинэчлэгдлээ.'
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(LessonUpdateView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(LessonUpdateView, self).get_form_kwargs()
@@ -424,25 +420,21 @@ class LessonUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
 		url = form.cleaned_data['url']
 		author_email = form.cleaned_data['author_email']
 		author_name = form.cleaned_data['author_name']
-		result = manager.update('L', self.request.user.id, self.pk, category, title = title, url = url, author_email = author_email, author_name = author_name)
+		result = m.update('L', self.request.user.id, self.pk, category, title = title, url = url, author_email = author_email, author_name = author_name)
 		if result:
 			if not result.isSuccess:
-				form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+				self.error(u'Үйлдэл амжилтгүй боллоо')
 				return self.form_invalid(form)
 		else:
-			form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
 		return super(LessonUpdateView, self).form_valid(form)
 
-class LessonDeleteView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.LessonForm
+class LessonDeleteView(FormView):
+	form_class = mf.LessonForm
 	success_url = reverse_lazy('manager:lesson_list')
 	template_name = 'manager/lesson/lesson_delete.html'
 	success_message = u'Сургалт амжилттай устлаа.'
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(LessonDeleteView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(LessonDeleteView, self).get_form_kwargs()
@@ -450,23 +442,19 @@ class LessonDeleteView(SuccessMessageMixin, LoginRequired, g.FormView):
 		return kwargs
 
 	def form_valid(self, form):
-		result = manager.delete('L', self.request.user.id, self.pk)
+		result = m.delete('L', self.request.user.id, self.pk)
 		if result == False:
-			form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+			self.error(u'Үйлдэл амжилтгүй боллоо')
 			return self.form_invalid(form)
 		if result == None:
-			form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
 		return super(LessonDeleteView, self).form_valid(form)
 
-class LessonCategoryCreateUpdateView(LoginRequired, g.FormView):
-	form_class = manager_form.CategoryForm
+class LessonCategoryCreateUpdateView(FormView):
+	form_class = mf.CategoryForm
 	template_name = 'manager/lesson/lesson_category_form.html'
 	success_url = reverse_lazy('manager:lesson_list')
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(LessonCategoryCreateUpdateView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(LessonCategoryCreateUpdateView, self).get_form_kwargs()
@@ -481,34 +469,30 @@ class LessonCategoryCreateUpdateView(LoginRequired, g.FormView):
 	def form_valid(self, form):		
 		if "_popup" in self.request.POST:
 			if not self.pk:
-				result = manager.category_create(form.cleaned_data['category'], '', '3')
+				result = m.category_create(form.cleaned_data['category'], '', '3')
 				if not result:
-					form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+					self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 					return self.form_invalid(form)
 				else:
 					if result.isSuccess == 'false':
-						form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+						self.error(u'Үйлдэл амжилтгүй боллоо')
 						return self.form_invalid(form)
-				return HttpResponse('<script>opener.dismissAddRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(result.categoryId.value, form.cleaned_data['category']))
+				return http.HttpResponse('<script>opener.dismissAddRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(result.categoryId.value, form.cleaned_data['category']))
 			else:
-				result = manager.category_create(form.cleaned_data['category'], self.pk, '3', is_create = False)
+				result = m.category_create(form.cleaned_data['category'], self.pk, '3', is_create = False)
 				if not result:
-					form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+					self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 					return self.form_invalid(form)
 				else:
 					if result.isSuccess == 'false':
-						form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+						self.error(u'Үйлдэл амжилтгүй боллоо')
 						return self.form_invalid(form)
-				return HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(self.pk, form.cleaned_data['category']))
+				return http.HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(self.pk, form.cleaned_data['category']))
 
-class LessonCategoryDeleteView(LoginRequired, g.FormView):
+class LessonCategoryDeleteView(FormView):
 
 	template_name = 'manager/news/news_category_delete.html'
-	form_class = manager_form.CategoryForm
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(LessonCategoryDeleteView, self).dispatch(request, *args, **kwargs)
+	form_class = mf.CategoryForm
 
 	def get_form_kwargs(self):
 		kwargs = super(LessonCategoryDeleteView, self).get_form_kwargs()
@@ -517,23 +501,29 @@ class LessonCategoryDeleteView(LoginRequired, g.FormView):
 
 
 	def form_valid(self, form):
-		result = manager.category_delete(self.request.user.id, self.pk, '3')
+		result = m.category_delete(self.request.user.id, self.pk, '3')
 		if not result:
-			form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
 		else:
 			if result == '0':
-				form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+				self.error(u'Үйлдэл амжилтгүй боллоо')
 				return self.form_invalid(form)
-		return HttpResponse('<script>opener.dismissDeleteRelatedObjectPopup(window, "select", "%s");</script>' %self.pk)
+		return http.HttpResponse('<script>opener.dismissDeleteRelatedObjectPopup(window, "select", "%s");</script>' %self.pk)
 
 
-class ResearchListView(LoginRequired, g.TemplateView):
+#Research
+class ResearchListView(TemplateView):
 	
 	template_name = 'manager/research/research_list.html'
 
-class ResearchCreateView(LoginRequired, g.FormView):
-	form_class = manager_form.ResearchForm
+	def get_context_data(self, *args, **kwargs):
+		context = super(ResearchListView, self).get_context_data(*args, **kwargs)
+		context['researchs'] = m.select(self.request.user.id, 'R')
+		return context
+
+class ResearchCreateView(FormView):
+	form_class = mf.ResearchForm
 	template_name = 'manager/research/research_form.html'
 	success_url = reverse_lazy('manager:research_list')
 
@@ -541,20 +531,34 @@ class ResearchCreateView(LoginRequired, g.FormView):
 		kwargs = super(ResearchCreateView, self).get_form_kwargs()
 		kwargs.update({'manager_id': self.request.user.id, 'type':'2'})
 		return kwargs
+
+	def form_valid(self, form):
+		category = form.cleaned_data['category']
+		title = form.cleaned_data['title']
+		file = form.cleaned_data['file']
+		research = ResearchModel.objects.create(file = file)
+		author_name = form.cleaned_data['author_name']
+		author_email = form.cleaned_data['author_email']
+		result = m.create('R', self.request.user.id, category, title = title, author_name = author_name, file = research.file)
+		if not result:
+			self.error(u"Үйлдэл амжилтгүй боллоо.")
+			return super(ResearchCreateView, self).form_invalid(form)
+		return super(ResearchCreateView, self).form_valid(form)
 	
-class ResearchUpdateView(LoginRequired, g.FormView):
-	form_class = manager_form.ResearchForm
+class ResearchUpdateView(FormView):
+	form_class = mf.ResearchForm
 	success_url = reverse_lazy('manager:research_list')
 	template_name = 'manager/research/research_form.html'
 
-class ResearchCategoryCreateUpdateView(LoginRequired, g.FormView):
-	form_class = manager_form.CategoryForm
+	def get_form_kwargs(self):
+		kwargs = super(ResearchUpdateView, self).get_form_kwargs()
+		kwargs.update({'manager_id': self.request.user.id, 'type':'2', 'id': self.pk})
+		return kwargs
+
+class ResearchCategoryCreateUpdateView(FormView):
+	form_class = mf.CategoryForm
 	template_name = 'manager/research/research_category_form.html'
 	success_url = reverse_lazy('manager:research_list')
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(ResearchCategoryCreateUpdateView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(ResearchCategoryCreateUpdateView, self).get_form_kwargs()
@@ -569,34 +573,30 @@ class ResearchCategoryCreateUpdateView(LoginRequired, g.FormView):
 	def form_valid(self, form):		
 		if "_popup" in self.request.POST:
 			if not self.pk:
-				result = manager.category_create(form.cleaned_data['category'], '', '2')
+				result = m.category_create(form.cleaned_data['category'], '', '2')
 				if not result:
-					form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+					self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 					return self.form_invalid(form)
 				else:
 					if result.isSuccess == 'false':
-						form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+						self.error(u'Үйлдэл амжилтгүй боллоо')
 						return self.form_invalid(form)
-				return HttpResponse('<script>opener.dismissAddRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(result.categoryId.value, form.cleaned_data['category']))
+				return http.HttpResponse('<script>opener.dismissAddRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(result.categoryId.value, form.cleaned_data['category']))
 			else:
-				result = manager.category_create(form.cleaned_data['category'], self.pk, '2', is_create = False)
+				result = m.category_create(form.cleaned_data['category'], self.pk, '2', is_create = False)
 				if not result:
-					form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+					self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 					return self.form_invalid(form)
 				else:
 					if result.isSuccess == 'false':
-						form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+						self.error(u'Үйлдэл амжилтгүй боллоо')
 						return self.form_invalid(form)
-				return HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(self.pk, form.cleaned_data['category']))
+				return http.HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(self.pk, form.cleaned_data['category']))
 
-class ResearchCategoryDeleteView(LoginRequired, g.FormView):
+class ResearchCategoryDeleteView(FormView):
 
 	template_name = 'manager/news/news_category_delete.html'
-	form_class = manager_form.CategoryForm
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(ResearchCategoryDeleteView, self).dispatch(request, *args, **kwargs)
+	form_class = mf.CategoryForm
 
 	def get_form_kwargs(self):
 		kwargs = super(ResearchCategoryDeleteView, self).get_form_kwargs()
@@ -605,34 +605,31 @@ class ResearchCategoryDeleteView(LoginRequired, g.FormView):
 
 
 	def form_valid(self, form):
-		result = manager.category_delete(self.request.user.id, self.pk, '2')
+		result = m.category_delete(self.request.user.id, self.pk, '2')
 		if not result:
-			form._errors['__all__'] = ErrorList([u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү'])
+			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
 		else:
 			if result == '0':
-				form._errors['__all__'] = ErrorList([u'Үйлдэл амжилтгүй боллоо'])
+				self.error(u'Үйлдэл амжилтгүй боллоо')
 				return self.form_invalid(form)
-		return HttpResponse('<script>opener.dismissDeleteRelatedObjectPopup(window, "select", "%s");</script>' %self.pk)
+		return http.HttpResponse('<script>opener.dismissDeleteRelatedObjectPopup(window, "select", "%s");</script>' %self.pk)
 
 
-class BankListView(LoginRequired, g.TemplateView):
+#Bank
+class BankListView(TemplateView):
 	template_name = 'manager/bank/bank_list.html'
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(BankListView, self).get_context_data(*args, **kwargs)
-		context['banks'] = manager.bank(self.request.user.id, 'S')
+		context['banks'] = m.bank(self.request.user.id, 'S')
 		return context
 
-class BankCreateUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.BankForm
+class BankCreateUpdateView(FormView):
+	form_class = mf.BankForm
 	template_name = 'manager/bank/bank_form.html'
 	success_url = reverse_lazy('manager:bank_list')
 	success_message = u'Банк амжилттай хадгалагдлаа.'
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(BankCreateUpdateView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(BankCreateUpdateView, self).get_form_kwargs()
@@ -650,20 +647,16 @@ class BankCreateUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
 		short_name = form.cleaned_data['short_name']
 		icon = form.cleaned_data['icon']
 		if not self.pk:
-			manager.bank(self.request.user.id, 'C', name = name, short_name = short_name, icon = icon, id = "")
+			m.bank(self.request.user.id, 'C', name = name, short_name = short_name, icon = icon, id = "")
 		else:
-			manager.bank(self.request.user.id, 'U', name = name, short_name = short_name, icon = icon, id = self.pk)
+			m.bank(self.request.user.id, 'U', name = name, short_name = short_name, icon = icon, id = self.pk)
 		return super(BankCreateUpdateView, self).form_valid(form)
 
-class BankDeleteView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.BankForm
+class BankDeleteView(FormView):
+	form_class = mf.BankForm
 	success_url = reverse_lazy('manager:bank_list')
 	template_name = 'manager/bank/bank_delete.html'
 	success_message = u'Банк амжилттай устлаа.'
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(BankDeleteView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(BankDeleteView, self).get_form_kwargs()
@@ -671,27 +664,24 @@ class BankDeleteView(SuccessMessageMixin, LoginRequired, g.FormView):
 		return kwargs
 
 	def form_valid(self, form):
-		manager.bank(self.request.user.id, 'D', id = self.pk)
+		m.bank(self.request.user.id, 'D', id = self.pk)
 		return super(BankDeleteView, self).form_valid(form)
 
 
-class CurrencyListView(LoginRequired, g.TemplateView):
+#Currency
+class CurrencyListView(TemplateView):
 	template_name = 'manager/currency/currency_list.html'
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(CurrencyListView, self).get_context_data(*args, **kwargs)
-		context['currencys'] = manager.currency(self.request.user.id, 'S')
+		context['currencys'] = m.currency(self.request.user.id, 'S')
 		return context
 
-class CurrencyCreateUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.CurrencyForm
+class CurrencyCreateUpdateView(FormView):
+	form_class = mf.CurrencyForm
 	template_name = 'manager/currency/currency_form.html'
 	success_url = reverse_lazy('manager:currency_list')
 	success_message = u'Банк амжилттай хадгалагдлаа.'
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(CurrencyCreateUpdateView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(CurrencyCreateUpdateView, self).get_form_kwargs()
@@ -710,20 +700,16 @@ class CurrencyCreateUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
 		symbol = form.cleaned_data['symbol']
 		icon = form.cleaned_data['icon']
 		if not self.pk:
-			manager.currency(self.request.user.id, 'C', name = name, short_name = short_name, icon = icon, symbol = symbol, id = "")
+			m.currency(self.request.user.id, 'C', name = name, short_name = short_name, icon = icon, symbol = symbol, id = "")
 		else:
-			manager.currency(self.request.user.id, 'U', name = name, short_name = short_name, icon = icon, symbol = symbol, id = self.pk)
+			m.currency(self.request.user.id, 'U', name = name, short_name = short_name, icon = icon, symbol = symbol, id = self.pk)
 		return super(CurrencyCreateUpdateView, self).form_valid(form)
 
-class CurrencyDeleteView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.CurrencyForm
+class CurrencyDeleteView(FormView):
+	form_class = mf.CurrencyForm
 	success_url = reverse_lazy('manager:currency_list')
 	template_name = 'manager/currency/currency_delete.html'
 	success_message = u'Банк амжилттай устлаа.'
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(CurrencyDeleteView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(CurrencyDeleteView, self).get_form_kwargs()
@@ -731,27 +717,54 @@ class CurrencyDeleteView(SuccessMessageMixin, LoginRequired, g.FormView):
 		return kwargs
 
 	def form_valid(self, form):
-		manager.currency(self.request.user.id, 'D', id = self.pk)
+		m.currency(self.request.user.id, 'D', id = self.pk)
 		return super(CurrencyDeleteView, self).form_valid(form)
 
 
-class StockListView(LoginRequired, g.TemplateView):
+#Currency Value
+class CurrencyValueListView(TemplateView):
+	template_name = 'manager/currency/currency_value_list.html'
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(CurrencyValueListView, self).get_context_data(*args, **kwargs)
+		context['currencys'] = m.list("S", PREVIOUS, NOW)
+		return context
+
+class CurrencyValueCreateView(FormView):
+	form_class = mf.CurrencyValueForm
+	template_name = 'manager/currency/currency_value_form.html'
+	success_url = reverse_lazy('manager:currency_value_list')
+	success_message = u'Валютын ханш амжилттай хадгалагдлаа'
+
+	def get_form_kwargs(self):
+		kwargs = super(CurrencyValueCreateView, self).get_form_kwargs()
+		kwargs.update({'manager_id':self.request.user.id})
+		return kwargs
+
+	def form_valid(self, form):
+		bank = form.cleaned_data['bank']
+		currency = form.cleaned_data['currency']
+		buy = form.cleaned_data['buy']
+		sell = form.cleaned_data['sell']
+		result = m.currency_create(self.request.user.id, bank, currency, buy, sell)
+		print result
+		return super(CurrencyValueCreateView, self).form_valid(form)
+
+
+#Stock
+class StockListView(TemplateView):
 	template_name = 'manager/stock/stock_list.html'
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(StockListView, self).get_context_data(*args, **kwargs)
-		context['stocks'] = manager.stock(self.request.user.id, 'S')
+		context['stocks'] = m.stock(self.request.user.id, 'S')
 		return context
 
-class StockCreateUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.StockForm
+class StockCreateUpdateView(FormView):
+	form_class = mf.StockForm
 	template_name = 'manager/stock/stock_form.html'
 	success_url = reverse_lazy('manager:stock_list')
 	success_message = u'Банк амжилттай хадгалагдлаа.'
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(StockCreateUpdateView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(StockCreateUpdateView, self).get_form_kwargs()
@@ -768,20 +781,16 @@ class StockCreateUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
 		name = form.cleaned_data['name']
 		symbol = form.cleaned_data['symbol']
 		if not self.pk:
-			manager.stock(self.request.user.id, 'C', name = name, symbol = symbol, id = "")
+			m.stock(self.request.user.id, 'C', name = name, symbol = symbol, id = "")
 		else:
-			manager.stock(self.request.user.id, 'U', name = name, symbol = symbol, id = self.pk)
+			m.stock(self.request.user.id, 'U', name = name, symbol = symbol, id = self.pk)
 		return super(StockCreateUpdateView, self).form_valid(form)
 
-class StockDeleteView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.StockForm
+class StockDeleteView(FormView):
+	form_class = mf.StockForm
 	success_url = reverse_lazy('manager:stock_list')
 	template_name = 'manager/stock/stock_delete.html'
 	success_message = u'Банк амжилттай устлаа.'
-
-	def dispatch(self, request, *args, **kwargs):
-		self.pk = self.kwargs.pop('pk', None)
-		return super(StockDeleteView, self).dispatch(request, *args, **kwargs)
 
 	def get_form_kwargs(self):
 		kwargs = super(StockDeleteView, self).get_form_kwargs()
@@ -789,48 +798,21 @@ class StockDeleteView(SuccessMessageMixin, LoginRequired, g.FormView):
 		return kwargs
 
 	def form_valid(self, form):
-		manager.stock(self.request.user.id, 'D', id = self.pk)
+		m.stock(self.request.user.id, 'D', id = self.pk)
 		return super(StockDeleteView, self).form_valid(form)
 
 
-class CurrencyValueListView(LoginRequired, g.TemplateView):
-	template_name = 'manager/currency/currency_value_list.html'
-
-	def get_context_data(self, *args, **kwargs):
-		context = super(CurrencyValueListView, self).get_context_data(*args, **kwargs)
-		context['currencys'] = manager.list("S", PREVIOUS, NOW)
-		return context
-
-class CurrencyValueCreateView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.CurrencyValueForm
-	template_name = 'manager/currency/currency_value_form.html'
-	success_url = reverse_lazy('manager:currency_value_list')
-	success_message = u'Валютын ханш амжилттай хадгалагдлаа'
-
-	def get_form_kwargs(self):
-		kwargs = super(CurrencyValueCreateView, self).get_form_kwargs()
-		kwargs.update({'manager_id':self.request.user.id})
-		return kwargs
-
-	def form_valid(self, form):
-		bank = form.cleaned_data['bank']
-		currency = form.cleaned_data['currency']
-		buy = form.cleaned_data['buy']
-		sell = form.cleaned_data['sell']
-		manager.currency_create(self.request.user.id, bank, currency, buy, sell)
-		return super(CurrencyValueCreateView, self).form_valid(form)
-
-
-class StockValueListView(LoginRequired, g.TemplateView):
+#Stock Value
+class StockValueListView(TemplateView):
 	template_name = 'manager/stock/stock_value_list.html'
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(StockValueListView, self).get_context_data(*args, **kwargs)
-		context['stocks'] = manager.list("S", PREVIOUS, NOW, is_currency = False)
+		context['stocks'] = m.list("S", PREVIOUS, NOW, is_currency = False)
 		return context
 
-class StockValueCreateView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.StockValueForm
+class StockValueCreateView(FormView):
+	form_class = mf.StockValueForm
 	template_name = 'manager/stock/stock_value_form.html'
 	success_url = reverse_lazy('manager:stock_value_list')
 	success_message = u'Хувьцааны ханш амжилттай хадгалагдлаа'
@@ -849,102 +831,126 @@ class StockValueCreateView(SuccessMessageMixin, LoginRequired, g.FormView):
 		low = form.cleaned_data['low']
 		last = form.cleaned_data['last']
 		close = form.cleaned_data['close']
-		manager.stock_create(self.request.user.id, stock, open, buy, sell, high, low, last, close, NOW)
+		m.stock_create(self.request.user.id, stock, open, buy, sell, high, low, last, close, NOW)
 		return super(StockValueCreateView, self).form_valid(form)
 
 
-class ManagerUserListView(LoginRequired, g.TemplateView):
+#User
+class UserListView(TemplateView):
 	
 	template_name = 'manager/user/user.html'
 
-class ManagerInfoView(LoginRequired, g.FormView):
-	form_class = manager_form.ManagerForm
+
+#Admin
+class AdminInfoView(FormView):
+	form_class = mf.ManagerForm
 	template_name = 'manager/user/admin/admin_info.html'
 
 	def get_form_kwargs(self):
-		kwargs = super(ManagerInfoView, self).get_form_kwargs()
+		kwargs = super(AdminInfoView, self).get_form_kwargs()
 		kwargs.update({'info': True, 'id':self.request.user.id})
 		return kwargs
 
-class PasswordUpdateView(LoginRequired, g.FormView):
-	form_class = manager_form.PasswordUpdateForm
+class AdminPasswordUpdateView(FormView):
+	form_class = mf.PasswordUpdateForm
 	template_name = 'manager/user/admin/password_update.html'
 	success_url = reverse_lazy('manager:manager_home')
+	success_message = u'Нууц үг амжилттай шинэчлэгдлээ'
 
 	def form_valid(self, form):
 		result = form.save(self.request)
 		if not result:
-			form._errors['__all__'] = ErrorList([u'Хуучин нууц үг буруу байна.'])
+			self.error(u'Хуучин нууц үг буруу байна.')
 			return self.form_invalid(form)
-		return super(PasswordUpdateView, self).form_valid(form)
+		return super(AdminPasswordUpdateView, self).form_valid(form)
 
-class ManagerListView(LoginRequired, g.TemplateView):
-	template_name = 'manager/user/admin/admin_user_list.html'
+class AdminListView(TemplateView):
+	template_name = 'manager/user/admin/admin_list.html'
 
 	def dispatch(self, request, *args, **kwargs):
 		if request.user:
 			if request.user.is_superuser == '0':
-				raise Http404
-		return super(ManagerListView, self).dispatch(request, *args, **kwargs)
+				raise http.Http404
+		return super(AdminListView, self).dispatch(request, *args, **kwargs)
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(ManagerListView, self).get_context_data(*args, **kwargs)
-		context['managers'] = manager.manager_list()
+		context = super(AdminListView, self).get_context_data(*args, **kwargs)
+		context['managers'] = m.admins()
 		return context
 
-class ManagerCreateUpdateView(SuccessMessageMixin, LoginRequired, g.FormView):
-	form_class = manager_form.ManagerForm
+class AdminCreateUpdateView(FormView):
+	form_class = mf.ManagerForm
 	template_name = 'manager/user/admin/admin_user_form.html'
 	success_url = reverse_lazy('manager:manager_list')
-	success_message = u"Үйлдэл амжилттай хийгдлээ."
+	success_message = u"Менежер амжилттай хадгалагдлаа амжилттай хийгдлээ."
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(ManagerCreateUpdateView, self).get_context_data(*args, **kwargs)
-		if 'pk' in self.kwargs:
-			context['object'] = self.kwargs['pk']
+		context = super(AdminCreateUpdateView, self).get_context_data(*args, **kwargs)
+		context['object'] = self.pk
 		return context
 
 	def get_form_kwargs(self):
-		kwargs = super(ManagerCreateUpdateView, self).get_form_kwargs()
-		if 'pk' in self.kwargs:
-			kwargs.update({'id': self.kwargs['pk']})
+		kwargs = super(AdminCreateUpdateView, self).get_form_kwargs()
+		if self.pk:
+			kwargs.update({'id': self.pk})
 		return kwargs
 
 	def form_valid(self, form):
-		form.save(self.request)
-		return super(ManagerCreateUpdateView, self).form_valid(form)
-	
-class ManagerCompetitionRegisterView(LoginRequired, g.TemplateView):
-	
-	template_name = 'manager/competition/competition_register.html'
+		#result = form.save(self.request)
+		#if not result:
+		self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү!')
+		return super(AdminCreateUpdateView, self).form_invalid(form)
+		return super(AdminCreateUpdateView, self).form_valid(form)
 
-
-def manager_competition_register_view(request, id = 0):
-	competition_register = CompetitionRegister.objects.get(id = id)
-	competition_register.status = True
-	competition_register.save()
-	from notifications.signals import notify
-	notify.send(request.user, recipient=request.user, verb='you reached level 10')
-	return HttpResponseRedirect(reverse_lazy('manager:manager_competition_register'))
-
-
-class ManagerFinanceView(LoginRequired, g.TemplateView):
-	get_perm = 'add_medee'
-	template_name = 'manager/finance/finance.html'
-
-
-class ManagerSetPasswordView(g.FormView):
-	form_class = manager_form.ManagerSetPasswordForm
+class AdminSetPasswordView(v.FormView):
+	form_class = mf.ManagerSetPasswordForm
 	template_name = 'manager/password/set_password.html'
 	success_url = reverse_lazy('manager:manager_login')
+	success_message = u'Бүртгэл амжилттай баталгаажлаа.'
 
 	def dispatch(self, request, *args , **kwargs):
 		uid = force_text(urlsafe_base64_decode(self.kwargs['uidb64']))
-		self.user = manager.check_manager(uid)
+		self.user = m.get_manager(uid)
 		if not default_token_generator.check_token(self.user, self.kwargs.pop('token', None)):
-			raise Http404
-		return super(ManagerSetPasswordView, self).dispatch(request, *args, **kwargs)
+			raise http.Http404
+		return super(AdminSetPasswordView, self).dispatch(request, *args, **kwargs)
 
 	def form_valid(self, form):
-		form.save(self.request, self.user)
-		return super(ManagerSetPasswordView, self).form_valid(form)
+		result = form.save(self.user)
+		return super(AdminSetPasswordView, self).form_valid(form)
+
+
+#Competition Register	
+class CompetitionRegisterView(TemplateView):
+	
+	template_name = 'manager/competition/competition_register.html'
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(CompetitionRegisterView, self).get_context_data(*args, **kwargs)
+		context['competitions'] = m.select(self.request.user.id, 'C')
+		return context
+
+class CompetitionRegisterUserListView(TemplateView):
+
+	template_name = 'manager/competition/competition_register_user_list.html'
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(CompetitionRegisterUserListView, self).get_context_data(*args, **kwargs)
+		context['users'] = wm.register('S', competition_id = self.pk, is_manager = True, manager_id = self.request.user.id)
+		return context
+
+	@classmethod
+	def approve(self, request, pk = 0):
+		result = wm.register('U', id = pk, is_manager = True, manager_id = request.user.id, is_approved = True)
+		return http.HttpResponseRedirect(reverse_lazy('manager:manager_home'))
+
+	@classmethod
+	def decline(self, request, pk = 0):
+		result = wm.register('U', id = pk, is_manager = True, manager_id = request.user.id)
+		return http.HttpResponseRedirect(reverse_lazy('manager:manager_home'))
+
+
+#Finance
+class ManagerFinanceView(TemplateView):
+	get_perm = 'add_medee'
+	template_name = 'manager/finance/finance.html'

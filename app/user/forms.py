@@ -10,7 +10,7 @@ from django.contrib import messages
 
 from app.config.get_username import get_username as gu
 from managers import UserBaseDataManager as manager
-
+from app.config import config
 
 forms.Field.default_error_messages = {'required': u"Энэ талбарыг бөглөнө үү."}
 
@@ -59,8 +59,8 @@ class UserSetPasswordForm(forms.Form):
 
 
 class UserLoginForm(forms.Form):
-	username = forms.CharField(label = u"Нэвтрэх нэр:", widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Нэвтрэх нэр'}))
-	password = forms.CharField(label = u"Нууц үг:", widget = forms.PasswordInput(attrs = {'class': 'form-control', 'placeholder': 'Нууц үг'}))
+	username = forms.CharField(label = u"", widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Нэвтрэх нэр'}))
+	password = forms.CharField(label = u"", widget = forms.PasswordInput(attrs = {'class': 'form-control', 'placeholder': 'Нууц үг'}))
 	remember_me = forms.BooleanField(required = False, initial = True, label = 'Намайг сана')
 
 	def clean_remember_me(self):
@@ -75,7 +75,7 @@ class UserLoginForm(forms.Form):
 	def clean(self):
 		cleaned_data = super(UserLoginForm, self).clean()
 		if self.is_valid():
-			user = manager.loginUser(cleaned_data['username'], cleaned_data['password'])
+			user = manager.login(cleaned_data['username'], cleaned_data['password'])
 			if user is None:
 				raise forms.ValidationError(_(u'Хэрэглэгчийн нэр эсвэл нууц үг буруу байна'), code='invalid')
 		return cleaned_data
@@ -86,26 +86,25 @@ class UserRegisterForm(forms.Form):
 	email = forms.EmailField(widget = forms.EmailInput(attrs = {'class':'form-control', 'placeholder':'Имэйл'}))
 	password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}))
 	repeat_password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг давтах'}))
-		
-
 
 	def clean_username(self):
-		username = manager.check_unique_user(True, self.cleaned_data['username'])
-		if username:
-			if not username:
-				raise forms.ValidationError(_(u'Хэрэглэгч бүртгэлтэй байна'), code='invalid')
-		else:
-			raise forms.ValidationError(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү', code='invalid')
+		username = self.cleaned_data['username']
+		self.error(username, True)
 		return username
 
 	def clean_email(self):
-		email = manager.check_unique_user(False, self.cleaned_data['email'])
-		if email:
-			if not email:
-				raise forms.ValidationError(_(u'Э-мэйл хаяг бүртгэлтэй байна'), code='invalid')
-		else:
-			raise forms.ValidationError(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү', code='invalid')
+		email = self.cleaned_data["email"]
+		self.error(email, False)
 		return email
+
+	def error(self, value, status):
+		result = manager.check_unique_user(status, value)
+		if not result:
+			raise forms.ValidationError(config.UNIQUE_USERNAME, code='invalid')
+		if result == config.URL_ERROR:
+			raise forms.ValidationError(config.URL_ERROR_MESSAGE, code='invalid')
+		if result == config.SYSTEM_ERROR:
+			raise forms.ValidationError(config.SYSTEM_ERROR_MESSAGE, code='invalid')
 
 	def clean(self):
 		cleaned_data = super(UserRegisterForm, self).clean()

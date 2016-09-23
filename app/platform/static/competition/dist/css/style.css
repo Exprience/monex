@@ -1,0 +1,431 @@
+@font-face {
+  font-family: 'ubuntu-b';
+  src: url("../fonts/Ubuntu-B.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ubuntu-c';
+  src: url("../fonts/Ubuntu-C.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'ubuntu-m';
+  src: url("../fonts/Ubuntu-M.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'ubuntu-l';
+  src: url("../fonts/Ubuntu-L.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+html { border: 1px solid black }
+body { 
+  border: 1px solid red;
+  background: #222;*/
+  padding-right: 5px;
+  padding-left: 5px;}
+html, body {
+  font-family: 'ubuntu-l';
+  font-size: 12px;
+  background: #222;*/
+  height: 100%;
+}
+
+.container-fluid {
+  top:50px;
+  height:calc(100%-50px);
+  background: #222;
+  margin: 0;
+  border: 1px dashed purple
+}
+
+.row {
+
+  border: 1px dashed black
+  }
+
+#menu{
+  
+  height: 50px;
+  background: #222;
+  border: 1px dashed red
+  
+
+}
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+  padding-right: 5px;
+  padding-left: 5px;
+  margin-top: 10px;
+  margin-bottom: -20px;
+  height: 100%
+}
+
+.panel{
+  background: #444;
+  border-color: #fff;
+  border-radius: 0px;
+  height: 96%;
+}
+
+.panel .panel-heading {
+  background: #444;
+  border-bottom-color: #fff;
+  border-color: #fff;
+  color: #EEE;
+  height: 32px;
+  font-family: 'ubuntu-b';
+  font-size: 16px;
+  margin: 0px;
+}
+
+
+.panel .panel-heading span.active{
+  color: #888888;
+}
+
+.panel .panel-body {
+  margin: 5px;
+  border-color: #fff;
+  background: #333;
+  color: #EEE;
+  padding: 0;
+  height: 80.5%;
+  overflow: hidden;
+  
+}
+.table{
+  height: 80.5%;
+  
+}
+.table-bordered {
+  border-color: #222 !important;
+  margin-bottom: 0px;
+}
+
+
+.table-bordered th,
+.table-bordered td {
+  border-color: #222 !important;
+}
+.table .tbody { 
+    height:20px;  
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.table .tbody::-webkit-scrollbar{
+  width: 10px;
+}
+
+.table .tbody::-webkit-scrollbar-track{
+  background: green;
+}
+.table .tbody::-webkit-scrollbar-thumb{
+  background: purple;
+  border: 1px white;
+}
+/*------------------------------------------Menu-------------------------------------------------------*/
+#logo{
+height:50px;
+}
+#logo img{
+  height: 50px;
+  width:20%;
+}
+#menu .nav{
+
+  background-color: #000;
+  width: 100%;
+  margin:0px;  
+  height:50px;
+  padding-right: 5px;
+}
+
+#menu .nav-item{
+ 
+ 
+  background-color: #222;
+}
+
+#menu .nav-link{
+   
+  color: grey;
+  height: 50px;
+  margin:0 ;
+}
+#menu a:link {
+    color: red;
+}
+
+/* visited link */
+#menu  a:visited {
+    color: green;
+}
+
+/* mouse over link */
+#menu  a:hover {
+    color: hotpink;
+}
+
+/* selected link */
+#menu a:active {
+    color: blue;
+}
+
+/* ----------------------------------------- MyModal --------------------------------------------------*/
+#myModal1 {
+top:6%;
+left:30%;
+outline: none;
+}
+#myModal1 .modal-dialog{
+  position: absolute;
+  background: #444;
+  border-color: #fff;
+  border-radius: 0px;
+  height: 425px;
+  width: 430px;
+  max-height: 500px;
+  padding-left: 15px;
+  padding-top: 5px;
+  
+}
+#myModal1 .modal-content{
+  position: center;
+  background: #444;
+  border-color: #fff;
+  border-radius: 0px;
+  height: 400px;
+  width: 400px;
+  max-height: 430px;
+  padding:0px; 
+  margin:0px;
+}
+#myModal1 .modal-header{
+  background: #444;
+  border-radius: 0px;
+  height: 32px;
+  width:100%;
+  padding-left:33%;
+  padding-top: 0px;
+  }
+#myModal1 .modal-body {
+  border-color: #fff;
+  background: #333;
+  color: #EEE;
+  height: 323px;
+  max-height: 353px;
+  width: 100%;
+  padding: 0px;
+}
+#myModal1 .modal-footer{
+  height: 32px;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+  bottom: 50px
+}
+
+#myModal2 {
+top:6%;
+left:30%;
+outline: none;
+}
+#myModal2 .modal-dialog{
+  position: absolute;
+  background: #444;
+  border-color: #fff;
+  border-radius: 0px;
+  height: 425px;
+  width: 430px;
+  max-height: 500px;
+  padding-left: 15px;
+  padding-top: 5px;
+  
+}
+#myModal2 .modal-content{
+  position: center;
+  background: #444;
+  border-color: #fff;
+  border-radius: 0px;
+  height: 400px;
+  width: 400px;
+  max-height: 430px;
+  padding:0px; 
+  margin:0px;
+}
+#myModal2 .modal-header{
+  background: #444;
+  border-radius: 0px;
+  height: 32px;
+  width:100%;
+  padding-left:33%;
+  padding-top: 0px;
+  }
+#myModal2 .modal-body {
+  border-color: #000;
+  background: #333;
+  color: #EEE;
+  height: 323px;
+  max-height: 353px;
+  width: 100%;
+  padding: 0px;
+}
+#myModal2 .modal-footer{
+  height: 32px;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+  bottom: 50px
+}
+
+/* --------------------------- Button --------------------------------------------------*/
+ 
+.btn:focus, .btn:active:focus, .btn.active:focus {
+        outline: 0 none;
+}
+ 
+.btn-primary {
+  height: 20px;
+  width: 50px;
+  background: #444;
+  color: #999;
+    
+}
+ 
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+    background: #333;
+    border-color: #fff;
+}
+ 
+.btn-primary:active, .btn-primary.active {
+    background: #000;
+    box-shadow: none;
+}
+.btn-info{
+  border-radius: 0px;
+  height: 32px;
+  width:100%
+
+}
+/*---------------------------------Tabs-----------------------------*/
+.ul {
+  border-color: #000;
+  border-radius: 0px;
+ 
+    }
+.nav{
+  
+  font-family: 'ubuntu-b';
+  font-size: 16px;
+  margin: -10px;
+ 
+}
+
+.nav-tabs > li > a
+{
+  height: 32px;
+  padding:0px;
+  border-color: #000;
+  border-radius: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
+
+table.sortable thead {
+    background-color:#eee;
+    color:#666666;
+    font-weight: bold;
+    cursor: default;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+#myInput {
+  
+  background-repeat: no-repeat;
+  width: 100px;
+  font-size: 12px;
+  font-color:#444;
+  color: #444;
+  font-family: 'ubuntu-b';
+  padding: 5px;
+  border: 1px solid #ddd;
+}
+#table2{
+  font-size: 11px;
+  height: 80.5%;
+  overflow-y: auto;
+}
+/*_______________________________________ACCOUNT_________________________________________________ */
+.blogShort{ border-bottom:1px solid #ddd;}
+.add{background: #333; padding: 10%; height: 300px;}
+
+.nav-sidebar { 
+    width: 100%;
+    padding: 30px 0; 
+    border-right: 1px solid #ddd;
+}
+.nav-sidebar a {
+    color: #333;
+    -webkit-transition: all 0.08s linear;
+    -moz-transition: all 0.08s linear;
+    -o-transition: all 0.08s linear;
+    transition: all 0.08s linear;
+}
+.nav-sidebar .active a { 
+    cursor: default;
+    background-color: #0b56a8; 
+    color: #fff; 
+}
+.nav-sidebar .active a:hover {
+    background-color: #E50000;   
+}
+.nav-sidebar .text-overflow a,
+.nav-sidebar .text-overflow .media-body {
+    white-space: nowrap;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis; 
+}
+
+.btn-blog {
+    color: #ffffff;
+    background-color: #E50000;
+    border-color: #E50000;
+    border-radius:0;
+    margin-bottom:10px
+}
+.btn-blog:hover,
+.btn-blog:focus,
+.btn-blog:active,
+.btn-blog.active,
+.open .dropdown-toggle.btn-blog {
+    color: white;
+    background-color:#0b56a8;
+    border-color: #0b56a8;
+}
+article h2{color:#333333;}
+h2{color:#0b56a8;}
+ .margin10{margin-bottom:10px; margin-right:10px;}
+ 
+ .container .text-style
+{
+  text-align: justify;
+  line-height: 23px;
+  margin: 0 13px 0 0;
+  font-size: 19px;
+}
+
+
+
+
+

@@ -7,6 +7,8 @@ import views as v
 
 
 urlpatterns = [
+	
+	url(r'^test/(?P<name>[0-9A-Za-z_\-]+)/$', v.ListView.as_view(), name = 'list'),
 
 	
 	url(r'^home/$', v.HomeView.as_view(), name = 'manager_home'),
@@ -72,27 +74,28 @@ urlpatterns = [
 	url(r'^stock/update/(?P<pk>[0-9]+)/$', v.StockCreateUpdateView.as_view(), name = 'stock_update'),
 	url(r'^stock/delete/(?P<pk>[0-9]+)/$', v.StockDeleteView.as_view(), name = 'stock_delete'),
 
+
 	url(r'^stock/value/$', v.StockValueListView.as_view(), name = 'stock_value_list'),
 	url(r'^stock/value/create/$', v.StockValueCreateView.as_view(), name = 'stock_value_create'),
 
-	url(r'^users/$', v.ManagerUserListView.as_view(), name = 'user_list'),
-	
-	
-	url(r'^info/$', v.ManagerInfoView.as_view(), name = 'info'),
-	url(r'^password/update/$', v.PasswordUpdateView.as_view(), name = 'password_update'),
-	url(r'^admin/users/$', v.ManagerListView.as_view(), name = 'manager_list'),
-	url(r'^admin/users/create/$', v.ManagerCreateUpdateView.as_view(), name = 'manager_create'),
-	url(r'^admin/users/update/(?P<pk>[0-9]+)/$', v.ManagerCreateUpdateView.as_view(), name = 'manager_update'),
 
+	url(r'^users/$', v.UserListView.as_view(), name = 'user_list'),
 	
-	url(r'competition/register/$', v.ManagerCompetitionRegisterView.as_view(), name = 'manager_competition_register'),
-	url(r'competition/register/(?P<id>[0-9]+)/$', v.manager_competition_register_view, name = 'manager_competition_register_def'),
+	
+	url(r'^info/$', v.AdminInfoView.as_view(), name = 'info'),
+	url(r'^password/update/$', v.AdminPasswordUpdateView.as_view(), name = 'password_update'),
+	url(r'^admin/users/$', v.AdminListView.as_view(), name = 'manager_list'),
+	url(r'^admin/users/create/$', v.AdminCreateUpdateView.as_view(), name = 'manager_create'),
+	url(r'^admin/users/update/(?P<pk>[0-9]+)/$', v.AdminCreateUpdateView.as_view(), name = 'manager_update'),
+	url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', v.AdminSetPasswordView.as_view()),
+	
+
+	url(r'competition/register/$', v.CompetitionRegisterView.as_view(), name = 'competition_register'),
+	url(r'competition/register/(?P<pk>[0-9]+)/$', v.CompetitionRegisterUserListView.as_view(), name = 'competition_register_user_list'),
+	url(r'competition/register/approve/(?P<pk>[0-9]+)/$', v.CompetitionRegisterUserListView.approve, name = 'approve'),
+	url(r'competition/register/decline/(?P<pk>[0-9]+)/$', v.CompetitionRegisterUserListView.decline, name = 'decline'),
 
 
 	url(r'finance/$', v.ManagerFinanceView.as_view(), name = 'manager_finance'),
-
-	#url(r'support/message/(?P<id>[0-9]+)/$', ManagerSupportMessageView.as_view(), name = 'manager_support_message'),
-	#url(r'support/message/all/(?P<id>[0-9]+)/$', manager_support_message_view, name = 'manager_support_message_all'),
-
-	url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', v.ManagerSetPasswordView.as_view()),
+	
 ]

@@ -53,24 +53,6 @@ formAjaxSubmit('#message-form', '#message-body');
 //  }
 //});
 
-$(function(){
-  $('[data-modal="modalview"]').DjangoModalRunner({
-    //on_show_modal: function(){
-    //},
-    //on_hide_modal: function(){
-    //},
-    //on_hide_modal_after_submit: function(){
-    //},
-    on_submit: function(){
-      //location.reload();
-    }
-    //on_done: function(){
-    //}
-  });
-});
-$(function() {
-  $.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
-});
 
 function form_submit(form_id, load_id, load_url){
   $(form_id).submit(function(event){

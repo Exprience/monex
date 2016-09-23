@@ -1,0 +1,54 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+
+	{% block head %}
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel='stylesheet' type='text/css'>
+	<!--jQuery-->
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="{% static 'competition/dist/js/jQuery-2.2.0.js' %}"></script>
+	<script src="{% static 'competition/dist/js/script.js' %}"></script>
+	<!script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/path/to/jquery-latest.js"></script>
+	<script type="text/javascript" src="competition/plugins/bootstrap/css/datepicker.css"></script> 
+	<!-- Style -->
+	<link rel="stylesheet" href="{% static 'competition/dist/css/style.css' %}">
+
+	<!link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<!script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<!script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>MONEX</title>
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+
+
+	<!--Bootstrap-->
+	<link rel="stylesheet" href="{% static 'competition/plugins/bootstrap/css/bootstrap.min.css' %}">
+	<!link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel='stylesheet' type='text/css'>
+	<script src="{% static 'competition/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+
+
+	{% endblock %}
+</head>
+
+<body>
+	{% block header %}{% include 'competition/header.html' %}{% endblock %}
+
+	{% block sidebar %}
+	{% endblock %}
+	{% block content %}
+	{% endblock %}
+	{% block footer %}
+	{% endblock %}
+</body>
+</html>
+{% block extrajs %}
+{% endblock %}

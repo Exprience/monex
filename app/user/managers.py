@@ -3,14 +3,14 @@
 
 
 import hashlib
+from urllib2 import URLError
 from datetime import datetime
 
 
 from app.config.managers import BaseDataManager
-
+from app.config import config
 
 class UserBaseDataManager(BaseDataManager):
-
 
     @staticmethod
     def check_unique_user(status, value):
@@ -18,45 +18,51 @@ class UserBaseDataManager(BaseDataManager):
             client = UserBaseDataManager.get_instance().setup_client('/MX_Check_Duplicate_Username_Email_HTTPService/MX_Check_Duplicate_Username_Email_HTTPPort?wsdl')
             result = client.service.MX_Check_Duplicate_Username_Email_HTTPOperation(status, value, False)
             return result
-        except:
-            return None
+        except URLError:
+            return config.URL_ERROR
+        except Exception, e:
+            return config.SYSTEM_ERROR
 
     @staticmethod
-    def loginUser(username, password):
+    def login(username, password):
         try:
             client = UserBaseDataManager.get_instance().setup_client('/MX_Check_User_LoginService/MX_Check_User_LoginPort?wsdl')
-            result = client.service.MX_Check_User_LoginOperation(username, hashlib.md5(password).hexdigest(), datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            result = client.service.MX_Check_User_LoginOperation(username, hashlib.md5(password).hexdigest(), config.NOW)
+            print result
             user = User()
             user.fill_user(result)
             return user
         except:
-            return None
+            return config.SYSTEM_ERROR
 
     @staticmethod
     def register(username, email, password):
         try:
             client = UserBaseDataManager.get_instance().setup_client('/MX_User_RegistrationService/MX_User_RegistrationPort?wsdl')
-            result = client.service.MX_User_RegistrationOperation(username, '', '', hashlib.md5(password).hexdigest(), False, email, False, False, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            result = client.service.MX_User_RegistrationOperation(username, '', '', hashlib.md5(password).hexdigest(), False, email, False, False, config.NOW)
             return result
         except:
-            return None
+            return config.SYSTEM_ERROR
 
 
 class User(object):
     
-    isHavePrivilege = False
-
     def is_authenticated(self):
         return True
 
     def fill_user(self, data):
-        self.id = None
-        self.isHavePrivilege = data.isHavePrivilege
-        self.last_login = data.last_login
-        self.is_superuser = data.is_superuser.value
-        self.is_staff = data.is_staff.value
-        self.is_active = data.is_active.value
-        if hasattr(data.firstname, 'value'):
-            self.firstname =  data.firstname.value
-        else:
-            self.firstname = None
+        for key in data.__keylist__:
+            if hasattr(getattr(data, key), 'value'):
+                if key == "last_login":
+                    self.last_login = datetime.strptime(data.last_login, "%Y-%m-%d %H:%M:%S")
+                else:
+                    print key
+                    setattr(self, key, getattr(data, key).value)
+            else:
+                if key == "last_login":
+                    self.last_login = datetime.strptime(data.last_login, "%Y-%m-%d %H:%M:%S")
+                else:
+                    setattr(self, key, getattr(data, key))
+
+    def is_user(self):
+        return True

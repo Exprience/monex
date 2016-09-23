@@ -1,6 +1,8 @@
 {% extends 'web/base.html' %}
+{% load monextags %}
 {% load i18n %}
 {% load static %}
+
 {% block content %}
 <div class="wall">
 	<h2 class="title">Тэмцээн</h2>
@@ -32,28 +34,8 @@
     <div class="tab-pane text-sm" id="calendar-competition">
       <div id="calendar" class="calendar" style="height: 1000px;"></div>
     </div>
-  </div>    
-</div>
-{% comment %}
-{% for o in object_list %}
-<div class="modal fade" id="shagnal{{ o.id }}">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Шагналын сан</h4>
-      </div>
-      <div class="modal-body">
-        {{ o.rank.shagnal|safe }}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Хаах</button>
-      </div>
-    </div>
   </div>
 </div>
-{% endfor %}
-{% endcomment %}
 {% endblock %}
 {% block extrajs %}
 <script src="{% static 'assets/bootstrap-year-calendar-master/js/bootstrap-year-calendar.js' %}"></script>

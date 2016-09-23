@@ -9,7 +9,6 @@ import jsonpickle
 
 def put(request, name, user):
 	request.session[name] = jsonpickle.encode(user)
-	request.user = jsonpickle.encode(user)
 
 
 
