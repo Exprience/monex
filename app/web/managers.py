@@ -50,6 +50,9 @@ class WebBaseDataManager(BaseDataManager):
 
 	@staticmethod
 	def if_register(competition_id, user_id):
-		client = WebBaseDataManager.get_instance().setup_client('/MX_SYSTEM_Check_Is_Registered_In_CompetitionWSDLService/MX_SYSTEM_Check_Is_Registered_In_CompetitionWSDLPort?wsdl')
-		result = client.service.MX_SYSTEM_Check_Is_Registered_In_CompetitionWSDLOperation(user_id, competition_id)
-		return result
+		try:
+			client = WebBaseDataManager.get_instance().setup_client('/MX_SYSTEM_Check_Is_Registered_In_CompetitionWSDLService/MX_SYSTEM_Check_Is_Registered_In_CompetitionWSDLPort?wsdl')
+			result = client.service.MX_SYSTEM_Check_Is_Registered_In_CompetitionWSDLOperation(user_id, competition_id)
+			return result
+		except:
+			return None

@@ -1,30 +1,123 @@
 # !/usr/bin/python/env
- #, widget = forms.Select()
 # -*- coding:utf-8 -*-
-from django.http import HttpResponse
-from django.views import generic as g
-from django.views.generic import TemplateView, FormView
-from forms import PriceAlertForm, OrderForm, AccountForm
+
+
+from django import http
+
+
+import forms as f
+from app.config import status, config, views as cv
+from app.web.managers import WebBaseDataManager as wm
+from app.manager.managers import ManagerBaseDataManager as mm
+from managers import PlatformBaseDataManager as pm
+
+class FormView(cv.FormView):
+
+	def get_context_data(self, *args,  **kwargs):
+		context = super(FormView, self).get_context_data(*args, **kwargs)
+		context['pk'] = self.pk
+		return context
+
+
+class TemplateView(cv.TemplateView):
+
+	def get_context_data(self, *args,  **kwargs):
+		context = super(TemplateView, self).get_context_data(*args, **kwargs)
+		context['pk'] = self.pk
+		return context
 
 
 class HomeView(FormView):
-	template_name = 'competition/trade.html'
-	form_class = PriceAlertForm
+	template_name = 'platform/trade.html'
+	form_class = f.PriceAlertForm
 
-class OrderView(FormView):
-	form_class = OrderForm
-	template_name = 'competition/trade/stock.html'
+	def get(self, request, *args, **kwargs):
+		competition = mm.individually("", "C", self.pk)
+		if not wm.if_register(self.pk, request.user.id) or str(competition.status.value) == status.COMPETITION_START_REGISTER:
+			raise http.Http404
+		return super(HomeView, self).get(request, *args, **kwargs)
 
-class CalendarView(TemplateView):
-	template_name = 'competition/news/calendar.html'
+	def get_context_data(self, *args, **kwargs):
+		context = super(HomeView, self).get_context_data(*args, **kwargs)
+		context['currencys'] = mm.list("L", config.PREVIOUS, config.NOW)
+		return context
+
+
+class StockView(TemplateView):
+	template_name = "platform/trade/stock.html"
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(StockView, self).get_context_data(*args, **kwargs)
+		context['stocks'] = mm.list("L", config.PREVIOUS, config.NOW, is_currency = False)
+		return context
+
+
+class CurrencyView(TemplateView):
+	
+	template_name = "platform/trade/currency.html"
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(CurrencyView, self).get_context_data(*args, **kwargs)
+		context['currencys'] = mm.list("L", config.PREVIOUS, config.NOW)
+		return context
+
+
+class CurrencyBuyView(FormView):
+	form_class = f.CurrencyBuyForm
+	template_name = "platform/currency/buy.html"
+	success_url = "/"
+
+	def dispatch(self, request,*args,**kwargs):
+		self.cid = int(self.kwargs.pop("cid", None))
+		self.vid = int(self.kwargs.pop("vid", None))
+		return super(CurrencyBuyView, self).dispatch(request, *args, **kwargs)
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(CurrencyBuyView, self).get_context_data(*args, **kwargs)
+		context['currency'] = mm.list("I", config.PREVIOUS, config.NOW, id = self.vid)[0]
+		return context
+
+	def form_valid(self, form):
+		piece = form.cleaned_data['piece']
+		pm.currency("C", self.cid, self.request.user.id, piece, self.vid)
+		return super(CurrencyBuyView, self).form_valid(form)
+
 
 class NewsView(TemplateView):
-	template_name = 'competition/news.html'
+	
+	template_name = 'platform/news.html'
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(NewsView, self).get_context_data(*args, **kwargs)
+		context['news'] = mm.select(u"", u'N')
+		return context
+
+class AlertView(TemplateView):
+	
+	template_name = "platform/trade/alert.html"
+
+
+class OrderView(FormView):
+	form_class = f.OrderForm
+	template_name = 'platform/trade/stock.html'
+
+
+class CalendarView(TemplateView):
+	
+	template_name = 'platform/news/calendar.html'
+
+
 class AccountView(TemplateView):
-	template_name = 'competition/account.html'
+	
+	template_name = 'platform/account.html'
+
+
 class Default(TemplateView):
-	template_name = 'competition/default.html'
+	
+	template_name = 'platform/default.html'
+
+
 class AccountInfoView(object):
-		template_name = 'competition/account/untitled.html'
-		form_class= AccountForm
+	template_name = 'platform/account/untitled.html'
+	form_class= f.AccountForm
 			

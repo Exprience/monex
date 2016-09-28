@@ -4,18 +4,13 @@
 
 from django import forms
 from django.conf import settings
-from django.utils.translation import ugettext as _
-from django.contrib import messages
 
 
-from app.config.get_username import get_username as gu
 from managers import UserBaseDataManager as manager
 from app.config import config
 
-forms.Field.default_error_messages = {'required': u"Энэ талбарыг бөглөнө үү."}
 
-
-class UserPasswordResetForm(forms.Form):
+class PasswordResetForm(forms.Form):
 	email = forms.EmailField(widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Э-мэйл хаяг'}))
 
 	def clean(self):
@@ -23,11 +18,11 @@ class UserPasswordResetForm(forms.Form):
 			cleaned_data = super(UserPasswordResetForm, self).clean()
 			email = cleaned_data['email']
 			if not User.objects.filter(email = email):
-				raise forms.ValidationError(_('Э-мэйл хаяг бүртгэлгүй байна'), code='invalid')
+				raise forms.ValidationError(u'Э-мэйл хаяг бүртгэлгүй байна', code='invalid')
 			return cleaned_data
 
 
-class UserPasswordChangeForm(forms.Form):
+class PasswordChangeForm(forms.Form):
 
 	old_password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder': 'Хуучин нууц үг'}))
 	new_password1 = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder': 'Шинэ нууц үг'}))
@@ -38,27 +33,16 @@ class UserPasswordChangeForm(forms.Form):
 		cleaned_data = super(UserPasswordChangeForm, self).clean()
 		if self.is_valid():
 			if cleaned_data['new_password1'] != cleaned_data['new_password2']:
-				raise forms.ValidationError(_('Нууц үг таарахгүй байна'))
+				raise forms.ValidationError(u'Нууц үг таарахгүй байна')
 		return cleaned_data
 
 
-class UserSetPasswordForm(forms.Form):
-	new_password1 = forms.CharField()
-	new_password2 = forms.CharField()
-
-	def __init__(self, *args , **kwargs):
-		super(UserSetPasswordForm, self).__init__(*args, **kwargs)
-		self.fields['new_password1'].widget.attrs['placeholder'] = u'Нууц үг'
-		self.fields['new_password2'].widget.attrs['placeholder'] = u'Нууц үг давтах'
-		self.fields['new_password1'].widget.attrs['class'] = u'form-control'
-		self.fields['new_password2'].widget.attrs['class'] = u'form-control'
-
-	def save(self, *args, **kwargs):
-		messages.success(gu(), _('Нууц үг амжилттай хадгалагдлаа'))
-		return super(UserSetPasswordForm, self).save(*args, **kwargs)
+class SetPasswordForm(forms.Form):
+	new_password1 = forms.CharField(widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}))
+	new_password2 = forms.CharField(widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг давтах'}))
 
 
-class UserLoginForm(forms.Form):
+class LoginForm(forms.Form):
 	username = forms.CharField(label = u"", widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Нэвтрэх нэр'}))
 	password = forms.CharField(label = u"", widget = forms.PasswordInput(attrs = {'class': 'form-control', 'placeholder': 'Нууц үг'}))
 	remember_me = forms.BooleanField(required = False, initial = True, label = 'Намайг сана')
@@ -73,15 +57,15 @@ class UserLoginForm(forms.Form):
 
 
 	def clean(self):
-		cleaned_data = super(UserLoginForm, self).clean()
+		cleaned_data = super(LoginForm, self).clean()
 		if self.is_valid():
 			user = manager.login(cleaned_data['username'], cleaned_data['password'])
 			if user is None:
-				raise forms.ValidationError(_(u'Хэрэглэгчийн нэр эсвэл нууц үг буруу байна'), code='invalid')
+				raise forms.ValidationError(u'Хэрэглэгчийн нэр эсвэл нууц үг буруу байна', code='invalid')
 		return cleaned_data
 
 
-class UserRegisterForm(forms.Form):
+class RegisterForm(forms.Form):
 	username = forms.CharField(widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нэвтрэх нэр'}) )
 	email = forms.EmailField(widget = forms.EmailInput(attrs = {'class':'form-control', 'placeholder':'Имэйл'}))
 	password = forms.CharField(widget = forms.PasswordInput(attrs = {'class':'form-control', 'placeholder':'Нууц үг'}))
@@ -113,4 +97,4 @@ class UserRegisterForm(forms.Form):
 			repeat_password = cleaned_data['repeat_password']
 			if not password == repeat_password:
 				raise forms.ValidationError(_(u'Нууц үг зөрүүтэй байна'), code='invalid')
-		return cleaned_data
+		return cleaned_data 

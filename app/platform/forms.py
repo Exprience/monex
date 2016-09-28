@@ -1,4 +1,7 @@
+# !/usr/bin/python/env
 # -*- coding: utf-8 -*-
+
+
 from django import forms
 
 
@@ -70,3 +73,7 @@ class AccountForm (forms.Form):
 	email = forms.EmailField(label='И-Майл',max_length=300, widget = forms.EmailInput(attrs = {'class':"form-control", 'style': 'height: 70px','placeholder':'Майл'}))
 	phone2 = forms.CharField(label='Утас', widget = forms.TextInput(attrs = {'class':"form-control",'placeholder':'Value'}))
 	phone2 = forms.CharField(label='Утас', widget = forms.TextInput(attrs = {'class':"form-control",'placeholder':'Value'}))
+
+
+class CurrencyBuyForm(forms.Form):
+	piece = forms.IntegerField(label="", widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':u'Ширхэг'}))

@@ -231,9 +231,9 @@ class ManagerForm(forms.Form):
 				uid = urlsafe_base64_encode(force_bytes(result.pk))
 				token = default_token_generator.make_token(result)
 				link = 'http://%s/manager/reset/%s/%s/' %(domain, uid, token)
-				manager.apply_manager('uuganbat@innosol.mn', link, token)
+				manager.apply_manager(self.cleaned_data['email'], link, token)
 		else:
-			result = manager.register("", "", news = news, research = research, lesson = lesson, competition_type = competition_type, competition = competition, currency = currency, stock = stock, bank = bank, competition_approval = competition_approval, is_create = "0", id = self.id, is_active = self.cleaned_data['is_active'])
+			result = manager.register("", "", news = news, research = research, lesson = lesson, competition_type = competition_type, competition = competition, currency = currency, stock = stock, bank = bank, competition_approval = competition_approval, is_create = False, id = self.id, is_active = "1")
 		return result
 
 

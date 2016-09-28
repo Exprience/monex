@@ -18,21 +18,25 @@ class ManagerBaseDataManager(BaseDataManager):
 
 	@staticmethod
 	def register(email, password, news = "", research = "", lesson = "", competition_type = "", competition = "", currency = "", stock = "", bank = "", competition_approval = "", is_superuser = "0", is_active = True, is_create = "0", id = ""):
-		try:
-			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Admin_Create_ManagerWSDLService/MX_Admin_Create_ManagerWSDLPort?wsdl')
-			result = client.service.MX_Admin_Create_ManagerWSDLOperation(email, hashlib.md5(password).hexdigest(), is_superuser, is_active, news, research, lesson, competition_type, competition, currency, stock, bank, competition_approval, is_create, id)
-			print dir(result.status)
-			if result.status == "true":
-				user = Manager()
+		#try:
+		client = ManagerBaseDataManager.get_instance().setup_client('/MX_Admin_Create_ManagerWSDLService/MX_Admin_Create_ManagerWSDLPort?wsdl')
+		result = client.service.MX_Admin_Create_ManagerWSDLOperation(email, hashlib.md5(password).hexdigest(), is_superuser, is_active, news, research, lesson, competition_type, competition, currency, stock, bank, competition_approval, is_create, id)
+		print result
+		if result.status == "true":
+			user = Manager()
+			if hasattr(result.manager_id, "value"):
 				user.id = int(result.manager_id.value)
 				user.pk = int(result.manager_id.value)
-				user.last_login = None
-				user.password = hashlib.md5(password).hexdigest()
-				return user
 			else:
-				return None
-		except:
+				user.id = int(result.manager_id)
+				user.pk = int(result.manager_id)
+			user.last_login = None
+			user.password = hashlib.md5(password).hexdigest()
+			return user
+		else:
 			return None
+		#except:
+		#	return config.SYSTEM_ERROR
 
 
 	@staticmethod
@@ -87,16 +91,13 @@ class ManagerBaseDataManager(BaseDataManager):
 	@staticmethod
 	def manager_info(id):
 		try:
-			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Admin_Show_Manager_Info_WSDLService/MX_Admin_Show_Manager_Info_WSDLPort?wsdl')
-			client.set_options(retxml=True)
+			client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/info/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
 			result = client.service.MX_Admin_Show_Manager_Info_WSDLOperation(id)
-			soup = BeautifulStoneSoup(result)
-			values = soup.findAll('mxadminshowmanagerinfo_record')
 			user = Manager()
-			user.fill_manager(values[0])
+			user.fill_manager(result.manager_info.MXAdminShowManagerInfo_Response.MXAdminShowManagerInfo_Record)
 			return user
 		except Exception, e:
-			return None
+			return config.SYSTEM_ERROR
 
 
 	@staticmethod
@@ -176,7 +177,6 @@ class ManagerBaseDataManager(BaseDataManager):
 				result = result.Lesson.MXManagerSelectLessonIndividually_Response.MXManagerSelectLessonIndividually_Record
 			if type == 'C':
 				result = result.Competition.MXManagerSelectCompetitionIndividually_Response.MXManagerSelectCompetitionIndividually_Record
-				print result
 			return result
 		except:
 			return None
@@ -184,34 +184,35 @@ class ManagerBaseDataManager(BaseDataManager):
 
 	@staticmethod
 	def select(manager_id, type):
-		#try:
-		client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/select/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
-		result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id)
-		print result
-		if type == 'N':
-			if manager_id == "":
-				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXUserShowNews_Record)
-			else:
-				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXManagerShowNewsLists_Record)				
-		if type == 'R':
-			if manager_id == "":
-				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXUserShowResearchLists_Record)
-			else:
-				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXManagerShowResearchLists_Record)
-		if type == 'L':
-			if manager_id == "":
-				records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXUserShowLessonLists_Record)
-			else:
-				records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXManagerShowLessonLists_Record)
-		if type == 'C':
-			if manager_id == "":
-				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXUserShowCompetitionLists_Record)
-			else:
-				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXManagerShowCompetitionLists_Record)
-			
-		return records
-		#except:
-		#	return None
+		try:
+			client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/select/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
+			result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id)
+			if type == 'N':
+				if manager_id == "":
+					records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXUserShowNews_Record)
+				else:
+					records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXManagerShowNewsLists_Record)				
+			if type == 'R':
+				if manager_id == "":
+					records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXUserShowResearchLists_Record)
+				else:
+					records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXManagerShowResearchLists_Record)
+			if type == 'L':
+				if manager_id == "":
+					records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXUserShowLessonLists_Record)
+				else:
+					records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXManagerShowLessonLists_Record)
+			if type == 'C':
+				if manager_id == "":
+					records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXUserShowCompetitionLists_Record)
+				else:
+					records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXManagerShowCompetitionLists_Record)
+				
+			return records
+		except URLError:
+			return config.URL_ERROR
+		except:
+			return None
 
 
 	@staticmethod
@@ -525,10 +526,22 @@ class ManagerBaseDataManager(BaseDataManager):
 		try:
 			client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/list.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
 			result = client.service.MX_Manager_User_Show_Currency_Stock_Value_WSDLOperation(type, id, start_date, end_date, is_currency)
-			if is_currency:
-				records = config.get_dict(result.Currency.MXManagerUserShowCurrency_Response.MXManagerUserShowCurrency_Record)
+			if result.isSuccess:
+				if type == "L":
+					if is_currency:
+						records = config.get_dict(result.Currency.MXManagerUserShowCurrency_Response.MXManagerUserShowCurrencyLast_Record)
+					else:
+						records = config.get_dict(result.Stock.MXManagerUserShowStock_Response.MXManagerUserShowStockLast_Record)
+				elif type == "I":
+					if is_currency:
+						records = config.get_dict(result.Currency.MXManagerUserShowCurrency_Response.MXManagerUserShowCurrencyIndividually_Record)
+				else:
+					if is_currency:
+						records = config.get_dict(result.Currency.MXManagerUserShowCurrency_Response.MXManagerUserShowCurrency_Record)
+					else:
+						records = config.get_dict(result.Stock.MXManagerUserShowStock_Response.MXManagerUserShowStock_Record)
+				return records
 			else:
-				records = config.get_dict(result.Stock.MXManagerUserShowStock_Response.MXManagerUserShowStock_Record)
-			return records
+				return None
 		except:
 			return None

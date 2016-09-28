@@ -1,0 +1,52 @@
+{% extends 'platform/base.html' %}
+{% block content %}
+<div class="container-fluid watchlist">
+	<div class="row">
+		<div class="col-lg-6">
+			<div class="watchlist-panel panel panel-default">
+				<div class="panel-heading">
+			  		<ul class="list-inline">
+						<li class="active"><a class="ajax-load" load-url="{% url 'platform:currency' pk %}" href="#watchlist">Валют</a></li>
+						<li><a class="ajax-load" load-url="{% url 'platform:stock' pk %}" href="#watchlist">Хувьцаа</a></li>
+						<li><a class="ajax-load" load-url="{% url 'platform:alert' %}" href="#watchlist">Сэрүүлэг</a></li>
+					</ul>
+				</div>
+				<div id="watchlist" class="panel-body">
+					{% include 'platform/trade/currency.html' %}
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<div class="watchlist-panel panel panel-default">
+				<div class="panel-heading">
+					<ul class="list-inline">
+						<li class="active"><a href="#overview"><span class="active">Overview</span></a></li>
+						<li><a href="#chart"><span>Chart</span></a></li>
+					</ul>	
+				</div>
+				<div class="panel-body">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="watchlist-panel panel panel-default">
+				<div class="panel-heading">
+					<ul class="list-inline">
+						<li class="active"><a href="#position"><span class="active">Арилжааны Явц</span></a></li>
+						<li><a href="#order"><span>Захиалга</span></a></li>
+					</ul>
+				</div><!-- panel-heading -->
+				<div class="panel-body">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% include 'platform/trade/popup/alertpop.html' %}
+
+{% endblock %}
+{% block extrajs %}
+{% endblock %}
+

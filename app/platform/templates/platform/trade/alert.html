@@ -1,4 +1,5 @@
 {% load static %}
+{% comment %}
 <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Хайх">
 
 
@@ -98,53 +99,40 @@
          </div>
       </div>
    </div><!-- /.modal-content -->
-
-
-
-
-
-<!--Tanle click PopUp Example 1-->
-<!--<table class="table table-striped"> <thead>
+{% endcomment %}
+<div class="watchlist-body">
+  <button data-toggle="modal" href="#myModal1" class="btn btn-plat btn-xs">ADD</button> 
+</div>
+<table class="table table-bordered" id="table1">
+  <thead>
     <tr>
-        <th>ID</th>
-        <th>Customer</th>
-        <th>Status</th>
+      <th>Валют</th>
+      <th>Авах</th>
+      <th>Зарах</th>
+      <th>Өөрчлөлт</th>
+      <th>Сэтгэгдэл</th>
+      <th>Засах</th>
+      <th>Устгах</th>
     </tr>
-    </thead>
-    <tbody>
-        <tr data-toggle="modal" data-id="1" data-target="#orderModal">
-            <td>1</td>
-            <td>24234234</td>
-            <td>A</td>
-        </tr>
-        <tr data-toggle="modal" data-id="2" data-target="#orderModal">
-            <td>2</td>
-            <td>24234234</td>
-            <td>A</td>
-        </tr>
-        <tr data-toggle="modal" data-id="3" data-target="#orderModal">
-            <td>3</td>
-            <td>24234234</td>
-            <td>A</td>
-        </tr>
-    </tbody>
+  </thead>
+  <tbody>
+    <tr>
+      <td>EUR</td>
+      <td>2000</td>
+      <td>2100</td>
+      <td>0.1</td>
+      <td>blabla bla bla</td>
+      <td><a data-toggle="modal" id="button5" href="#myModal1" class="btn btn-primary btn-xs">Edit</a></td>
+      <td><a class="btn btn-primary btn-xs">delete</a></td>
+    </tr>
+    <tr>
+      <td>USA</td>
+      <td>1900</td>
+      <td>1950</td>
+      <td>0.05</td>
+      <td>5%</td>
+      <td><a data-toggle="modal" id="button9" href="#myModal2" class="btn btn-primary btn-xs">Edit</a></td>
+      <td><a class="btn btn-primary btn-xs">delete</a></td>
+    </tr>
+  </tbody>
 </table>
-  
-  <div id="orderModal" class="modal fade" role="dialog" aria-labelledby="orderModal" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-        <h3>Order</h3>
-      </div>
-      <div id="orderDetails" class="modal-body"></div>
-      <div id="orderItems" class="modal-body"></div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div>
--->

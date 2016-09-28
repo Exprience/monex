@@ -8,8 +8,9 @@ from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render_to_response
 
 
-from app.user import views as user_v
 import forms as f
+from app.config import config, views as v
+from app.user import views as user_v
 from app.manager.managers import ManagerBaseDataManager as mm
 from managers import WebBaseDataManager as m
 
@@ -25,11 +26,11 @@ class NotManager(object):
 
 
 
-class Home(NotManager, g.TemplateView):
+class Home(NotManager, v.TemplateView):
 	template_name = 'web/home/home.html'
 
 
-class News(NotManager, g.TemplateView):
+class News(NotManager, v.TemplateView):
 
 	template_name = 'web/news/news.html'
 
@@ -41,7 +42,7 @@ class News(NotManager, g.TemplateView):
 
 
 
-class NewsSelf(NotManager, g.TemplateView):
+class NewsSelf(NotManager, v.TemplateView):
 	template_name = 'web/news/news_self.html'
 
 	def get_context_data(self, *args, **kwargs):
@@ -50,7 +51,7 @@ class NewsSelf(NotManager, g.TemplateView):
 		return context
 
 
-class Research(NotManager, user_v.LoginRequired, g.TemplateView):
+class Research(NotManager, user_v.LoginRequired, v.TemplateView):
 	template_name = 'web/research/research.html'
 
 
@@ -80,12 +81,16 @@ class LessonFilter(Lesson):
 
 
 
-class Competition(NotManager, g.TemplateView):
+class Competition(NotManager, v.TemplateView):
 	template_name = 'web/competition/competition.html'
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(Competition, self).get_context_data(*args, **kwargs)
-		context['competitions'] = mm.select("", 'C')
+		competitions = mm.select("", 'C')
+		if competitions == config.URL_ERROR:
+			pass
+		else:
+			context['competitions'] = competitions
 		return context
 
 
@@ -95,7 +100,7 @@ class WebCompetitionCalendarFilter(Competition):
 
 
 
-class Calendar(NotManager, g.TemplateView):
+class Calendar(NotManager, v.TemplateView):
 	template_name = 'web/calendar/calendar.html'
 
 	

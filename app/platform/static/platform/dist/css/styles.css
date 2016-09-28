@@ -1,0 +1,209 @@
+@font-face {
+  font-family: 'ubuntu-b';
+  src: url("../fonts/Ubuntu-B.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ubuntu-c';
+  src: url("../fonts/Ubuntu-C.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'ubuntu-m';
+  src: url("../fonts/Ubuntu-M.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'ubuntu-l';
+  src: url("../fonts/Ubuntu-L.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html, body {
+  font-family: 'ubuntu-l';
+  font-size: 14px;
+  background: #222;
+  height: 100%;
+}
+
+#header.navbar-default {
+  background-color: #222;
+  border: none;
+  height: 8%;
+
+}
+
+#header.navbar-default .navbar-nav > .active > a,
+#header.navbar-default .navbar-nav > .active > a:hover,
+#header.navbar-default .navbar-nav > .active > a:focus {
+  color: white;
+  background-color: #222;
+}
+
+.watchlist {
+  height: 92%;
+  margin-top: -20px;
+}
+
+.watchlist .row {
+  height: 50%;
+  padding: 0px 7px 7px 7px;
+}
+
+.watchlist .row > *{
+  height: 100%;
+  padding: 0px 4px 0px 4px;
+}
+
+.watchlist-panel{
+  height: 100%;
+  margin: 0px;
+  border: none;
+  background: #444;
+  border-radius: 0px;
+}
+
+.watchlist-panel .panel-heading {
+  background: #444;
+  border: none;
+  height: 35px;
+  font-size: 14px;
+}
+
+.watchlist-panel .panel-heading li > a{
+  color: #999;
+}
+
+.watchlist-panel .panel-heading li > a:hover,
+.watchlist-panel .panel-heading li > a:focus
+{
+  color: white;
+  background-color: transparent;
+  border-bottom: none;
+  text-decoration: none;
+}
+
+.watchlist-panel .panel-heading li.active > a{
+  color: white;
+}
+
+.watchlist-panel .panel-body {
+  background: #333;
+  height: -moz-calc(100% - 45px);
+  height: -webkit-calc(100% - 45px);
+  height: calc(100% - 45px);
+  margin: 0px 10px 10px 10px;
+  border: 1px;
+  padding: 0px;
+}
+
+.watchlist-panel .watchlist-body{
+  height: 15%;
+  padding: 5px;
+  color: white;
+}
+
+.watchlist-body select{
+  border-radius: 0px;
+  width: 200px;
+  height: 28px;
+  font-size: 12px;
+  color: white;
+  background: #444;
+  border-color: #444
+}
+
+.watchlist-panel .table-bordered th,
+.watchlist-panel .table-bordered td {
+  border-color: #222 !important;
+  border-left: none;
+  border-right: none;
+}
+
+.watchlist-panel .table-bordered th{
+  font-family: "ubuntu-b";
+  color: #999;
+}
+
+.watchlist-panel table {
+  color: white;
+  font-size: 12px;
+  border: 1px solid #222;
+}
+
+.watchlist-panel table tr > th,
+.watchlist-panel table tr > td {
+  padding: 5px;
+  line-height: 1;
+  vertical-align: center;
+}
+
+.watchlist-panel .btn-plat {
+  background: #555;
+}
+
+.watchlist-panel .btn-plat:hover{
+  background: #888;
+  color: white;
+}
+
+.watchlist-panel .btn-plat:focus{
+  color: white;
+}
+
+
+#ModalGeneral {
+  color: white;
+}
+
+#ModalGeneral .modal-dialog{
+}
+
+#ModalGeneral .modal-content{
+  border-radius: 0px;
+  background: #333;
+}
+
+#ModalGeneral .modal-header {
+  border: none;
+}
+
+#ModalGeneral .modal-body {
+  border-radius: 0px;
+  border: none;
+}
+
+#ModalGeneral .modal-footer {
+  border-radius: 0px;
+  border: none;
+}
+
+#ModalGeneral button {
+  border-radius: 0px;
+}
+
+#ModalGeneral .form-control{
+  border-radius: 0px;
+  color: white;
+  border: none;
+  background: #222;
+}
+
+.value {
+  border: 1px solid black;
+  width: 40px;
+  height: 40px;
+}
+
+.watchlist .rows {
+  height: 100% !important;
+}
+
+.example {
+  width: 20%;
+}

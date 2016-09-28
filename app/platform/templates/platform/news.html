@@ -1,0 +1,48 @@
+{% extends 'platform/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid watchlist">
+	<div class="row rows">
+		<div class="col-lg-12">
+			<div class="watchlist-panel panel panel-default">
+				<div class="panel-heading">
+					<ul class="list-inline">
+						<li class="active"><a href="#news"><span>Мэдээ </span></a></li>
+						<li><a href="#research"><span>Судалгаа</span></a></li>
+						<li><a href="#calendar"><span>Календарь</span></a></li>
+						<li><a href="#top20"><span class="active">Top 20 Компани</span></a></li>
+					</ul>
+				</div>
+				<div class="panel-body">
+					<div class="">
+						<div class="example">
+							<table class="table table-bordered">
+								<tr>
+									<th>Гарчиг</th>
+								</tr>
+								{% for n in news %}
+								<tr>
+									<td>{{ n }}</td>
+								</tr>
+								{% endfor %}
+							</table>		
+						</div>
+						<div class="example">
+							<table class="table table-bordered">
+								<tr>
+									<th>Гарчиг</th>
+								</tr>
+								{% for n in news %}
+								<tr>
+									<td>{{ n }}</td>
+								</tr>
+								{% endfor %}
+							</table>		
+						</div>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

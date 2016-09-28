@@ -276,24 +276,7 @@
         return false;
       });
     });
-    {% if messages %}
-      {% for m in messages %}
-        $(document).ready(function(){
-          $.notify(
-            {
-              message: '{{ m }}'
-            },
-            {
-              type: '{% if m.tags == "error" %}danger{% else %}{{ m.tags }}{% endif %}',
-              placement: {
-                from: "top",
-                align: "center"
-              },
-            }
-          );
-        });
-      {% endfor %}
-    {% endif %}
   </script>
+  {% include "config/messages.html" %}
 </body>
 </html>

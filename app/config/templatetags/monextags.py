@@ -38,9 +38,9 @@ def if_registered(competition_id, user_id, status):
 	result = wm.if_register(competition_id, user_id)
 	if result:
 		if status == "2":
-			return mark_safe("<a href='#' class='btn btn-primary btn-xs btn-flat'>Тоглох</a>")
+			return mark_safe(u"<a href='/platform/%s' class='btn btn-primary btn-xs btn-flat'>Тоглох</a>"%competition_id)
 		elif status == "1":
-			return "Бүртгүүлсэн байна"
+			return u"Бүртгүүлсэн байна"
 	else:
 		#if status == "3":
 		#	return "Тэмцээн дууссан байна"

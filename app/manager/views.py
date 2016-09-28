@@ -35,18 +35,20 @@ class LoginView(v.FormView):
 
 	def form_valid(self, form):
 		user = m.login(form.cleaned_data['email'], form.cleaned_data['password'])
+		
 		if user == config.URL_ERROR:
 			self.error(config.URL_ERROR_MESSAGE)
 			return super(LoginView, self).form_invalid(form)
+		
 		if user == config.SYSTEM_ERROR:
 			self.error(config.SYSTEM_ERROR_MESSAGE)
 			return super(LoginView, self).form_invalid(form)
+		
 		if user == "false":
-			self.form_error(form, u"Хэрэглэгчийн э-мэйл эсвэл нууц үг буруу байна")
-			return super(LoginView, self).form_invalid(form)
+			return self.form_error(form, u"Хэрэглэгчийн и-мэйл эсвэл нууц үг буруу байна")
+		
 		if user.is_active == '0':
-			self.form_error(form, u"Системд нэвтрэх эрхгүй байна. Бүртгэлээ баталгаажуулна уу!")
-			return super(LoginView, self).form_invalid(form)
+			return self.form_error(form, u"Системд нэвтрэх эрхгүй байна. Бүртгэлээ баталгаажуулна уу!")
 		session.put(self.request, 'manager', user)
 		return super(LoginView, self).form_valid(form)
 
@@ -896,10 +898,10 @@ class AdminCreateUpdateView(FormView):
 		return kwargs
 
 	def form_valid(self, form):
-		#result = form.save(self.request)
-		#if not result:
-		self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү!')
-		return super(AdminCreateUpdateView, self).form_invalid(form)
+		result = form.save(self.request)
+		if result == config.SYSTEM_ERROR:
+			self.error(config.SYSTEM_ERROR_MESSAGE)
+			return super(AdminCreateUpdateView, self).form_invalid(form)
 		return super(AdminCreateUpdateView, self).form_valid(form)
 
 class AdminSetPasswordView(v.FormView):

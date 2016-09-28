@@ -32,7 +32,9 @@ class UserBaseDataManager(BaseDataManager):
             user = User()
             user.fill_user(result)
             return user
-        except:
+        except URLError:
+            return config.URL_ERROR
+        except Exception, e:
             return config.SYSTEM_ERROR
 
     @staticmethod

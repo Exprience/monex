@@ -61,7 +61,7 @@ def get_dict(values):
         for key in values.__keylist__:
             context[key] = getattr(values, key).value
             if hasattr(getattr(values, key), 'value'):
-                context[key] = getattr(values, key).value
+                context[key] = unicode(getattr(values, key).value)
             else:
                 context[key] = u"Бичлэг байхгүй байна"
         lists.append(context)
@@ -70,7 +70,7 @@ def get_dict(values):
             context = {}
             for key in value.__keylist__:
                 if hasattr(getattr(value, key), 'value'):
-                    context[key] = getattr(value, key).value
+                    context[key] = unicode(getattr(value, key).value)
                 else:
                     context[key] = u"Бичлэг байхгүй байна"
             lists.append(context)

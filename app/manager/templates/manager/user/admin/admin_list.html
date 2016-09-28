@@ -34,7 +34,7 @@
                 <td>{{ manager.last_login }}</td>
                 <td><label class="label label-primary">{{ manager.is_active }}</label></td>
                 <td>
-                  <a href="" class="btn btn-flat btn-primary btn-xs">
+                  <a href="{% url 'manager:manager_update' manager.id %}" class="btn btn-flat btn-primary btn-xs">
                     <i class="fa fa-edit"></i> Засварлах
                   </a>
                   {% comment %}

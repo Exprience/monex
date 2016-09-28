@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns0="http://xml.netbeans.org/schema/MX_User_Manager_Currency_Stock_Order_CUS" xmlns:ns1="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Currency_Stock_Order_CUS/src/MX_User_Manager_Currency_Stock_Order_CUSWSDL" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MX_User_Manager_Currency_Stock_Order_CUSWSDL" targetNamespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Currency_Stock_Order_CUS/src/MX_User_Manager_Currency_Stock_Order_CUSWSDL">
+	<types>
+		<xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Currency_Stock_Order_CUS/src/MX_User_Manager_Currency_Stock_Order_CUSWSDL">
+			<xsd:import namespace="http://xml.netbeans.org/schema/MX_User_Manager_Currency_Stock_Order_CUS" schemaLocation="http://a-PC:9080/MX_User_Manager_Currency_Stock_Order_CUSCA-sun-http-binding/MX_User_Manager_Currency_Stock_Order_CUS/MX_User_Manager_Currency_Stock_Order_CUS.xsd"/>
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="http://a-PC:9080/MX_User_Manager_Currency_Stock_Order_CUSCA-sun-http-binding/MX_User_Manager_Currency_Stock_Order_CUS/MXUserShowIndividuallyCurrencySellOrder.xsd"/>
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="http://a-PC:9080/MX_User_Manager_Currency_Stock_Order_CUSCA-sun-http-binding/MX_User_Manager_Currency_Stock_Order_CUS/MXUserShowIndividuallyCurrencyBuyOrder.xsd"/>
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="http://a-PC:9080/MX_User_Manager_Currency_Stock_Order_CUSCA-sun-http-binding/MX_User_Manager_Currency_Stock_Order_CUS/MXUserShowCurrencySellOrder.xsd"/>
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="http://a-PC:9080/MX_User_Manager_Currency_Stock_Order_CUSCA-sun-http-binding/MX_User_Manager_Currency_Stock_Order_CUS/MXUserShowCurrencyBuyOrder.xsd"/>
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="http://a-PC:9080/MX_User_Manager_Currency_Stock_Order_CUSCA-sun-http-binding/MX_User_Manager_Currency_Stock_Order_CUS/MXUserShowStockBuyOrder.xsd"/>
+			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="http://a-PC:9080/MX_User_Manager_Currency_Stock_Order_CUSCA-sun-http-binding/MX_User_Manager_Currency_Stock_Order_CUS/MXUserShowStockSellOrder.xsd"/>
+		</xsd:schema>
+	</types>
+	<message name="MX_User_Manager_Currency_Stock_Order_CUSWSDLOperationResponse">
+		<part name="isSuccess" type="xsd:boolean"></part>
+		<part name="id" type="xsd:string"></part>
+		<part element="ns1:MXUserShowCurrencyBuyOrder_Response" name="currency_buy_order"></part>
+		<part element="ns1:MXUserShowCurrencySellOrder_Response" name="currency_sell_order"></part>
+		<part element="ns1:MXUserShowStockBuyOrder_Response" name="stock_buy_order"></part>
+		<part element="ns1:MXUserShowStockSellOrder_Response" name="stock_sell_order"></part>
+	</message>
+	<message name="MX_User_Manager_Currency_Stock_Order_CUSWSDLOperationRequest">
+		<part name="CUDS" type="xsd:string"></part>
+		<part name="isCurrency" type="xsd:boolean"></part>
+		<part name="isBuyOrder" type="xsd:boolean"></part>
+		<part element="ns1:MXUserShowCurrencyBuyOrder_Record" name="currency_buy_order"></part>
+		<part element="ns0:MXUserShowCurrencySellOrder_Record" name="currency_sell_order"></part>
+		<part element="ns0:MXUserShowStockBuyOrder_Record" name="stock_buy_order"></part>
+		<part element="ns0:MXUserShowStockSellOrder_Record" name="stock_sell_order"></part>
+	</message>
+	<portType name="MX_User_Manager_Currency_Stock_Order_CUSWSDLPortType">
+		<operation name="MX_User_Manager_Currency_Stock_Order_CUSWSDLOperation">
+			<input message="tns:MX_User_Manager_Currency_Stock_Order_CUSWSDLOperationRequest" name="input1"></input>
+			<output message="tns:MX_User_Manager_Currency_Stock_Order_CUSWSDLOperationResponse" name="output1"></output>
+		</operation>
+	</portType>
+	<binding name="MX_User_Manager_Currency_Stock_Order_CUSWSDLBinding" type="tns:MX_User_Manager_Currency_Stock_Order_CUSWSDLPortType">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="MX_User_Manager_Currency_Stock_Order_CUSWSDLOperation">
+			<soap:operation/>
+			<input name="input1">
+				<soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Currency_Stock_Order_CUS/src/MX_User_Manager_Currency_Stock_Order_CUSWSDL" use="literal"/>
+			</input>
+			<output name="output1">
+				<soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Currency_Stock_Order_CUS/src/MX_User_Manager_Currency_Stock_Order_CUSWSDL" use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="MX_User_Manager_Currency_Stock_Order_CUSWSDLService">
+		<port binding="tns:MX_User_Manager_Currency_Stock_Order_CUSWSDLBinding" name="MX_User_Manager_Currency_Stock_Order_CUSWSDLPort">
+			<soap:address location="http://a-PC:9080/MX_User_Manager_Currency_Stock_Order_CUSWSDLService/MX_User_Manager_Currency_Stock_Order_CUSWSDLPort"/>
+		</port>
+	</service>
+	<plnk:partnerLinkType name="MX_User_Manager_Currency_Stock_Order_CUSWSDL">
+		<!--
+		 A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+		In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+		A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.
+		-->
+		<plnk:role name="MX_User_Manager_Currency_Stock_Order_CUSWSDLPortTypeRole" portType="tns:MX_User_Manager_Currency_Stock_Order_CUSWSDLPortType"/>
+	</plnk:partnerLinkType>
+</definitions>

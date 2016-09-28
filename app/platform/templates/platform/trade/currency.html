@@ -1,0 +1,38 @@
+<div class="watchlist-body">
+  <select class="form-control">
+    <option>Худалдаа хөгжлийн банк</option>
+    <option>Голомт банк</option>
+    <option>Хаан банк</option>
+    <option>Хас банк</option>
+  </select> 
+</div>
+<table class="table table-bordered">
+  <tr>
+    <th>Валют</th>
+    <th class="text-right" style="width: 60px;">Авах</th>
+    <th class="text-right" style="width: 60px;">Зарах</th>
+    <th class="text-right" style="width: 90px;">Өөрчлөлт</th>
+    <th class="text-right" style="width: 90px;">Өөрчлөлтийн Хувь</th>
+    <th class="text-right" style="width: 90px;">Сүүлд өөрчлөгдсөн</th>
+  </tr>
+  {% for currency in currencys %}
+  <tr>
+    <td>{{ currency.currency_id }}</td>
+    <td class="text-right">
+      <button class="btn btn-plat btn-xs" data-toggle="ajax-modal" href="{% url 'platform:currency_buy' pk currency.id %}">
+        {{ currency.buy }}
+      </button>
+    </td>
+    <td class="text-right"><button class="btn btn-plat btn-xs">{{ currency.sell }}</button></td>
+    <td class="text-right">0.1</td>
+    <td class="text-right">10%</td>
+    <td class="text-right">2015-10-16</td>
+  </tr>
+  {% endfor %}
+</table>
+<div id="ModalGeneral" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

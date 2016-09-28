@@ -39,7 +39,8 @@ class BaseMixin(object):
 		self.request.flash.error(message)
 
 	def form_error(self, form, message):
-		self.form_class._errors["__all__"] = ErrorList([message])
+		form._errors["__all__"] = ErrorList([message])
+		return self.form_invalid(form)
 
 
 class FormView(BaseMixin, g.FormView):

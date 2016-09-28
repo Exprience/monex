@@ -120,26 +120,9 @@
       <i class="fa fa-chevron-up"></i>    
     </span>
   </div>
-  {% comment %}
-  {% if user.is_authenticated %}
-  <a href="{% url 'web:bagts' %}" data-modal="modalview" class="btn btn-primary btn-flat" id="bagts-button">Багц</a>
-  {% endif %}
-  {% endcomment %}
   {% endblock %}
 
   {% block support %}
-  {% comment %}
-  {% if user.is_authenticated %}
-  <div class="row">
-    <div class="col-md-12">
-      <div id="online-support" class="online-support">
-        <div id="online-header">Онлайн туслах</div>
-        <div id="online-body"></div>
-      </div>
-    </div>
-  </div>
-  {% endif %}
-  {% endcomment %}
   {% endblock %}
 </body>
 {% block js %}
@@ -165,3 +148,6 @@
     width: 100%;
   }
 </style>
+
+{% include "config/messages.html" %}
+{% include "config/error.html" %}
