@@ -157,6 +157,12 @@ class Manager(object):
 	def is_manager(self):
 		return True
 
+	def is_staff(self):
+		return True
+
+	def is_active(self):
+		return True
+
 
 class CompetitionRegister(models.Model):
 	reciept = models.ImageField(verbose_name = u'Баримт')

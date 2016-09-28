@@ -112,12 +112,12 @@ class ManagerBaseDataManager(BaseDataManager):
 
 	@staticmethod
 	def category_create(category_name, id, type, wallet_val = "", is_create = True):
-		try:
-			client = ManagerBaseDataManager.get_instance().setup_client('/MX_NewsCategoryCreateUpdateWSDLService/MX_NewsCategoryCreateUpdateWSDLPort?wsdl')
-			result = client.service.MX_NewsCategoryCreateUpdateWSDLOperation(is_create, category_name, id, type, wallet_val)
-			return result
-		except:
-			return None
+		#try:
+		client = ManagerBaseDataManager.get_instance().setup_client('/MX_NewsCategoryCreateUpdateWSDLService/MX_NewsCategoryCreateUpdateWSDLPort?wsdl')
+		result = client.service.MX_NewsCategoryCreateUpdateWSDLOperation(is_create, category_name, id, type, wallet_val)
+		return result
+		#except:
+		#	return None
 
 
 	@staticmethod
