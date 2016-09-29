@@ -7,5 +7,5 @@ app/chat/migrations/
 app/online_support/migrations/
 .store/
 .store1
-monex/local_settings.py
+local_settings.py
 monex.sqlite
