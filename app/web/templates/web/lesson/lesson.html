@@ -31,6 +31,7 @@
 						<span class="author-name">
 							{{ m.author_name }}
 						</span>
+						{% comment %}
 						{% if user.is_authenticated %}
 						<span class="author-name">
 							<a href="{% url 'web:lesson_mail' user.id m.id %}" data-modal="modalview">
@@ -38,6 +39,7 @@
 							</a>
 						</span>
 						{% endif %}
+						{% endcomment %}
 					</div><!-- /.entry-meta -->
 				</div><!-- /.post-meta -->
 			</article>
