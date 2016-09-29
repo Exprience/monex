@@ -27,6 +27,7 @@ class PopUpWidget(forms.Widget):
 
 		if self.can_change_related:
 			change_related_url = self.get_related_url('update')
+			print change_related_url
 			context.update(
 				can_change_related=True,
 				change_related_url=change_related_url,
@@ -47,4 +48,7 @@ class PopUpWidget(forms.Widget):
 		return mark_safe(render_to_string(self.template, context))
 
 	def get_related_url(self, type):
-		return reverse_lazy("manager:%s_category_%s" %(self.value, type))
+		if type == "create":
+			return reverse_lazy("manager:%s_category_%s" %(self.value, type))
+		else:
+			return reverse_lazy("manager:%s_category_%s" %(self.value, type), kwargs = {'pk': self.widget.choices[0][0]})

@@ -1,7 +1,7 @@
 <div class="related-widget-wrapper">
   {{ widget }}
   {% if can_change_related %}
-  <a id="related_change" href="#" onclick="return popup(this, 'notes')">
+  <a id="related_change" href="{{ change_related_url }}" onclick="return popup(this, 'notes')">
     <i class="fa fa-pencil-square-o"></i>
   </a>
   {% endif %}
@@ -11,7 +11,7 @@
   </a>
   {% endif %}
   {% if can_delete_related %}
-  <a id="related_delete" href="#" onclick="return popup(this, 'notes')">
+  <a id="related_delete" href="{{ delete_related_url }}" onclick="return popup(this, 'notes')">
     <i class="fa fa-trash-o"></i>
   </a>
   {% endif %}

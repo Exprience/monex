@@ -174,7 +174,7 @@ class CompetitionCategoryCreateUpdateView(FormView):
 						return self.form_invalid(form)
 				return http.HttpResponse('<script>opener.dismissAddRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(result.categoryId.value, form.cleaned_data['category']))
 			else:
-				result = m.category_create(form.cleaned_data['category'], self.pk, '4', is_create = False)
+				result = m.category_create(form.cleaned_data['category'], self.pk, '4', is_create = False, wallet_val = form.cleaned_data['wallet_val'])
 				if not result:
 					self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 					return self.form_invalid(form)

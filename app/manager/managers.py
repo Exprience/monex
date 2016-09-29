@@ -18,25 +18,25 @@ class ManagerBaseDataManager(BaseDataManager):
 
 	@staticmethod
 	def register(email, password, news = "", research = "", lesson = "", competition_type = "", competition = "", currency = "", stock = "", bank = "", competition_approval = "", is_superuser = "0", is_active = True, is_create = "0", id = ""):
-		#try:
-		client = ManagerBaseDataManager.get_instance().setup_client('/MX_Admin_Create_ManagerWSDLService/MX_Admin_Create_ManagerWSDLPort?wsdl')
-		result = client.service.MX_Admin_Create_ManagerWSDLOperation(email, hashlib.md5(password).hexdigest(), is_superuser, is_active, news, research, lesson, competition_type, competition, currency, stock, bank, competition_approval, is_create, id)
-		print result
-		if result.status == "true":
-			user = Manager()
-			if hasattr(result.manager_id, "value"):
-				user.id = int(result.manager_id.value)
-				user.pk = int(result.manager_id.value)
+		try:
+			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Admin_Create_ManagerWSDLService/MX_Admin_Create_ManagerWSDLPort?wsdl')
+			result = client.service.MX_Admin_Create_ManagerWSDLOperation(email, hashlib.md5(password).hexdigest(), is_superuser, is_active, news, research, lesson, competition_type, competition, currency, stock, bank, competition_approval, is_create, id)
+			print result
+			if result.status == "true":
+				user = Manager()
+				if hasattr(result.manager_id, "value"):
+					user.id = int(result.manager_id.value)
+					user.pk = int(result.manager_id.value)
+				else:
+					user.id = int(result.manager_id)
+					user.pk = int(result.manager_id)
+				user.last_login = None
+				user.password = hashlib.md5(password).hexdigest()
+				return user
 			else:
-				user.id = int(result.manager_id)
-				user.pk = int(result.manager_id)
-			user.last_login = None
-			user.password = hashlib.md5(password).hexdigest()
-			return user
-		else:
-			return None
-		#except:
-		#	return config.SYSTEM_ERROR
+				return None
+		except:
+			return config.SYSTEM_ERROR
 
 
 	@staticmethod
@@ -102,22 +102,23 @@ class ManagerBaseDataManager(BaseDataManager):
 
 	@staticmethod
 	def set_password(id, new_password, old_password = '', is_create = True):
-		#try:
-		client = ManagerBaseDataManager.get_instance().setup_client('/MX_Manager_Set_PasswordWSDLService/MX_Manager_Set_PasswordWSDLPort?wsdl')
-		result = client.service.MX_Manager_Set_PasswordWSDLOperation(is_create, hashlib.md5(new_password).hexdigest(), hashlib.md5(old_password).hexdigest(), id)
-		return result
-		#except:
-		#	return False
+		try:
+			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Manager_Set_PasswordWSDLService/MX_Manager_Set_PasswordWSDLPort?wsdl')
+			result = client.service.MX_Manager_Set_PasswordWSDLOperation(is_create, hashlib.md5(new_password).hexdigest(), hashlib.md5(old_password).hexdigest(), id)
+			return result
+		except:
+			return False
 
 
 	@staticmethod
 	def category_create(category_name, id, type, wallet_val = "", is_create = True):
-		#try:
-		client = ManagerBaseDataManager.get_instance().setup_client('/MX_NewsCategoryCreateUpdateWSDLService/MX_NewsCategoryCreateUpdateWSDLPort?wsdl')
-		result = client.service.MX_NewsCategoryCreateUpdateWSDLOperation(is_create, category_name, id, type, wallet_val)
-		return result
-		#except:
-		#	return None
+		try:
+			client = ManagerBaseDataManager.get_instance().setup_client('/MX_NewsCategoryCreateUpdateWSDLService/MX_NewsCategoryCreateUpdateWSDLPort?wsdl')
+			result = client.service.MX_NewsCategoryCreateUpdateWSDLOperation(is_create, category_name, id, type, wallet_val)
+			print result
+			return result
+		except:
+			return None
 
 
 	@staticmethod
@@ -184,133 +185,133 @@ class ManagerBaseDataManager(BaseDataManager):
 
 	@staticmethod
 	def select(manager_id, type):
-		#try:
-		client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/select/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
-		result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id)
-		if type == 'N':
-			if manager_id == "":
-				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXUserShowNews_Record)
-			else:
-				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXManagerShowNewsLists_Record)				
-		if type == 'R':
-			if manager_id == "":
-				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXUserShowResearchLists_Record)
-			else:
-				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXManagerShowResearchLists_Record)
-		if type == 'L':
-			if manager_id == "":
-				records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXUserShowLessonLists_Record)
-			else:
-				records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXManagerShowLessonLists_Record)
-		if type == 'C':
-			if manager_id == "":
-				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXUserShowCompetitionLists_Record)
-			else:
-				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXManagerShowCompetitionLists_Record)
-			
-		return records
-		#except URLError:
-		#	return config.URL_ERROR
-		#except:
-		#	return None
+		try:
+			client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/select/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
+			result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id)
+			if type == 'N':
+				if manager_id == "":
+					records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXUserShowNews_Record)
+				else:
+					records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXManagerShowNewsLists_Record)				
+			if type == 'R':
+				if manager_id == "":
+					records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXUserShowResearchLists_Record)
+				else:
+					records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXManagerShowResearchLists_Record)
+			if type == 'L':
+				if manager_id == "":
+					records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXUserShowLessonLists_Record)
+				else:
+					records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXManagerShowLessonLists_Record)
+			if type == 'C':
+				if manager_id == "":
+					records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXUserShowCompetitionLists_Record)
+				else:
+					records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXManagerShowCompetitionLists_Record)
+				
+			return records
+		except URLError:
+			return config.URL_ERROR
+		except:
+			return None
 
 
 	@staticmethod
 	def create(type, created_by, category, body = "", title = "", author_email = "", author_name = "", url = "", fee = "", prize="", start_date = config.NOW , end_date = config.NOW, register_low = "", status="", file = ""):
-		#try:
-		client = ManagerBaseDataManager.get_instance().setup_client('/MX_Insert_Into_News_Research_LessonService/MX_Insert_Into_News_Research_LessonPort?wsdl')
-		
-		news = client.factory.create('ns1:NewsRecord')
-		news.created_by = created_by
-		news.created_at = config.NOW
-		news.category = category
-		news.title = title
-		news.body = body
-
-		research = client.factory.create('ns1:ResearchRecord')
-		research.created_by = created_by
-		research.created_at = config.NOW
 		try:
-			with open(u"media/%s" %file, "rb") as f:
-				data = f.read()
-				research.pdf_file = base64.b64encode(data)
-		except:
-			research.pdf_file = file
-		import os
-		
-		research.file_type = os.path.splitext(u"media/%s" %file)[1]
-		research.author_name = author_name
-		research.title = title
-		research.research_category_id = category
+			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Insert_Into_News_Research_LessonService/MX_Insert_Into_News_Research_LessonPort?wsdl')
+			
+			news = client.factory.create('ns1:NewsRecord')
+			news.created_by = created_by
+			news.created_at = config.NOW
+			news.category = category
+			news.title = title
+			news.body = body
 
-		lesson = client.factory.create('ns1:LessonRecord')
-		lesson.created_by = created_by
-		lesson.created_at = config.NOW
-		lesson.author_email = author_email
-		lesson.author_name = author_name
-		lesson.url = url
-		lesson.title = title
-		lesson.lesson_category_id = category
-		print lesson
+			research = client.factory.create('ns1:ResearchRecord')
+			research.created_by = created_by
+			research.created_at = config.NOW
+			try:
+				with open(u"media/%s" %file, "rb") as f:
+					data = f.read()
+					research.pdf_file = base64.b64encode(data)
+			except:
+				research.pdf_file = file
+			import os
+			
+			research.file_type = os.path.splitext(u"media/%s" %file)[1]
+			research.author_name = author_name
+			research.title = title
+			research.research_category_id = category
 
-		competition = client.factory.create('ns1:CompetitionRecord')
-		competition.status = status
-		competition.register_low = register_low
-		competition.created_by = created_by
-		competition.created_at = config.NOW
-		competition.end_date = end_date
-		competition.start_date = start_date
-		competition.prize = prize
-		competition.fee = fee
-		competition.competition_category_id = category
+			lesson = client.factory.create('ns1:LessonRecord')
+			lesson.created_by = created_by
+			lesson.created_at = config.NOW
+			lesson.author_email = author_email
+			lesson.author_name = author_name
+			lesson.url = url
+			lesson.title = title
+			lesson.lesson_category_id = category
+			print lesson
 
-		result = client.service.MX_Insert_Into_News_Research_LessonOperation(type, news, research, lesson, competition, created_by)
-		print result
-		return result
-		#except Exception, e:
-		#	return False
+			competition = client.factory.create('ns1:CompetitionRecord')
+			competition.status = status
+			competition.register_low = register_low
+			competition.created_by = created_by
+			competition.created_at = config.NOW
+			competition.end_date = end_date
+			competition.start_date = start_date
+			competition.prize = prize
+			competition.fee = fee
+			competition.competition_category_id = category
+
+			result = client.service.MX_Insert_Into_News_Research_LessonOperation(type, news, research, lesson, competition, created_by)
+			print result
+			return result
+		except Exception, e:
+			return False
 
 
 	@staticmethod
 	def update(type, manager_id, id, category, title = "", body = "", url = "", author_name = "", author_email = "", fee = "", prize="", start_date = config.NOW , end_date = config.NOW, register_low = ""):
-		#try:
-		client = ManagerBaseDataManager.get_instance().setup_client('/MX_Manager_Update_News_Research_LessonService/MX_Manager_Update_News_Research_LessonPort?wsdl')
-		news = client.factory.create('ns0:News')
-		news.MXManagerUpdateNews_Request.id = id
-		news.MXManagerUpdateNews_Request.category = category
-		news.MXManagerUpdateNews_Request.title = title
-		news.MXManagerUpdateNews_Request.body = body
-		
-		research = client.factory.create('ns0:Research')
-		research.MXManagerUpdateResearch_Request.research_category_id = category
-		research.MXManagerUpdateResearch_Request.title = title
-		research.MXManagerUpdateResearch_Request.author_name = ""
-		research.MXManagerUpdateResearch_Request.author_email = ""
-		research.MXManagerUpdateResearch_Request.file_type = ""
-		research.MXManagerUpdateResearch_Request.pdf_file = ""
-		research.MXManagerUpdateResearch_Request.id = id
+		try:
+			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Manager_Update_News_Research_LessonService/MX_Manager_Update_News_Research_LessonPort?wsdl')
+			news = client.factory.create('ns0:News')
+			news.MXManagerUpdateNews_Request.id = id
+			news.MXManagerUpdateNews_Request.category = category
+			news.MXManagerUpdateNews_Request.title = title
+			news.MXManagerUpdateNews_Request.body = body
+			
+			research = client.factory.create('ns0:Research')
+			research.MXManagerUpdateResearch_Request.research_category_id = category
+			research.MXManagerUpdateResearch_Request.title = title
+			research.MXManagerUpdateResearch_Request.author_name = ""
+			research.MXManagerUpdateResearch_Request.author_email = ""
+			research.MXManagerUpdateResearch_Request.file_type = ""
+			research.MXManagerUpdateResearch_Request.pdf_file = ""
+			research.MXManagerUpdateResearch_Request.id = id
 
-		lesson = client.factory.create('ns0:Lesson')
-		lesson.MXManagerUpdateLesson_Request.lesson_category_id = category
-		lesson.MXManagerUpdateLesson_Request.title = title
-		lesson.MXManagerUpdateLesson_Request.url = url
-		lesson.MXManagerUpdateLesson_Request.author_name = author_name
-		lesson.MXManagerUpdateLesson_Request.author_email = author_email
-		lesson.MXManagerUpdateLesson_Request.id = id
-		
-		competition = client.factory.create('ns0:Competition')
-		competition.MXManagerUpdateCompetition_Request.competition_category_id = category
-		competition.MXManagerUpdateCompetition_Request.fee = fee
-		competition.MXManagerUpdateCompetition_Request.prize = prize
-		competition.MXManagerUpdateCompetition_Request.start_date = start_date
-		competition.MXManagerUpdateCompetition_Request.end_date = end_date
-		competition.MXManagerUpdateCompetition_Request.register_low = register_low
-		competition.MXManagerUpdateCompetition_Request.id = id
+			lesson = client.factory.create('ns0:Lesson')
+			lesson.MXManagerUpdateLesson_Request.lesson_category_id = category
+			lesson.MXManagerUpdateLesson_Request.title = title
+			lesson.MXManagerUpdateLesson_Request.url = url
+			lesson.MXManagerUpdateLesson_Request.author_name = author_name
+			lesson.MXManagerUpdateLesson_Request.author_email = author_email
+			lesson.MXManagerUpdateLesson_Request.id = id
+			
+			competition = client.factory.create('ns0:Competition')
+			competition.MXManagerUpdateCompetition_Request.competition_category_id = category
+			competition.MXManagerUpdateCompetition_Request.fee = fee
+			competition.MXManagerUpdateCompetition_Request.prize = prize
+			competition.MXManagerUpdateCompetition_Request.start_date = start_date
+			competition.MXManagerUpdateCompetition_Request.end_date = end_date
+			competition.MXManagerUpdateCompetition_Request.register_low = register_low
+			competition.MXManagerUpdateCompetition_Request.id = id
 
-		result = client.service.MX_Manager_Update_News_Research_LessonOperation(type, manager_id, news, research, lesson, competition)
-		return result
-		#except:
-		#	return None
+			result = client.service.MX_Manager_Update_News_Research_LessonOperation(type, manager_id, news, research, lesson, competition)
+			return result
+		except:
+			return None
 
 
 	@staticmethod
