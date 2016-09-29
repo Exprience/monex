@@ -112,7 +112,7 @@ WSGI_APPLICATION = 'monex.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'monex.sqlite',
+        'NAME': os.path.join(BASE_DIR, 'monex.sqlite'),
     }
 }
 
