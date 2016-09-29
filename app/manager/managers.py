@@ -217,63 +217,64 @@ class ManagerBaseDataManager(BaseDataManager):
 
 	@staticmethod
 	def create(type, created_by, category, body = "", title = "", author_email = "", author_name = "", url = "", fee = "", prize="", start_date = config.NOW , end_date = config.NOW, register_low = "", status="", file = ""):
+		#try:
+		client = ManagerBaseDataManager.get_instance().setup_client('/MX_Insert_Into_News_Research_LessonService/MX_Insert_Into_News_Research_LessonPort?wsdl')
+		
+		news = client.factory.create('ns1:NewsRecord')
+		news.created_by = created_by
+		news.created_at = config.NOW
+		news.category = category
+		news.title = title
+		news.body = body
+
+		research = client.factory.create('ns1:ResearchRecord')
+		research.created_by = created_by
+		research.created_at = config.NOW
 		try:
-			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Insert_Into_News_Research_LessonService/MX_Insert_Into_News_Research_LessonPort?wsdl')
-			
-			news = client.factory.create('ns1:NewsRecord')
-			news.created_by = created_by
-			news.created_at = config.NOW
-			news.category = category
-			news.title = title
-			news.body = body
+			with open(u"media/%s" %file, "rb") as f:
+				data = f.read()
+				research.pdf_file = base64.b64encode(data)
+		except:
+			research.pdf_file = file
+		import os
+		
+		research.file_type = os.path.splitext(u"media/%s" %file)[1]
+		research.author_name = author_name
+		research.title = title
+		research.research_category_id = category
 
-			research = client.factory.create('ns1:ResearchRecord')
-			research.created_by = created_by
-			research.created_at = config.NOW
-			try:
-				with open(u"media/%s" %file, "rb") as f:
-					data = f.read()
-					research.pdf_file = base64.b64encode(data)
-			except:
-				research.pdf_file = file
-			import os
-			
-			research.file_type = os.path.splitext(u"media/%s" %file)[1]
-			research.author_name = author_name
-			research.title = title
-			research.research_category_id = category
+		lesson = client.factory.create('ns1:LessonRecord')
+		lesson.created_by = created_by
+		lesson.created_at = config.NOW
+		lesson.author_email = author_email
+		lesson.author_name = author_name
+		lesson.url = url
+		lesson.title = title
+		lesson.lesson_category_id = category
+		print lesson
 
-			lesson = client.factory.create('ns1:LessonRecord')
-			lesson.created_by = created_by
-			lesson.created_at = config.NOW
-			lesson.author_email = author_email
-			lesson.author_name = author_name
-			lesson.url = url
-			lesson.title = title
-			lesson.lesson_category_id = category
+		competition = client.factory.create('ns1:CompetitionRecord')
+		competition.status = status
+		competition.register_low = register_low
+		competition.created_by = created_by
+		competition.created_at = config.NOW
+		competition.end_date = end_date
+		competition.start_date = start_date
+		competition.prize = prize
+		competition.fee = fee
+		competition.competition_category_id = category
 
-			competition = client.factory.create('ns1:CompetitionRecord')
-			competition.status = status
-			competition.register_low = register_low
-			competition.created_by = created_by
-			competition.created_at = config.NOW
-			competition.end_date = end_date
-			competition.start_date = start_date
-			competition.prize = prize
-			competition.fee = fee
-			competition.competition_category_id = category
-
-			result = client.service.MX_Insert_Into_News_Research_LessonOperation(type, news, research, lesson, competition, created_by)
-			return result
-		except Exception, e:
-			return False
+		result = client.service.MX_Insert_Into_News_Research_LessonOperation(type, news, research, lesson, competition, created_by)
+		print result
+		return result
+		#except Exception, e:
+		#	return False
 
 
 	@staticmethod
 	def update(type, manager_id, id, category, title = "", body = "", url = "", author_name = "", author_email = "", fee = "", prize="", start_date = config.NOW , end_date = config.NOW, register_low = ""):
 		#try:
 		client = ManagerBaseDataManager.get_instance().setup_client('/MX_Manager_Update_News_Research_LessonService/MX_Manager_Update_News_Research_LessonPort?wsdl')
-		
 		news = client.factory.create('ns0:News')
 		news.MXManagerUpdateNews_Request.id = id
 		news.MXManagerUpdateNews_Request.category = category

@@ -397,7 +397,7 @@ class LessonCreateView(FormView):
 		url = form.cleaned_data['url']
 		author_name = form.cleaned_data['author_name']
 		author_email = form.cleaned_data['author_email']
-		m.create('L', self.request.user.id, config.NOW, category, title = title, url = url, author_name = author_name, author_email = author_email)
+		m.create('L', self.request.user.id, category, title = title, url = url, author_name = author_name, author_email = author_email)
 		return super(LessonCreateView, self).form_valid(form)
 
 class LessonUpdateView(FormView):
