@@ -257,7 +257,7 @@ class ManagerSetPasswordForm(forms.Form):
 class CategoryForm(forms.Form):
 	category = forms.CharField(label = u'Ангилал', widget = forms.TextInput(attrs = {'class':'form-control'}))
 
-	def __init__(self, id = None, delete_id = None, *args, **kwargs):
+	def __init__(self, id = None, type = None, delete_id = None, *args, **kwargs):
 		super(CategoryForm, self).__init__(*args, **kwargs)
 		if delete_id:
 			self.fields['category'].disabled = True

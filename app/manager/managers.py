@@ -6,8 +6,6 @@ import base64
 from urllib2 import URLError
 
 
-from BeautifulSoup import BeautifulStoneSoup
-
 from django.conf import settings
 from app.config.managers import BaseDataManager
 from app.config import config
@@ -21,7 +19,6 @@ class ManagerBaseDataManager(BaseDataManager):
 		try:
 			client = ManagerBaseDataManager.get_instance().setup_client('/MX_Admin_Create_ManagerWSDLService/MX_Admin_Create_ManagerWSDLPort?wsdl')
 			result = client.service.MX_Admin_Create_ManagerWSDLOperation(email, hashlib.md5(password).hexdigest(), is_superuser, is_active, news, research, lesson, competition_type, competition, currency, stock, bank, competition_approval, is_create, id)
-			print result
 			if result.status == "true":
 				user = Manager()
 				if hasattr(result.manager_id, "value"):
@@ -132,34 +129,25 @@ class ManagerBaseDataManager(BaseDataManager):
 
 
 	@staticmethod
-	def show_category(manager_id, type):
+	def show_category(*args):
 		try:
 			category_list = []
-			category = None
-			client = ManagerBaseDataManager.get_instance().setup_client('/MX_ShowNewsResearchLessonCategoryWSDLService/MX_ShowNewsResearchLessonCategoryWSDLPort?wsdl')
-			client.set_options(retxml=True)
-			result = client.service.MX_ShowNewsResearchLessonCategoryWSDLOperation(manager_id, type)
-			soup = BeautifulStoneSoup(result)
-			if type == '1':
-				category = soup.findAll('mxselectnewscategoryforshow_record')
-				for i in category:
-					context = (i.id.text, i.category.text)
-					category_list.append(context)
-			if type == '2':
-				category = soup.findAll('mxselectresearchcategoryforshow_record')
-				for i in category:
-					context = (i.id.text, i.category.text)
-					category_list.append(context)
-			if type == '3':
-				category = soup.findAll('mxselectlessoncategoryforshow_record')
-				for i in category:
-					context = (i.id.text, i.category.text)
-					category_list.append(context)
-			if type == '4':
-				category = soup.findAll('mxselectcompetitioncategoryforshow_record')
-				for i in category:
-					context = (i.id.text, i.category.text)
-					category_list.append(context)
+			client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/category/list/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
+			result = client.service.MX_ShowNewsResearchLessonCategoryWSDLOperation(args[0], args[1])
+			
+			if args[1] == '1':
+				category = result.news_category.MXSelectNewsCategoryForShow_Response.MXSelectNewsCategoryForShow_Record
+			elif args[1] == '2':
+				category = result.research_category.MXSelectResearchCategoryForShow_Response.MXSelectResearchCategoryForShow_Record
+			elif args[1] == '3':
+				category = result.lesson_category.MXSelectLessonCategoryForShow_Response.MXSelectLessonCategoryForShow_Record
+			elif args[1] == '4':
+				category = result.competition_category.MXSelectCompetitionCategoryForShow_Response.MXSelectCompetitionCategoryForShow_Record
+			
+			for i in category:
+				context = (i.id.value, i.category.value)
+				category_list.append(context)
+			
 			return category_list
 		except:
 			return None
