@@ -11,13 +11,13 @@ from app.web.managers import WebBaseDataManager as wm
 from app.manager.managers import ManagerBaseDataManager as mm
 from managers import PlatformBaseDataManager as pm
 
+
 class FormView(cv.FormView):
 
 	def get_context_data(self, *args,  **kwargs):
 		context = super(FormView, self).get_context_data(*args, **kwargs)
 		context['pk'] = self.pk
 		return context
-
 
 class TemplateView(cv.TemplateView):
 
@@ -40,6 +40,7 @@ class HomeView(FormView):
 	def get_context_data(self, *args, **kwargs):
 		context = super(HomeView, self).get_context_data(*args, **kwargs)
 		context['currencys'] = mm.list("L", config.PREVIOUS, config.NOW)
+		context['packages'] = pm.currency("S", self.pk, self.request.user.id)
 		return context
 
 
@@ -48,7 +49,15 @@ class StockView(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(StockView, self).get_context_data(*args, **kwargs)
-		context['stocks'] = mm.list("L", config.PREVIOUS, config.NOW, is_currency = False)
+		context['packages'] = pm.currency("S", self.pk, self.request.user.id)
+		return context
+
+class StockValueView(TemplateView):
+	template_name = "platform/trade/position_stock.html"
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(StockValueView, self).get_context_data(*args, **kwargs)
+		context['packages'] = pm.currency("S", self.pk, self.request.user.id, isCurrency = False)
 		return context
 
 
@@ -61,6 +70,14 @@ class CurrencyView(TemplateView):
 		context['currencys'] = mm.list("L", config.PREVIOUS, config.NOW)
 		return context
 
+class CurrencyValueView(TemplateView):
+	
+	template_name = "platform/trade/position_currency.html"
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(CurrencyValueView, self).get_context_data(*args, **kwargs)
+		context['packages'] = pm.currency("S", self.pk, self.request.user.id)
+		return context
 
 class CurrencyBuyView(FormView):
 	form_class = f.CurrencyBuyForm
@@ -79,8 +96,33 @@ class CurrencyBuyView(FormView):
 
 	def form_valid(self, form):
 		piece = form.cleaned_data['piece']
-		pm.currency("C", self.cid, self.request.user.id, piece, self.vid)
+		pm.currency("C", self.cid, self.request.user.id, piece = piece, value_id = self.vid)
 		return super(CurrencyBuyView, self).form_valid(form)
+
+class CurrencySellView(FormView):
+	form_class = f.CurrencyBuyForm
+	template_name = "platform/currency/sell.html"
+	success_url = "/"
+
+	def dispatch(self, request,*args,**kwargs):
+		self.cid = int(self.kwargs.pop("cid", None))
+		self.pid = int(self.kwargs.pop("pid", None))
+		return super(CurrencySellView, self).dispatch(request, *args, **kwargs)
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(CurrencySellView, self).get_context_data(*args, **kwargs)
+		return context
+
+	def form_valid(self, form):
+		print "#############################"
+		print "#############################"
+		print "#############################"
+		print "#############################"
+		print "#############################"
+		print "#############################"
+		print "#############################"
+		pm.currency("U", self.cid, self.request.user.id, value_id = 3, id = self.pid)
+		return super(CurrencySellView, self).form_valid(form)
 
 
 class NewsView(TemplateView):
@@ -91,6 +133,7 @@ class NewsView(TemplateView):
 		context = super(NewsView, self).get_context_data(*args, **kwargs)
 		context['news'] = mm.select(u"", u'N')
 		return context
+
 
 class AlertView(TemplateView):
 	

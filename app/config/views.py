@@ -8,7 +8,11 @@ from django.views import generic as g
 from django.forms.utils import ErrorList
 
 def handler404(request):
-	response = render_to_response('config/handler/404.html', {},
+	if hasattr(request.user, "is_manager"):
+		template_name = "config/handler/manager404.html"
+	else:
+		template_name = 'config/handler/404.html'
+	response = render_to_response(template_name, {},
                                   context_instance=RequestContext(request))
 	response.status_code = 404
 	return response
@@ -17,10 +21,13 @@ def handler404(request):
 
 
 def handler500(request):
-    response = render_to_response('config/handler/500.html', {},
-                                  context_instance=RequestContext(request))
-    response.status_code = 500
-    return response
+	if hasattr(request.user, "is_manager"):
+		template_name = "config/handler/manager500.html"
+	else:
+		template_name = 'config/handler/500.html'
+	response = render_to_response(template_name, {}, context_instance=RequestContext(request))
+	response.status_code = 500
+	return response
 
 
 class BaseMixin(object):

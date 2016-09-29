@@ -1,0 +1,40 @@
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Банк</th>
+			<th>Валют</th>
+			<th>Төлөв</th>
+			<th>L/S</th>
+			<th>Ширхэг</th>
+			<th>Худалдан авсан ханш</th>
+			<th>Одоогийн ханш</th>
+			<th>Алдагдал зогсоох</th>
+			<th>Ашиг авах</th>
+			<th>Ашиг/Алдагдал</th>
+			<th>Ашиг/Алдагдал(MNT)</th>
+			<th>Ашиг/Алдагдал(%)</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for package in packages %}
+		<tr>
+			<td>{{ package.id }}</td>
+			<td></td>
+			<td>{{ package.status }}</td>
+			<td>{{ package.status }}</td>
+			<td>{{ package.piece }}</td>
+			<td>{{ package.user_id }}</td>
+			<td>{{ package.status }}</td>
+			<td>{{ package.status }}</td>
+			<td>
+				<button class="btn btn-plat btn-xs" data-toggle="ajax-modal" href="{% url 'platform:currency_sell' pk package.id %}">
+					Зарах
+				</button>
+			</td>
+			<td>{{ package.status }}</td>
+			<td>{{ package.status }}</td>
+			<td>{{ package.status }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>

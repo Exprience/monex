@@ -11,6 +11,7 @@ $(function() {
 $(document).ajaxStart(function() { Pace.restart(); });
 
 
+
 (function($){
 
 	$(document).on('click', '.ajax-load', function(e){
@@ -55,3 +56,21 @@ $(document).ajaxStart(function() { Pace.restart(); });
 
 
 })(jQuery);
+
+$(document).ready(function(){
+	$(".scrolling").slimScroll({
+	    height: $(".scrolling").height(),
+	    //size: '10px',
+	    //position: 'left',
+	    //color: '#ffcc00',
+	    //alwaysVisible: true,
+	    //distance: '20px',
+	    //start: $('#child_image_element'),
+	    //railVisible: true,
+	    //railColor: '#222',
+	    //railOpacity: 0.3,
+	    //wheelStep: 10,
+	    //allowPageScroll: false,
+	    //disableFadeOut: false
+	});
+})

@@ -47,7 +47,7 @@ class NewsSelf(NotManager, v.TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(NewsSelf, self).get_context_data(*args, **kwargs)
-		context['news'] = mm.individually("", 'N', self.kwargs['pk'])
+		context['news'] = mm.individually("", 'N', self.pk)
 		return context
 
 
@@ -141,7 +141,7 @@ class CompetitionRegisterView(NotManager, user_v.LoginRequired, g.FormView):
 
 	def form_valid(self, form):
 		obj = form.save()
-		m.register("C", file = obj.reciept, competition_id = self.kwargs['pk'], user_id = self.request.user.id)
+		m.register("C", file = obj.reciept, competition_id = self.pk, user_id = self.request.user.id)
 		return super(CompetitionRegisterView, self).form_valid(form)
 
 

@@ -12,7 +12,6 @@
 
 	<!--jQuery-->
 	<script src="{% static 'platform/dist/js/jQuery-2.2.0.js' %}"></script>
-	<script src="{% static 'platform/dist/js/platform.js' %}"></script>
 
 	<!--Bootstrap-->
 	<link rel="stylesheet" href="{% static 'platform/plugins/bootstrap/css/bootstrap.min.css' %}">
@@ -24,6 +23,11 @@
 	<!--Pace-->
 	<link rel="stylesheet" href="{% static 'manager/plugins/pace/pace.min.css' %}">
 	<script src="{% static 'manager/plugins/pace/pace.min.js' %}"></script>
+	
+	<!--slimScrol-->
+	<script src="{% static 'manager/plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>
+
+	<script src="{% static 'platform/dist/js/platform.js' %}"></script>
 	{% endblock %}
 </head>
 <body>
@@ -32,9 +36,9 @@
 	{% endblock %}
 	{% block footer %}
 	{% endblock %}
+	<div id="ModalGeneral" class="modal fade" tabindex="-1" role="dialog"></div>
 </body>
 </html>
-<div id="ModalGeneral" class="modal fade" tabindex="-1" role="dialog"></div>
 {% include "config/error.html" %}
 {% include "config/messages.html" %}
 {% block extrajs %}

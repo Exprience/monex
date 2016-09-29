@@ -29,13 +29,17 @@
           <div class="header-nav">
             <nav>
               <ul class="primary-nav">
+                {% comment %}
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'user:home' %}">Хянах самбар</a></li>
                 {% endif %}
+                {% endcomment %}
                 <li><a href="#categorys">Мэдээлэл</a></li>
                 <li><a href="#categorys">Судалгаа</a></li>
                 <li><a href="#categorys">Cургалт</a></li>
+                {% comment %}
                 <li><a href="http://idp.example.com:8090/openam/idpssoinit?metaAlias=/idp&spEntityID=http://sp.example.com:8080/opensso&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-REDIRECT&RelayState=http://localhost:8000{% url 'chat:room' %}">Форум</a></li>
+                {% endcomment %}
               </ul>
               <ul class="member-actions">
                 {% if user.is_authenticated %}

@@ -5,13 +5,13 @@
 		<div class="col-lg-6">
 			<div class="watchlist-panel panel panel-default">
 				<div class="panel-heading">
-			  		<ul class="list-inline">
+					<ul class="list-inline">
 						<li class="active"><a class="ajax-load" load-url="{% url 'platform:currency' pk %}" href="#watchlist">Валют</a></li>
 						<li><a class="ajax-load" load-url="{% url 'platform:stock' pk %}" href="#watchlist">Хувьцаа</a></li>
 						<li><a class="ajax-load" load-url="{% url 'platform:alert' %}" href="#watchlist">Сэрүүлэг</a></li>
 					</ul>
 				</div>
-				<div id="watchlist" class="panel-body">
+				<div id="watchlist" class="panel-body scrolling">
 					{% include 'platform/trade/currency.html' %}
 				</div>
 			</div>
@@ -24,7 +24,7 @@
 						<li><a href="#chart"><span>Chart</span></a></li>
 					</ul>	
 				</div>
-				<div class="panel-body">
+				<div class="panel-body scrolling">
 				</div>
 			</div>
 		</div>
@@ -34,19 +34,28 @@
 			<div class="watchlist-panel panel panel-default">
 				<div class="panel-heading">
 					<ul class="list-inline">
-						<li class="active"><a href="#position"><span class="active">Арилжааны Явц</span></a></li>
-						<li><a href="#order"><span>Захиалга</span></a></li>
+						<li class="active">
+							<a class="ajax-load" load-url="{% url 'platform:currency_value' pk %}" href="#value">
+								Валют
+							</a>
+						</li>
+						<li>
+							<a class="ajax-load" load-url="{% url 'platform:stock_value' pk %}" href="#value">
+								Хувьцаа
+							</a>
+						</li>
+						<li>
+							<a class="ajax-load" load-url="{% url 'platform:stock' pk %}" href="#value">
+								Захиалга
+							</a>
+						</li>
 					</ul>
 				</div><!-- panel-heading -->
-				<div class="panel-body">
+				<div class="scrolling panel-body" id="value">
+					{% include "platform/trade/position_currency.html" %}
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-{% include 'platform/trade/popup/alertpop.html' %}
-
 {% endblock %}
-{% block extrajs %}
-{% endblock %}
-

@@ -256,7 +256,7 @@ class NewsCreateView(FormView):
 		category = form.cleaned_data['category']
 		title = form.cleaned_data['title']
 		body = form.cleaned_data['body']
-		m.create('N', self.request.user.id, config.NOW, category, title = title, body = body)
+		m.create('N', self.request.user.id, category, body = body, title = title)
 		return super(NewsCreateView, self).form_valid(form)
 
 class NewsUpdateView(FormView):

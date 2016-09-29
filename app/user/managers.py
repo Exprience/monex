@@ -28,7 +28,6 @@ class UserBaseDataManager(BaseDataManager):
         try:
             client = UserBaseDataManager.get_instance().setup_client('/MX_Check_User_LoginService/MX_Check_User_LoginPort?wsdl')
             result = client.service.MX_Check_User_LoginOperation(username, hashlib.md5(password).hexdigest(), config.NOW)
-            print result
             user = User()
             user.fill_user(result)
             return user
@@ -58,7 +57,6 @@ class User(object):
                 if key == "last_login":
                     self.last_login = datetime.strptime(data.last_login, "%Y-%m-%d %H:%M:%S")
                 else:
-                    print key
                     setattr(self, key, getattr(data, key).value)
             else:
                 if key == "last_login":
