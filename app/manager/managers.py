@@ -184,35 +184,35 @@ class ManagerBaseDataManager(BaseDataManager):
 
 	@staticmethod
 	def select(manager_id, type):
-		try:
-			client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/select/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
-			result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id)
-			if type == 'N':
-				if manager_id == "":
-					records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXUserShowNews_Record)
-				else:
-					records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXManagerShowNewsLists_Record)				
-			if type == 'R':
-				if manager_id == "":
-					records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXUserShowResearchLists_Record)
-				else:
-					records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXManagerShowResearchLists_Record)
-			if type == 'L':
-				if manager_id == "":
-					records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXUserShowLessonLists_Record)
-				else:
-					records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXManagerShowLessonLists_Record)
-			if type == 'C':
-				if manager_id == "":
-					records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXUserShowCompetitionLists_Record)
-				else:
-					records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXManagerShowCompetitionLists_Record)
-				
-			return records
-		except URLError:
-			return config.URL_ERROR
-		except:
-			return None
+		#try:
+		client = ManagerBaseDataManager.get_instance().setup_client('%ssoap/manager/select/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
+		result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id)
+		if type == 'N':
+			if manager_id == "":
+				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXUserShowNews_Record)
+			else:
+				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXManagerShowNewsLists_Record)				
+		if type == 'R':
+			if manager_id == "":
+				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXUserShowResearchLists_Record)
+			else:
+				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXManagerShowResearchLists_Record)
+		if type == 'L':
+			if manager_id == "":
+				records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXUserShowLessonLists_Record)
+			else:
+				records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXManagerShowLessonLists_Record)
+		if type == 'C':
+			if manager_id == "":
+				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXUserShowCompetitionLists_Record)
+			else:
+				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXManagerShowCompetitionLists_Record)
+			
+		return records
+		#except URLError:
+		#	return config.URL_ERROR
+		#except:
+		#	return None
 
 
 	@staticmethod
