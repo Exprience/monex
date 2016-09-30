@@ -9,3 +9,4 @@ app/online_support/migrations/
 .store1
 local_settings.py
 monex.sqlite
+media/*
