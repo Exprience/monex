@@ -22,7 +22,6 @@ class WebBaseDataManager(BaseDataManager):
 			request.competition_id = competition_id
 			request.user_id = user_id
 			try:
-				print 1/0
 				with open(file.path, "rb") as f:
 					data = f.read()
 					request.file = base64.b64encode(data)
