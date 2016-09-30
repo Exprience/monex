@@ -14,7 +14,7 @@ class WebBaseDataManager(BaseDataManager):
 
 	@staticmethod
 	def register(types, id = "", manager_id = "", competition_id = "", user_id = "", file="", is_approved = False, is_manager = False):
-		try:
+		#try:
 			client = WebBaseDataManager.get_instance().setup_client('%ssoap/web/competition/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
 			register = client.factory.create("ns:competition_registerR")
 			request = client.factory.create("ns:competition_register")
@@ -43,8 +43,8 @@ class WebBaseDataManager(BaseDataManager):
 				elif types == "U":
 					return result
 			return result
-		except:
-			return config.SYSTEM_ERROR
+		#except:
+		#	return config.SYSTEM_ERROR
 
 	@staticmethod
 	def if_register(competition_id, user_id):

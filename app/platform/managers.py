@@ -10,7 +10,7 @@ class PlatformBaseDataManager(BaseDataManager):
 	
 	@staticmethod
 	def currency(type, competition_id, user_id, piece = 1, value_id = 1, id = 1, isCurrency = True, isManager = False, manager_id = ""):
-		#try:
+		try:
 			client = PlatformBaseDataManager.get_instance().setup_client('%ssoap/platform/buy_sell/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
 			
 			currencyR = client.factory.create('ns0:MXUserShowCurrencyCUS_ResponseR')
@@ -53,9 +53,15 @@ class PlatformBaseDataManager(BaseDataManager):
 			stockR.MXUserShowStockCUS_Response = stock
 			result = client.service.MX_User_Manager_Currency_Stock_CUS_WSDLOperation(type, isCurrency, isManager, manager_id, currencyR, stockR)
 			if type == "S" and isCurrency:
-				record = config.get_dict(result.Currency.MXUserShowCurrencyCUS_Response.MXUserShowCurrencyCUS_Record)
+				if result.Currency.MXUserShowCurrencyCUS_Response == "":
+					record = None
+				else:
+					record = config.get_dict(result.Currency.MXUserShowCurrencyCUS_Response.MXUserShowCurrencyCUS_Record)
 			else:
-				record = config.get_dict(result.Stock.MXUserShowStockCUS_Response.MXUserShowStockCUS_Record)
+				if result.Stock.MXUserShowStockCUS_Response == "":
+					record = None
+				else:
+					record = config.get_dict(result.Stock.MXUserShowStockCUS_Response.MXUserShowStockCUS_Record)
 			return record
-		#except:
-		#	return config.SYSTEM_ERROR
+		except:
+			return config.SYSTEM_ERROR
