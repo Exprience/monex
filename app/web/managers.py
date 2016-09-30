@@ -30,6 +30,7 @@ class WebBaseDataManager(BaseDataManager):
 			request.status = status.CR_NOT_APPROVED
 			request.created_at = config.NOW
 			register.competition_register = request
+			print request
 			result = client.service.MX_User_Manager_Competition_Register_CUS_WSDLOperation(is_manager, types, register, manager_id, is_approved)
 			if result.Response == 3:
 				return ""
