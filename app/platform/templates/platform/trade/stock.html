@@ -15,15 +15,23 @@
     <tbody>
         {% for stock in stocks %}
         <tr>
-            <td>5</td>
-            <td>6</td>
-            <td>8</td>
-            <td>9</td>
-            <td>9</td>
-            <td>9</td>
-            <td>9</td>
-            <td>9</td>
-            <td>9</td>
+            <td>{{ stock.stock_id }}</td>
+            <td>
+                <button class="btn btn-plat btn-xs" data-toggle="ajax-modal" href="{% url 'platform:stock_buy' pk stock.id %}">
+                    {{ stock.buy }}
+                </button>
+            </td>
+            <td>
+                <button class="btn btn-plat btn-xs" data-toggle="ajax-modal" href="{% url 'platform:stock_buy' pk stock.id %}">
+                    {{ stock.sell }}
+                </button>
+            </td>
+            <td>{{ stock.high }}</td>
+            <td>{{ stock.low }}</td>
+            <td>{{ stock.last }}</td>
+            <td>{{ stock.last }}</td>
+            <td>{{ stock.last }}</td>
+            <td>{{ stock.last }}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -77,3 +77,7 @@ class AccountForm (forms.Form):
 
 class CurrencyBuyForm(forms.Form):
 	piece = forms.IntegerField(label="", widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':u'Ширхэг'}))
+
+
+class StockBuyForm(forms.Form):
+	piece = forms.IntegerField(label="", widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':u'Ширхэг'}))

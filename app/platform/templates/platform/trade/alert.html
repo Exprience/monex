@@ -36,10 +36,36 @@
       </tr>
    </tbody>
 </table>
-
-
+{% endcomment %}
+<div class="watchlist-body">
+  <button data-toggle="modal" href="#myModal1" class="btn btn-plat btn-xs">Нэмэх</button> 
+</div>
+<table class="table table-bordered" id="table1">
+  <thead>
+    <tr>
+      <th>Валют</th>
+      <th>Авах</th>
+      <th>Зарах</th>
+      <th>Өөрчлөлт</th>
+      <th>Сэтгэгдэл</th>
+      <th>Засах</th>
+      <th>Устгах</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>EUR</td>
+      <td>2000</td>
+      <td>2100</td>
+      <td>0.1</td>
+      <td>blabla bla bla</td>
+      <td><button href="#ModalGeneral" data-toggle="modal" class="btn btn-plat btn-xs">Засах</button></td>
+      <td><button class="btn btn-plat btn-xs">Устгах</button></td>
+    </tr>
+  </tbody>
+</table>
 <!-- Modal -->
-<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalGeneral" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog">
       <div class="modal-content">
          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -99,40 +125,3 @@
          </div>
       </div>
    </div><!-- /.modal-content -->
-{% endcomment %}
-<div class="watchlist-body">
-  <button data-toggle="modal" href="#myModal1" class="btn btn-plat btn-xs">ADD</button> 
-</div>
-<table class="table table-bordered" id="table1">
-  <thead>
-    <tr>
-      <th>Валют</th>
-      <th>Авах</th>
-      <th>Зарах</th>
-      <th>Өөрчлөлт</th>
-      <th>Сэтгэгдэл</th>
-      <th>Засах</th>
-      <th>Устгах</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>EUR</td>
-      <td>2000</td>
-      <td>2100</td>
-      <td>0.1</td>
-      <td>blabla bla bla</td>
-      <td><a data-toggle="modal" id="button5" href="#myModal1" class="btn btn-primary btn-xs">Edit</a></td>
-      <td><a class="btn btn-primary btn-xs">delete</a></td>
-    </tr>
-    <tr>
-      <td>USA</td>
-      <td>1900</td>
-      <td>1950</td>
-      <td>0.05</td>
-      <td>5%</td>
-      <td><a data-toggle="modal" id="button9" href="#myModal2" class="btn btn-primary btn-xs">Edit</a></td>
-      <td><a class="btn btn-primary btn-xs">delete</a></td>
-    </tr>
-  </tbody>
-</table>

@@ -25,16 +25,16 @@ class UserBaseDataManager(BaseDataManager):
 
     @staticmethod
     def login(username, password):
-        try:
-            client = UserBaseDataManager.get_instance().setup_client('/MX_Check_User_LoginService/MX_Check_User_LoginPort?wsdl')
-            result = client.service.MX_Check_User_LoginOperation(username, hashlib.md5(password).hexdigest(), config.NOW)
-            user = User()
-            user.fill_user(result)
-            return user
-        except URLError:
-            return config.URL_ERROR
-        except Exception, e:
-            return config.SYSTEM_ERROR
+        #try:
+        client = UserBaseDataManager.get_instance().setup_client('/MX_Check_User_LoginService/MX_Check_User_LoginPort?wsdl')
+        result = client.service.MX_Check_User_LoginOperation(username, hashlib.md5(password).hexdigest(), config.NOW)
+        user = User()
+        user.fill_user(result)
+        return user
+        #except URLError:
+        #    return config.URL_ERROR
+        #except Exception, e:
+        #    return config.SYSTEM_ERROR
 
     @staticmethod
     def register(username, email, password):
@@ -61,6 +61,8 @@ class User(object):
             else:
                 if key == "last_login":
                     self.last_login = datetime.strptime(data.last_login, "%Y-%m-%d %H:%M:%S")
+                elif key == "firstname":
+                    self.firstname = ""
                 else:
                     setattr(self, key, getattr(data, key))
 

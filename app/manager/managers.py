@@ -515,6 +515,8 @@ class ManagerBaseDataManager(BaseDataManager):
 				elif type == "I":
 					if is_currency:
 						records = config.get_dict(result.Currency.MXManagerUserShowCurrency_Response.MXManagerUserShowCurrencyIndividually_Record)
+					else:
+						records = config.get_dict(result.Stock.MXManagerUserShowStock_Response.MXManagerUserShowStockIndividually_Record)
 				else:
 					if is_currency:
 						records = config.get_dict(result.Currency.MXManagerUserShowCurrency_Response.MXManagerUserShowCurrency_Record)

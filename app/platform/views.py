@@ -49,7 +49,7 @@ class StockView(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(StockView, self).get_context_data(*args, **kwargs)
-		context['packages'] = pm.currency("S", self.pk, self.request.user.id)
+		context['stocks'] = mm.list("L", config.PREVIOUS, config.NOW, is_currency = False)
 		return context
 
 class StockValueView(TemplateView):
@@ -59,6 +59,45 @@ class StockValueView(TemplateView):
 		context = super(StockValueView, self).get_context_data(*args, **kwargs)
 		context['packages'] = pm.currency("S", self.pk, self.request.user.id, isCurrency = False)
 		return context
+
+class StockBuyView(FormView):
+
+	form_class = f.StockBuyForm
+	template_name = "platform/stock/buy.html"
+	success_url = "/"
+
+	def dispatch(self, request,*args,**kwargs):
+		self.cid = int(self.kwargs.pop("cid", None))
+		self.sid = int(self.kwargs.pop("sid", None))
+		return super(StockBuyView, self).dispatch(request, *args, **kwargs)
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(StockBuyView, self).get_context_data(*args, **kwargs)
+		context['stock'] = mm.list("I", config.PREVIOUS, config.NOW, id = self.sid, is_currency = False)[0]
+		return context
+
+	def form_valid(self, form):
+		piece = form.cleaned_data['piece']
+		pm.currency("C", self.cid, self.request.user.id, piece = piece, value_id = self.sid, isCurrency = False)
+		return super(StockBuyView, self).form_valid(form)
+
+class StockSellView(FormView):
+	form_class = f.StockBuyForm
+	template_name = "platform/stock/sell.html"
+	success_url = "/"
+
+	def dispatch(self, request,*args,**kwargs):
+		self.cid = int(self.kwargs.pop("cid", None))
+		self.sid = int(self.kwargs.pop("sid", None))
+		return super(StockSellView, self).dispatch(request, *args, **kwargs)
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(StockSellView, self).get_context_data(*args, **kwargs)
+		return context
+
+	def form_valid(self, form):
+		pm.currency("U", self.cid, self.request.user.id, value_id = 3, id = self.sid, isCurrency = False)
+		return super(StockSellView, self).form_valid(form)
 
 
 class CurrencyView(TemplateView):
@@ -114,13 +153,6 @@ class CurrencySellView(FormView):
 		return context
 
 	def form_valid(self, form):
-		print "#############################"
-		print "#############################"
-		print "#############################"
-		print "#############################"
-		print "#############################"
-		print "#############################"
-		print "#############################"
 		pm.currency("U", self.cid, self.request.user.id, value_id = 3, id = self.pid)
 		return super(CurrencySellView, self).form_valid(form)
 

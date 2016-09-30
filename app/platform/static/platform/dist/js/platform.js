@@ -47,6 +47,19 @@ $(document).ajaxStart(function() { Pace.restart(); });
 				}
 				else {
 					$('#ModalGeneral').modal('hide');
+					$.notify(
+					{
+						icon: 'icon fa fa-check-circle',
+						message: "Худалдан авалт амжилттай боллоо"
+					},
+					{
+						type: 'success',
+						placement: {
+							from: "top",
+							align: "right"
+						},
+					}
+					);
 				}
 			},
 			error: function (xhr, ajaxOptions, thrownError) {

@@ -130,7 +130,7 @@ class BagtsView(NotManager, g.FormView):
 		return super(BagtsView, self).form_valid(form, commit = False, **kwargs)
 
 
-class CompetitionRegisterView(NotManager, user_v.LoginRequired, g.FormView):
+class CompetitionRegisterView(NotManager, user_v.LoginRequired, v.FormView):
 	template_name = "web/competition/competition_register.html"
 	form_class = f.CompetitionRegisterForm
 	success_url = reverse_lazy('web:competition')
@@ -141,12 +141,15 @@ class CompetitionRegisterView(NotManager, user_v.LoginRequired, g.FormView):
 
 	def form_valid(self, form):
 		obj = form.save()
-		m.register("C", file = obj.reciept, competition_id = self.pk, user_id = self.request.user.id)
+		result = m.register("C", file = obj.reciept, competition_id = self.pk, user_id = self.request.user.id)
+		if result == config.SYSTEM_ERROR:
+			self.error(config.SYSTEM_ERROR_MESSAGE)
+			return self.form_invalid(form)
 		return super(CompetitionRegisterView, self).form_valid(form)
 
 
 
-class LessonMailView(NotManager, g.FormView):
+class LessonMailView(NotManager, v.FormView):
 
 	def __init__(self, *args, **kwargs):
 		super(LessonMailView, self).__init__(*args, **kwargs)

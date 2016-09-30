@@ -14,6 +14,8 @@ urlpatterns = [
 	
 	url(r'^stock/(?P<pk>[0-9]+)/$', v.StockView.as_view(), name = 'stock'),
 	url(r'^stock/value/(?P<pk>[0-9]+)/$', v.StockValueView.as_view(), name = 'stock_value'),
+	url(r'^stock/buy/(?P<cid>[0-9]+)/(?P<sid>[0-9]+)/$', v.StockBuyView.as_view(), name = 'stock_buy'),
+	url(r'^stock/sell/(?P<cid>[0-9]+)/(?P<sid>[0-9]+)/$', v.StockSellView.as_view(), name = 'stock_sell'),
 	
 	url(r'^currency/(?P<pk>[0-9]+)/$', v.CurrencyView.as_view(), name = 'currency'),
 	url(r'^currency/value/(?P<pk>[0-9]+)/$', v.CurrencyValueView.as_view(), name = 'currency_value'),

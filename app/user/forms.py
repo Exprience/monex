@@ -91,7 +91,7 @@ class RegisterForm(forms.Form):
 			raise forms.ValidationError(config.SYSTEM_ERROR_MESSAGE, code='invalid')
 
 	def clean(self):
-		cleaned_data = super(UserRegisterForm, self).clean()
+		cleaned_data = super(RegisterForm, self).clean()
 		if self.is_valid():
 			password = cleaned_data['password']
 			repeat_password = cleaned_data['repeat_password']

@@ -59,7 +59,7 @@ def get_dict(values):
     if hasattr(values, '__keylist__'):
         context = {}
         for key in values.__keylist__:
-            context[key] = getattr(values, key).value
+            #context[key] = getattr(values, key).value
             if hasattr(getattr(values, key), 'value'):
                 context[key] = unicode(getattr(values, key).value)
             else:

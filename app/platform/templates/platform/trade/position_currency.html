@@ -24,12 +24,14 @@
 			<td>{{ package.status }}</td>
 			<td>{{ package.piece }}</td>
 			<td>{{ package.user_id }}</td>
-			<td>{{ package.status }}</td>
+			<td>{{ package.buy_currency_id }}</td>
 			<td>{{ package.status }}</td>
 			<td>
+				{% if package.status == "1" %}
 				<button class="btn btn-plat btn-xs" data-toggle="ajax-modal" href="{% url 'platform:currency_sell' pk package.id %}">
 					Зарах
 				</button>
+				{% endif %}
 			</td>
 			<td>{{ package.status }}</td>
 			<td>{{ package.status }}</td>
