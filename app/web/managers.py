@@ -21,12 +21,12 @@ class WebBaseDataManager(BaseDataManager):
 			request.id = id
 			request.competition_id = competition_id
 			request.user_id = user_id
-			try:
-				with open(u"media/%s" %file, "rb") as f:
-					data = f.read()
-					request.file = base64.b64encode(data)
-			except:
-				request.file = file
+			#try:
+			with open(u"media/%s" %file, "rb") as f:
+				data = f.read()
+				request.file = base64.b64encode(data)
+			#except:
+			#	request.file = file
 			request.status = status.CR_NOT_APPROVED
 			request.created_at = config.NOW
 			register.competition_register = request
