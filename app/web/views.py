@@ -11,8 +11,8 @@ from django.shortcuts import render_to_response
 import forms as f
 from app.config import config, views as v
 from app.user import views as user_v
-from app.manager.managers import ManagerBaseDataManager as mm
-from managers import WebBaseDataManager as m
+from app.manager.managers import ManagerDataManager as mm
+from managers import WebDataManager as wm
 
 #Exports
 __all__ = []
@@ -141,7 +141,7 @@ class CompetitionRegisterView(NotManager, user_v.LoginRequired, v.FormView):
 
 	def form_valid(self, form):
 		obj = form.save()
-		result = m.register("C", file = obj.reciept, competition_id = self.pk, user_id = self.request.user.id)
+		result = wm.register("C", file = obj.reciept, competition_id = self.pk, user_id = self.request.user.id)
 		if result == config.SYSTEM_ERROR:
 			self.error(config.SYSTEM_ERROR_MESSAGE)
 			return self.form_invalid(form)

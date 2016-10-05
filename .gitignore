@@ -1,4 +1,5 @@
 *.pyc
+local_settings.py
 app/competition/migrations/
 app/manager/migrations/
 app/user/migrations/
@@ -6,7 +7,6 @@ app/web/migrations/
 app/chat/migrations/
 app/online_support/migrations/
 .store/
-.store1
-local_settings.py
 monex.sqlite
 media/
+monex/local_settings.py

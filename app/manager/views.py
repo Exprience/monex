@@ -4,10 +4,9 @@
 
 import urllib
 
-from django import forms
-from django.forms.utils import ErrorList
+#from django import forms
+#from django.forms.utils import ErrorList
 from django import http
-from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.core.exceptions import PermissionDenied
@@ -20,9 +19,9 @@ from django.contrib.auth.tokens import default_token_generator
 
 import forms as mf
 from models import ResearchModel
-from managers import ManagerBaseDataManager as m
+from managers import ManagerDataManager as m
 from app.config import session, status as s, views as v, config
-from app.web.managers import WebBaseDataManager as wm
+from app.web.managers import WebDataManager as wm
 
 
 class LoginView(v.FormView):
@@ -35,14 +34,6 @@ class LoginView(v.FormView):
 
 	def form_valid(self, form):
 		user = m.login(form.cleaned_data['email'], form.cleaned_data['password'])
-		
-		if user == config.URL_ERROR:
-			self.error(config.URL_ERROR_MESSAGE)
-			return super(LoginView, self).form_invalid(form)
-		
-		if user == config.SYSTEM_ERROR:
-			self.error(config.SYSTEM_ERROR_MESSAGE)
-			return super(LoginView, self).form_invalid(form)
 		
 		if user == "false":
 			return self.form_error(form, u"Хэрэглэгчийн и-мэйл эсвэл нууц үг буруу байна")
@@ -68,9 +59,9 @@ class LoginRequired(object):
 		return super(LoginRequired, self).dispatch(request, *args, **kwargs)
 
 
-class FormView(LoginRequired, SuccessMessageMixin, v.FormView):
-	
-	success_message = u"Мэдээлэл амжилттай хадгалагдлаа"
+class FormView(LoginRequired, v.FormView):
+
+	pass
 
 
 class TemplateView(LoginRequired, v.TemplateView):
@@ -137,12 +128,8 @@ class CompetitionUpdateView(FormView):
 		end_date = form.cleaned_data['end_date']
 		fee = form.cleaned_data['fee']
 		result = m.update('C', self.request.user.id, self.pk, category, register_low = register_low, start_date = start_date.strftime("%Y-%m-%d %H:%M:%S"), end_date = end_date.strftime("%Y-%m-%d %H:%M:%S"), prize = prize, fee = fee)
-		if result:
-			if not result.isSuccess:
-				self.error(u'Үйлдэл амжилтгүй боллоо')
-				return self.form_invalid(form)
-		else:
-			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
+		if not result.isSuccess:
+			self.error(u'Үйлдэл амжилтгүй боллоо')
 			return self.form_invalid(form)
 		return super(CompetitionUpdateView, self).form_valid(form)
 
@@ -899,9 +886,6 @@ class AdminCreateUpdateView(FormView):
 
 	def form_valid(self, form):
 		result = form.save(self.request)
-		if result == config.SYSTEM_ERROR:
-			self.error(config.SYSTEM_ERROR_MESSAGE)
-			return super(AdminCreateUpdateView, self).form_invalid(form)
 		return super(AdminCreateUpdateView, self).form_valid(form)
 
 class AdminSetPasswordView(v.FormView):

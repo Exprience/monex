@@ -6,7 +6,7 @@ from django import forms
 from django.conf import settings
 
 
-from managers import UserBaseDataManager as manager
+from managers import UserDataManager as um
 from app.config import config
 
 
@@ -56,15 +56,6 @@ class LoginForm(forms.Form):
 		return remember_me
 
 
-	def clean(self):
-		cleaned_data = super(LoginForm, self).clean()
-		if self.is_valid():
-			user = manager.login(cleaned_data['username'], cleaned_data['password'])
-			if user is None:
-				raise forms.ValidationError(u'Хэрэглэгчийн нэр эсвэл нууц үг буруу байна', code='invalid')
-		return cleaned_data
-
-
 class RegisterForm(forms.Form):
 	username = forms.CharField(widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':'Нэвтрэх нэр'}) )
 	email = forms.EmailField(widget = forms.EmailInput(attrs = {'class':'form-control', 'placeholder':'Имэйл'}))
@@ -82,7 +73,7 @@ class RegisterForm(forms.Form):
 		return email
 
 	def error(self, value, status):
-		result = manager.check_unique_user(status, value)
+		result = um.check_unique_user(status, value)
 		if not result:
 			raise forms.ValidationError(config.UNIQUE_USERNAME, code='invalid')
 		if result == config.URL_ERROR:

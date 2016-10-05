@@ -6,12 +6,24 @@ from app.config.managers import BaseDataManager
 from django.conf import settings
 from app.config import config
 
-class PlatformBaseDataManager(BaseDataManager):
+class PlatformDataManager(BaseDataManager):
+
+	__instance = None
+
+	def __init__(self):
+		pass
+
+	@staticmethod
+	def get_instance():
+		if PlatformDataManager.__instance is None:
+			PlatformDataManager.__instance = PlatformDataManager()
+		return PlatformDataManager.__instance
+
 	
 	@staticmethod
 	def currency(type, competition_id, user_id, piece = 1, value_id = 1, id = 1, isCurrency = True, isManager = False, manager_id = ""):
-		try:
-			client = PlatformBaseDataManager.get_instance().setup_client('%ssoap/platform/buy_sell/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
+		#try:
+			client = PlatformDataManager.get_instance().setup_client('%ssoap/platform/buy_sell/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
 			
 			currencyR = client.factory.create('ns0:MXUserShowCurrencyCUS_ResponseR')
 			currency = client.factory.create('ns0:MXUserShowCurrencyCUS_Response')
@@ -63,5 +75,5 @@ class PlatformBaseDataManager(BaseDataManager):
 				else:
 					record = config.get_dict(result.Stock.MXUserShowStockCUS_Response.MXUserShowStockCUS_Record)
 			return record
-		except:
-			return config.SYSTEM_ERROR
+		#except:
+		#	return config.SYSTEM_ERROR

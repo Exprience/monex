@@ -9,13 +9,23 @@ from app.config.managers import BaseDataManager
 from app.config import status, config
 
 
-class WebBaseDataManager(BaseDataManager):
+class WebDataManager(BaseDataManager):
+	__instance = None
+
+	def __init__(self):
+		pass
+
+	@staticmethod
+	def get_instance():
+		if WebDataManager.__instance is None:
+			WebDataManager.__instance = WebDataManager()
+		return WebDataManager.__instance
 
 
 	@staticmethod
 	def register(types, id = "", manager_id = "", competition_id = "", user_id = "", file="", is_approved = False, is_manager = False):
 		try:
-			client = WebBaseDataManager.get_instance().setup_client('%ssoap/web/competition/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
+			client = WebDataManager.get_instance().setup_client('%ssoap/web/competition/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
 			register = client.factory.create("ns:competition_registerR")
 			request = client.factory.create("ns:competition_register")
 			request.id = id
@@ -50,7 +60,7 @@ class WebBaseDataManager(BaseDataManager):
 	@staticmethod
 	def if_register(competition_id, user_id):
 		try:
-			client = WebBaseDataManager.get_instance().setup_client('/MX_SYSTEM_Check_Is_Registered_In_CompetitionWSDLService/MX_SYSTEM_Check_Is_Registered_In_CompetitionWSDLPort?wsdl')
+			client = WebDataManager.get_instance().setup_client('/MX_SYSTEM_Check_Is_Registered_In_CompetitionWSDLService/MX_SYSTEM_Check_Is_Registered_In_CompetitionWSDLPort?wsdl')
 			result = client.service.MX_SYSTEM_Check_Is_Registered_In_CompetitionWSDLOperation(user_id, competition_id)
 			return result
 		except:

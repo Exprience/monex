@@ -7,9 +7,9 @@ from django import http
 
 import forms as f
 from app.config import status, config, views as cv
-from app.web.managers import WebBaseDataManager as wm
-from app.manager.managers import ManagerBaseDataManager as mm
-from managers import PlatformBaseDataManager as pm
+from app.web.managers import WebDataManager as wm
+from app.manager.managers import ManagerDataManager as mm
+from managers import PlatformDataManager as pm
 
 
 class FormView(cv.FormView):

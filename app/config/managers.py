@@ -15,16 +15,16 @@ from suds.client import Client
 from suds.bindings import binding
 
 
+# Export
 __all__ = ['BaseDataManager']
 
 
+# Log бичих
 class LogPlugin(MessagePlugin):
     def sending(self, context):
-        pass
-        #print('sending', str(context.envelope))
+        print('sending', str(context.envelope))
     def received(self, context):
-        pass
-        #print('received', str(context.reply))
+        print('received', str(context.reply))
 
 
 class FixUrls(DocumentPlugin):
@@ -35,6 +35,8 @@ class FixUrls(DocumentPlugin):
 
 class BaseDataManager(object):
     __instance = None
+
+    """Singleton patterns хэрэгжүүлсэн класс"""
 
     def __init__(self):
         pass

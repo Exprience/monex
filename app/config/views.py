@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views import generic as g
 from django.forms.utils import ErrorList
+from django.contrib.messages.views import SuccessMessageMixin
 
 def handler404(request):
 	if hasattr(request.user, "is_manager"):
@@ -50,8 +51,8 @@ class BaseMixin(object):
 		return self.form_invalid(form)
 
 
-class FormView(BaseMixin, g.FormView):
-	pass
+class FormView(SuccessMessageMixin, BaseMixin, g.FormView):
+	success_message = u"Мэдээлэл амжилттай хадгалагдлаа"
 
 
 class TemplateView(BaseMixin, g.TemplateView):

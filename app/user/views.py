@@ -15,12 +15,12 @@ from django.conf import settings
 
 
 from app.config import session, config, views as cv
-from managers import UserBaseDataManager as manager
+from managers import UserDataManager as um
 import forms as f 
 
 
-class FormView(SuccessMessageMixin, cv.FormView):
-	success_message = u"Мэдээлэл амжилттай хадгалагдлаа"
+class FormView(cv.FormView):
+	pass
 
 class TemplateView(cv.TemplateView):
 	pass
@@ -57,14 +57,11 @@ class Login(FormView):
 		return self.request.GET.get('next', self.success_url)
 
 	def form_valid(self, form):
-		user =  manager.login(form.cleaned_data['username'], form.cleaned_data['password'])
-		if user == config.SYSTEM_ERROR:
-			self.error(config.SYSTEM_ERROR_MESSAGE)
+		user =  um.login(form.cleaned_data['username'], form.cleaned_data['password'])
+		if user is None:
+			self.form_error(form, u"Хэрэглэгчийн нэр эсвэл нууц үг буруу байна")
 			return super(Login, self).form_invalid(form)
-		if user == config.URL_ERROR:
-			self.error(config.URL_ERROR_MESSAGE)
-			return self.form_invalid(form)
-		if user.isHavePrivilege:
+		else:
 			session.put(self.request, 'user', user)
 		return super(Login, self).form_valid(form)
 
@@ -83,16 +80,13 @@ class RegisterView(FormView):
 		username = form.cleaned_data['username']
 		email = form.cleaned_data['email']
 		password = form.cleaned_data['password']
-		user = manager.register(username, email, password)
-		if user:
-			if user.isSuccess:
-				return super(RegisterView, self).form_valid(form)
-			else:
-				self.error("Бүртгүүлэхэд алдаа гарлаа")
-				return super(RegisterView, self).form_invalid(form)
+		user = um.register(username, email, password)
+		if user.isSuccess:
+			return super(RegisterView, self).form_valid(form)
 		else:
+			self.error("Бүртгүүлэхэд алдаа гарлаа")
 			return super(RegisterView, self).form_invalid(form)
-
+		
 
 class ResetPasswordView(FormView):
 	form_class = f.PasswordResetForm

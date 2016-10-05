@@ -5,7 +5,7 @@
 from django.template.defaulttags import register
 from django.utils.safestring import mark_safe
 
-from app.web.managers import WebBaseDataManager as wm
+from app.web.managers import WebDataManager as wm
 
 @register.simple_tag()
 def get_competition_status_label(value):
