@@ -11,7 +11,7 @@ urlpatterns = [
 	url(r'^test/(?P<name>[0-9A-Za-z_\-]+)/$', v.ListView.as_view(), name = 'list'),
 
 	
-	url(r'^home/$', v.HomeView.as_view(), name = 'manager_home'),
+	url(r'^home/$', v.HomeView.as_view(), name = 'home'),
 
 	
 	url(r'^competition/$', v.CompetitionListView.as_view(), name = 'competition_list'),

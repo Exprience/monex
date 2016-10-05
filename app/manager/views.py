@@ -27,7 +27,7 @@ from app.web.managers import WebDataManager as wm
 class LoginView(v.FormView):
 	form_class = mf.LoginForm
 	template_name = 'manager/login.html'
-	success_url = reverse_lazy('manager:manager_home')
+	success_url = reverse_lazy('manager:home')
 
 	def get_success_url(self):
 		return self.request.GET.get('next', self.success_url)
@@ -843,7 +843,7 @@ class AdminInfoView(FormView):
 class AdminPasswordUpdateView(FormView):
 	form_class = mf.PasswordUpdateForm
 	template_name = 'manager/user/admin/password_update.html'
-	success_url = reverse_lazy('manager:manager_home')
+	success_url = reverse_lazy('manager:home')
 	success_message = u'Нууц үг амжилттай шинэчлэгдлээ'
 
 	def form_valid(self, form):
@@ -928,12 +928,12 @@ class CompetitionRegisterUserListView(TemplateView):
 	@classmethod
 	def approve(self, request, pk = 0):
 		result = wm.register('U', id = pk, is_manager = True, manager_id = request.user.id, is_approved = True)
-		return http.HttpResponseRedirect(reverse_lazy('manager:manager_home'))
+		return http.HttpResponseRedirect(reverse_lazy('manager:home'))
 
 	@classmethod
 	def decline(self, request, pk = 0):
 		result = wm.register('U', id = pk, is_manager = True, manager_id = request.user.id)
-		return http.HttpResponseRedirect(reverse_lazy('manager:manager_home'))
+		return http.HttpResponseRedirect(reverse_lazy('manager:home'))
 
 
 #Finance
