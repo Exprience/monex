@@ -10,6 +10,7 @@ from app.config import status, config, views as cv
 from app.web.managers import WebDataManager as wm
 from app.manager.managers import ManagerDataManager as mm
 from managers import PlatformDataManager as pm
+from app.manager import models
 
 
 class FormView(cv.FormView):
@@ -27,19 +28,21 @@ class TemplateView(cv.TemplateView):
 		return context
 
 
-class HomeView(FormView):
-	template_name = 'platform/trade.html'
+class Platform(FormView):
 	form_class = f.PriceAlertForm
 
 	def get(self, request, *args, **kwargs):
 		competition = mm.individually("", "C", self.pk)
 		if not wm.if_register(self.pk, request.user.id) or str(competition.status.value) == status.COMPETITION_START_REGISTER:
 			raise http.Http404
-		return super(HomeView, self).get(request, *args, **kwargs)
+		return super(Platform, self).get(request, *args, **kwargs)
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(HomeView, self).get_context_data(*args, **kwargs)
-		context['currencys'] = mm.list("L", config.PREVIOUS, config.NOW)
+		context = super(Platform, self).get_context_data(*args, **kwargs)
+		#context['currencys'] = mm.list("L", config.PREVIOUS, config.NOW)
+		currencys = []
+		currencys.append(models.Currency.objects.filter(name = u"USDEUR").last())
+		context['currencys'] = currencys
 		context['packages'] = pm.currency("S", self.pk, self.request.user.id)
 		return context
 

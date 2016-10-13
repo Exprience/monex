@@ -49,7 +49,6 @@ class Home(TemplateView):
 class Login(FormView):
 
 	form_class = f.LoginForm
-	template_name = "user/register/login.html"
 	success_url = reverse_lazy('web:home')
 	success_message = u"Монекд тавтай морил"
 
@@ -71,7 +70,7 @@ class Login(FormView):
 		return HttpResponseRedirect(reverse_lazy('web:home'))
 
 
-class RegisterView(FormView):
+class Register(FormView):
 	form_class = f.RegisterForm
 	template_name = "user/register/register.html"
 	success_url = reverse_lazy('web:home')
@@ -88,13 +87,13 @@ class RegisterView(FormView):
 			return super(RegisterView, self).form_invalid(form)
 		
 
-class ResetPasswordView(FormView):
+class ResetPassword(FormView):
 	form_class = f.PasswordResetForm
 	template_name = "user/password/password_reset.html"
 	success_url = reverse_lazy('web:home')
 
 
-class SetPasswordView(FormView):
+class SetPassword(FormView):
 	
 	form_class = f.SetPasswordForm
 
@@ -106,7 +105,7 @@ class SetPasswordView(FormView):
 				return HttpResponseRedirect(post_change_redirect)
 
 
-class ChangePasswordView(LoginRequired, cv.FormView):
+class ChangePassword(LoginRequired, FormView):
 	form_class = f.PasswordChangeForm
 	template_name = "user/password/password_change.html"
 	success_url  = reverse_lazy('web:home')

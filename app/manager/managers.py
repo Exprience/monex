@@ -1,6 +1,8 @@
 # !/usr/bin/python/env
 # -*- coding:utf-8 -*-
 
+
+import os
 import hashlib
 import base64
 
@@ -9,6 +11,7 @@ from django.conf import settings
 from app.config.managers import BaseDataManager
 from app.config import config
 from models import Manager
+
 
 class ManagerDataManager(BaseDataManager):
 	__instance = None
@@ -125,13 +128,13 @@ class ManagerDataManager(BaseDataManager):
 	def individually(manager_id, type, id):
 		client = ManagerDataManager.get_instance().setup_client('%ssoap/manager/individually/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
 		result = client.service.MXManagerShowNewsResearchLessonIndividuallyWSDLOperation(type, manager_id, id)
-		if type == 'N':
+		if type is 'N':
 			result = result.News.MXManagerSelectNewsIndividually_Response.MXManagerSelectNewsIndividually_Record
-		if type == 'R':
+		if type is 'R':
 			result = result.Research.MXManagerSelectResearchIndividually_Response.MXManagerSelectResearchIndividually_Record
-		if type == 'L':
+		if type is 'L':
 			result = result.Lesson.MXManagerSelectLessonIndividually_Response.MXManagerSelectLessonIndividually_Record
-		if type == 'C':
+		if type is 'C':
 			result = result.Competition.MXManagerSelectCompetitionIndividually_Response.MXManagerSelectCompetitionIndividually_Record
 		return result
 
@@ -139,27 +142,26 @@ class ManagerDataManager(BaseDataManager):
 	def select(manager_id, type):
 		client = ManagerDataManager.get_instance().setup_client('%ssoap/manager/select/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
 		result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id)
-		if type == 'N':
-			if manager_id == "":
+		if type is 'N':
+			if manager_id is "":
 				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXUserShowNews_Record)
 			else:
 				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXManagerShowNewsLists_Record)				
-		if type == 'R':
-			if manager_id == "":
+		if type is 'R':
+			if manager_id is "":
 				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXUserShowResearchLists_Record)
 			else:
 				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXManagerShowResearchLists_Record)
-		if type == 'L':
-			if manager_id == "":
+		if type is 'L':
+			if manager_id is "":
 				records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXUserShowLessonLists_Record)
 			else:
 				records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXManagerShowLessonLists_Record)
-		if type == 'C':
-			if manager_id == "":
+		if type is 'C':
+			if manager_id is "":
 				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXUserShowCompetitionLists_Record)
 			else:
 				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXManagerShowCompetitionLists_Record)
-			
 		return records
 
 	@staticmethod
@@ -177,14 +179,13 @@ class ManagerDataManager(BaseDataManager):
 		research.created_by = created_by
 		research.created_at = config.NOW
 		try:
-			with open(u"media/%s" %file, "rb") as f:
+			with open(file.path, "rb") as f:
 				data = f.read()
 				research.pdf_file = base64.b64encode(data)
+			research.file_type = os.path.splitext(file.path)[1]
 		except:
 			research.pdf_file = file
-		import os
-		
-		research.file_type = os.path.splitext(u"media/%s" %file)[1]
+			research.file_type = ""
 		research.author_name = author_name
 		research.title = title
 		research.research_category_id = category
@@ -215,6 +216,7 @@ class ManagerDataManager(BaseDataManager):
 	@staticmethod
 	def update(type, manager_id, id, category, title = "", body = "", url = "", author_name = "", author_email = "", fee = "", prize="", start_date = config.NOW , end_date = config.NOW, register_low = ""):
 		client = ManagerDataManager.get_instance().setup_client('/MX_Manager_Update_News_Research_LessonService/MX_Manager_Update_News_Research_LessonPort?wsdl')
+		
 		news = client.factory.create('ns0:News')
 		news.MXManagerUpdateNews_Request.id = id
 		news.MXManagerUpdateNews_Request.category = category

@@ -24,9 +24,7 @@ class FlashMiddleware(object):
 		request.flash = Flash(request)
 
 	def process_template_response(self, request, response):
-
 		response.context_data.update({
 			'flash': Flash(request),
 		})
-
 		return response

@@ -87,14 +87,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'app/user/templates'),
-            os.path.join(BASE_DIR, 'app/config/templates'),
-            os.path.join(BASE_DIR, 'app/manager/templates'),
-            os.path.join(BASE_DIR, 'app/competition/templates'),
-            os.path.join(BASE_DIR, 'app/web/templates'),
-            os.path.join(BASE_DIR, 'app/chat/templates'),
-            os.path.join(BASE_DIR, 'app/online_support/templates'),
-            ],
+            os.path.join(BASE_DIR, 'app')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -215,5 +209,3 @@ CAPTCHA_TEXT_FIELD_TEMPLATE = 'config/captcha/captcha_text_field.html'
 
 
 WS_SERVER=get_local('WS_SERVER', '192.168.1.20')
-
-STATIC_DOMAIN_URL = get_local('STATIC_DOMAIN_URL', '%s') % '/static/'

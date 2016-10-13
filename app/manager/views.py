@@ -4,8 +4,7 @@
 
 import urllib
 
-#from django import forms
-#from django.forms.utils import ErrorList
+
 from django import http
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
@@ -24,9 +23,8 @@ from app.config import session, status as s, views as v, config
 from app.web.managers import WebDataManager as wm
 
 
-class LoginView(v.FormView):
+class Login(v.FormView):
 	form_class = mf.LoginForm
-	template_name = 'manager/login.html'
 	success_url = reverse_lazy('manager:home')
 
 	def get_success_url(self):
@@ -41,7 +39,7 @@ class LoginView(v.FormView):
 		if user.is_active == '0':
 			return self.form_error(form, u"Системд нэвтрэх эрхгүй байна. Бүртгэлээ баталгаажуулна уу!")
 		session.put(self.request, 'manager', user)
-		return super(LoginView, self).form_valid(form)
+		return super(Login, self).form_valid(form)
 
 	@staticmethod
 	def logout(request):
@@ -50,6 +48,7 @@ class LoginView(v.FormView):
 
 
 class LoginRequired(object):
+	
 	def dispatch(self, request, *args, **kwargs):
 		if request.user is None:
 			next_url = urllib.urlencode({'next': request.get_full_path()})
@@ -60,37 +59,32 @@ class LoginRequired(object):
 
 
 class FormView(LoginRequired, v.FormView):
-
 	pass
 
 
 class TemplateView(LoginRequired, v.TemplateView):
-
 	pass
 
 
-class HomeView(TemplateView):
-
-	template_name = 'manager/home.html'
+class Home(TemplateView):
+	pass
 
 
 #Competitions
-class CompetitionListView(TemplateView):
-	template_name = 'manager/competition/competition_list.html'
+class CompetitionList(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(CompetitionListView, self).get_context_data(*args, **kwargs)
+		context = super(CompetitionList, self).get_context_data(*args, **kwargs)
 		context['competitions'] = m.select(self.request.user.id, 'C')
 		return context
 
-class CompetitionCreateView(FormView):
+class CompetitionCreate(FormView):
 	form_class = mf.CompetitionForm
-	template_name = 'manager/competition/competition_form.html'
 	success_url = reverse_lazy('manager:competition_list')
 	success_message = u"Тэмцээн амжилттай шинэчлэгдлээ"
 
 	def get_form_kwargs(self):
-		kwargs = super(CompetitionCreateView, self).get_form_kwargs()
+		kwargs = super(CompetitionCreate, self).get_form_kwargs()
 		kwargs.update({'manager_id': self.request.user.id, 'type':'4'})
 		return kwargs
 
@@ -101,22 +95,21 @@ class CompetitionCreateView(FormView):
 		start_date = form.cleaned_data['start_date']
 		end_date = form.cleaned_data['end_date']
 		fee = form.cleaned_data['fee']
-		m.create('C', self.request.user.id, config.NOW, category, status = s.COMPETITION_START_REGISTER, register_low = register_low, start_date = start_date, end_date = end_date, prize = prize, fee = fee)
-		return super(CompetitionCreateView, self).form_valid(form)
+		m.create('C', self.request.user.id, category, status = s.COMPETITION_START_REGISTER, register_low = register_low, start_date = start_date, end_date = end_date, prize = prize, fee = fee)
+		return super(CompetitionCreate, self).form_valid(form)
 
-class CompetitionUpdateView(FormView):
+class CompetitionUpdate(FormView):
 	form_class = mf.CompetitionForm
-	template_name = 'manager/competition/competition_form.html'
 	success_url = reverse_lazy('manager:competition_list')
 	success_message = u"Тэмцээн амжилттай шинэчлэгдлээ"
 
 	def get_form_kwargs(self):
-		kwargs = super(CompetitionUpdateView, self).get_form_kwargs()
+		kwargs = super(CompetitionUpdate, self).get_form_kwargs()
 		kwargs.update({'manager_id': self.request.user.id, 'type':'4', 'id':self.pk})
 		return kwargs
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(CompetitionUpdateView, self).get_context_data(*args, **kwargs)
+		context = super(CompetitionUpdate, self).get_context_data(*args, **kwargs)
 		context['object'] = True
 		return context
 
@@ -127,24 +120,23 @@ class CompetitionUpdateView(FormView):
 		start_date = form.cleaned_data['start_date']
 		end_date = form.cleaned_data['end_date']
 		fee = form.cleaned_data['fee']
-		result = m.update('C', self.request.user.id, self.pk, category, register_low = register_low, start_date = start_date.strftime("%Y-%m-%d %H:%M:%S"), end_date = end_date.strftime("%Y-%m-%d %H:%M:%S"), prize = prize, fee = fee)
+		result = m.update('C', self.request.user.id, self.pk, category, register_low = register_low, start_date = start_date, end_date = end_date, prize = prize, fee = fee)
 		if not result.isSuccess:
 			self.error(u'Үйлдэл амжилтгүй боллоо')
 			return self.form_invalid(form)
-		return super(CompetitionUpdateView, self).form_valid(form)
+		return super(CompetitionUpdate, self).form_valid(form)
 
-class CompetitionCategoryCreateUpdateView(FormView):
+class CompetitionCategoryCreate(FormView):
 	form_class = mf.CompetitionCategoryForm
-	template_name = 'manager/competition/competition_category_form.html'
 	success_url = reverse_lazy('manager:competition_list')
 
 	def get_form_kwargs(self):
-		kwargs = super(CompetitionCategoryCreateUpdateView, self).get_form_kwargs()
+		kwargs = super(CompetitionCategoryCreate, self).get_form_kwargs()
 		kwargs.update({'id': self.pk})
 		return kwargs
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(CompetitionCategoryCreateUpdateView, self).get_context_data(*args, **kwargs)
+		context = super(CompetitionCategoryCreate, self).get_context_data(*args, **kwargs)
 		context['object'] = self.pk
 		return context
 
@@ -171,13 +163,11 @@ class CompetitionCategoryCreateUpdateView(FormView):
 						return self.form_invalid(form)
 				return http.HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(self.pk, form.cleaned_data['category']))
 
-class CompetitionCategoryDeleteView(FormView):
-
-	template_name = 'manager/competition/competition_category_delete.html'
+class CompetitionCategoryDelete(FormView):
 	form_class = mf.CategoryForm
 
 	def get_form_kwargs(self):
-		kwargs = super(CompetitionCategoryDeleteView, self).get_form_kwargs()
+		kwargs = super(CompetitionCategoryDelete, self).get_form_kwargs()
 		kwargs.update({'delete_id' : self.pk})
 		return kwargs
 
@@ -193,49 +183,29 @@ class CompetitionCategoryDeleteView(FormView):
 				return self.form_invalid(form)
 		return http.HttpResponse('<script>opener.dismissDeleteRelatedObjectPopup(window, "select", "%s");</script>' %self.pk)
 
-class CompetitionFilter(v.TemplateView):
-	template_name = 'manager/competition/competition_filter.html'
+class CompetitionFilter(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(CompetitionFilter, self).get_context_data(*args, **kwargs)
 		return context
 
 
-class ListView(TemplateView):
-	
-	template_name = 'manager/news/news_list.html'
-
-	def dispatch(self, request, *args, **kwargs):
-		self.name = self.kwargs.pop('name', None)
-		if self.name:
-			self.template_name = 'manager/%s/%s_list.html' %(self.name, self.name)
-		return super(ListView, self).dispatch(request, *args, **kwargs)
-
-	def get_context_data(self, *args, **kwargs):
-		context = super(ListView, self).get_context_data(*args, **kwargs)
-		context[self.name] = m.select(self.request.user.id, 'N')
-		return context
-
-
 #News
-class NewsListView(TemplateView):
-	
-	template_name = 'manager/news/news_list.html'
+class NewsList(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(NewsListView, self).get_context_data(*args, **kwargs)
+		context = super(NewsList, self).get_context_data(*args, **kwargs)
 		context['news'] = m.select(self.request.user.id, 'N')
 		return context
 
-class NewsCreateView(FormView):
+class NewsCreate(FormView):
 	form_class = mf.NewsForm
-	template_name = 'manager/news/news_form.html'
 	success_url = reverse_lazy('manager:news')
 	success_message = u'Мэдээ амжилттай хадгадагдлаа'
 
 
 	def get_form_kwargs(self):
-		kwargs = super(NewsCreateView, self).get_form_kwargs()
+		kwargs = super(NewsCreate, self).get_form_kwargs()
 		kwargs.update({'manager_id': self.request.user.id, 'type':'1'})
 		return kwargs
 
@@ -244,21 +214,20 @@ class NewsCreateView(FormView):
 		title = form.cleaned_data['title']
 		body = form.cleaned_data['body']
 		m.create('N', self.request.user.id, category, body = body, title = title)
-		return super(NewsCreateView, self).form_valid(form)
+		return super(NewsCreate, self).form_valid(form)
 
-class NewsUpdateView(FormView):
+class NewsUpdate(FormView):
 	form_class = mf.NewsForm
-	template_name = 'manager/news/news_form.html'
 	success_url = reverse_lazy('manager:news')
 	success_message = u'Мэдээ амжилттай шинэчлэгдлээ.'
 
 	def get_form_kwargs(self):
-		kwargs = super(NewsUpdateView, self).get_form_kwargs()
+		kwargs = super(NewsUpdate, self).get_form_kwargs()
 		kwargs.update({'manager_id': self.request.user.id, 'type':'1', 'id':self.pk})
 		return kwargs
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(NewsUpdateView, self).get_context_data(*args, **kwargs)
+		context = super(NewsUpdate, self).get_context_data(*args, **kwargs)
 		context['object'] = True
 		return context
 
@@ -274,16 +243,15 @@ class NewsUpdateView(FormView):
 		else:
 			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
-		return super(NewsUpdateView, self).form_valid(form)
+		return super(NewsUpdate, self).form_valid(form)
 
-class NewsDeleteView(FormView):
+class NewsDelete(FormView):
 	form_class = mf.NewsForm
-	template_name = 'manager/news/news_delete.html'
 	success_url = reverse_lazy('manager:news')
 	success_message = u'Мэдээ амжилттай утслаа'
 
 	def get_form_kwargs(self):
-		kwargs = super(NewsDeleteView, self).get_form_kwargs()
+		kwargs = super(NewsDelete, self).get_form_kwargs()
 		kwargs.update({'manager_id': self.request.user.id, 'type':'1', 'id':self.pk, 'is_delete':True})
 		return kwargs
 
@@ -295,20 +263,19 @@ class NewsDeleteView(FormView):
 		if result == None:
 			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
-		return super(NewsDeleteView, self).form_valid(form)
+		return super(NewsDelete, self).form_valid(form)
 
-class NewsCategoryCreateUpdateView(FormView):
+class NewsCategoryCreate(FormView):
 	form_class = mf.CategoryForm
 	success_url = reverse_lazy('manager:news')
-	template_name = "manager/news/news_category_form.html"
 
 	def get_form_kwargs(self):
-		kwargs = super(NewsCategoryCreateUpdateView, self).get_form_kwargs()
+		kwargs = super(NewsCategoryCreate, self).get_form_kwargs()
 		kwargs.update({'id': self.pk})
 		return kwargs
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(NewsCategoryCreateUpdateView, self).get_context_data(*args, **kwargs)
+		context = super(NewsCategoryCreate, self).get_context_data(*args, **kwargs)
 		context['object'] = self.pk
 		return context
 
@@ -335,13 +302,11 @@ class NewsCategoryCreateUpdateView(FormView):
 						return self.form_invalid(form)
 				return http.HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(self.pk, form.cleaned_data['category']))
 
-class NewsCategoryDeleteView(FormView):
-
-	template_name = 'manager/news/news_category_delete.html'
+class NewsCategoryDelete(FormView):
 	form_class = mf.CategoryForm
 
 	def get_form_kwargs(self):
-		kwargs = super(NewsCategoryDeleteView, self).get_form_kwargs()
+		kwargs = super(NewsCategoryDelete, self).get_form_kwargs()
 		kwargs.update({'delete_id' : self.pk})
 		return kwargs
 
@@ -359,22 +324,20 @@ class NewsCategoryDeleteView(FormView):
 
 
 #Lesson
-class LessonListView(TemplateView):
-	template_name = 'manager/lesson/lesson_list.html'
+class LessonList(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(LessonListView, self).get_context_data(*args, **kwargs)
+		context = super(LessonList, self).get_context_data(*args, **kwargs)
 		context['lessons'] = m.select(self.request.user.id, 'L')
 		return context
 
-class LessonCreateView(FormView):
+class LessonCreate(FormView):
 	form_class = mf.LessonForm
-	template_name = 'manager/lesson/lesson_form.html'
 	success_url = reverse_lazy('manager:lesson_list')
 	success_message = u'Сургалт амжилттай хадгалагдлаа.'
 
 	def get_form_kwargs(self):
-		kwargs = super(LessonCreateView, self).get_form_kwargs()
+		kwargs = super(LessonCreate, self).get_form_kwargs()
 		kwargs.update({'manager_id': self.request.user.id, 'type':'3'})
 		return kwargs
 
@@ -385,21 +348,20 @@ class LessonCreateView(FormView):
 		author_name = form.cleaned_data['author_name']
 		author_email = form.cleaned_data['author_email']
 		m.create('L', self.request.user.id, category, title = title, url = url, author_name = author_name, author_email = author_email)
-		return super(LessonCreateView, self).form_valid(form)
+		return super(LessonCreate, self).form_valid(form)
 
-class LessonUpdateView(FormView):
+class LessonUpdate(FormView):
 	form_class = mf.LessonForm
 	success_url = reverse_lazy('manager:lesson_list')
-	template_name = 'manager/lesson/lesson_form.html'
 	success_message = u'Сургалт амжилттай шинэчлэгдлээ.'
 
 	def get_form_kwargs(self):
-		kwargs = super(LessonUpdateView, self).get_form_kwargs()
+		kwargs = super(LessonUpdate, self).get_form_kwargs()
 		kwargs.update({'manager_id': self.request.user.id, 'type':'3', 'id':self.pk})
 		return kwargs
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(LessonUpdateView, self).get_context_data(*args, **kwargs)
+		context = super(LessonUpdate, self).get_context_data(*args, **kwargs)
 		context['object'] = True
 		return context
 
@@ -417,16 +379,15 @@ class LessonUpdateView(FormView):
 		else:
 			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
-		return super(LessonUpdateView, self).form_valid(form)
+		return super(LessonUpdate, self).form_valid(form)
 
-class LessonDeleteView(FormView):
+class LessonDelete(FormView):
 	form_class = mf.LessonForm
 	success_url = reverse_lazy('manager:lesson_list')
-	template_name = 'manager/lesson/lesson_delete.html'
 	success_message = u'Сургалт амжилттай устлаа.'
 
 	def get_form_kwargs(self):
-		kwargs = super(LessonDeleteView, self).get_form_kwargs()
+		kwargs = super(LessonDelete, self).get_form_kwargs()
 		kwargs.update({'manager_id': self.request.user.id, 'type':'3', 'id':self.pk, 'is_delete': True})
 		return kwargs
 
@@ -438,20 +399,19 @@ class LessonDeleteView(FormView):
 		if result == None:
 			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
-		return super(LessonDeleteView, self).form_valid(form)
+		return super(LessonDelete, self).form_valid(form)
 
-class LessonCategoryCreateUpdateView(FormView):
+class LessonCategoryCreate(FormView):
 	form_class = mf.CategoryForm
-	template_name = 'manager/lesson/lesson_category_form.html'
 	success_url = reverse_lazy('manager:lesson_list')
 
 	def get_form_kwargs(self):
-		kwargs = super(LessonCategoryCreateUpdateView, self).get_form_kwargs()
+		kwargs = super(LessonCategoryCreate, self).get_form_kwargs()
 		kwargs.update({'id': self.pk})
 		return kwargs
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(LessonCategoryCreateUpdateView, self).get_context_data(*args, **kwargs)
+		context = super(LessonCategoryCreate, self).get_context_data(*args, **kwargs)
 		context['object'] = self.pk
 		return context
 
@@ -478,13 +438,11 @@ class LessonCategoryCreateUpdateView(FormView):
 						return self.form_invalid(form)
 				return http.HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(self.pk, form.cleaned_data['category']))
 
-class LessonCategoryDeleteView(FormView):
-
-	template_name = 'manager/news/news_category_delete.html'
+class LessonCategoryDelete(FormView):
 	form_class = mf.CategoryForm
 
 	def get_form_kwargs(self):
-		kwargs = super(LessonCategoryDeleteView, self).get_form_kwargs()
+		kwargs = super(LessonCategoryDelete, self).get_form_kwargs()
 		kwargs.update({'delete_id' : self.pk})
 		return kwargs
 
@@ -907,21 +865,17 @@ class AdminSetPasswordView(v.FormView):
 
 
 #Competition Register	
-class CompetitionRegisterView(TemplateView):
-	
-	template_name = 'manager/competition/competition_register.html'
+class CompetitionRegister(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(CompetitionRegisterView, self).get_context_data(*args, **kwargs)
+		context = super(CompetitionRegister, self).get_context_data(*args, **kwargs)
 		context['competitions'] = m.select(self.request.user.id, 'C')
 		return context
 
-class CompetitionRegisterUserListView(TemplateView):
-
-	template_name = 'manager/competition/competition_register_user_list.html'
+class CompetitionRegisterUser(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(CompetitionRegisterUserListView, self).get_context_data(*args, **kwargs)
+		context = super(CompetitionRegisterUser, self).get_context_data(*args, **kwargs)
 		context['users'] = wm.register('S', competition_id = self.pk, is_manager = True, manager_id = self.request.user.id)
 		return context
 

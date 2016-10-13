@@ -8,41 +8,38 @@ import views as v
 
 urlpatterns = [
 	
-	url(r'^test/(?P<name>[0-9A-Za-z_\-]+)/$', v.ListView.as_view(), name = 'list'),
+	url(r'^home/$', v.Home.as_view(), name = 'home'),
 
 	
-	url(r'^home/$', v.HomeView.as_view(), name = 'home'),
-
-	
-	url(r'^competition/$', v.CompetitionListView.as_view(), name = 'competition_list'),
-	url(r'^competition/create/$', v.CompetitionCreateView.as_view(), name = 'competition_create'),
-	url(r'^competition/update/(?P<pk>[0-9]+)/$', v.CompetitionUpdateView.as_view(), name = 'competition_update'),
-	url(r'^competition/category/create/$', v.CompetitionCategoryCreateUpdateView.as_view(), name = 'competition_category_create'),
-	url(r'^competition/category/update/(?P<pk>[0-9A-Za-z\_]+)/$', v.CompetitionCategoryCreateUpdateView.as_view(), name = 'competition_category_update'),
-	url(r'^competition/category/delete/(?P<pk>[0-9A-Za-z\_]+)/$', v.CompetitionCategoryDeleteView.as_view(), name = 'competition_category_delete'),
+	url(r'^competition/$', v.CompetitionList.as_view(), name = 'competition_list'),
+	url(r'^competition/create/$', v.CompetitionCreate.as_view(), name = 'competition_create'),
+	url(r'^competition/update/(?P<pk>[0-9]+)/$', v.CompetitionUpdate.as_view(), name = 'competition_update'),
+	url(r'^competition/category/create/$', v.CompetitionCategoryCreate.as_view(), name = 'competition_category_create'),
+	url(r'^competition/category/update/(?P<pk>[0-9A-Za-z\_]+)/$', v.CompetitionCategoryCreate.as_view(), name = 'competition_category_update'),
+	url(r'^competition/category/delete/(?P<pk>[0-9A-Za-z\_]+)/$', v.CompetitionCategoryDelete.as_view(), name = 'competition_category_delete'),
 	url(r'^competition/filter/$', v.CompetitionFilter.as_view(), name = 'competition_filter'),
 	
 	
-	url(r'^login/$', v.LoginView.as_view(), name = 'manager_login'),
-	url(r'^logout/$', v.LoginView.logout, name = 'manager_logout'),
+	url(r'^login/$', v.Login.as_view(), name = 'manager_login'),
+	url(r'^logout/$', v.Login.logout, name = 'manager_logout'),
 	
 	
-	url(r'^news/$', v.NewsListView.as_view(), name = 'news'),
-	url(r'^news/create/$', v.NewsCreateView.as_view(), name = 'news_create'),
-	url(r'^news/update/(?P<pk>[0-9]+)/$', v.NewsUpdateView.as_view(), name = 'news_update'),
-	url(r'^news/delete/(?P<pk>[0-9]+)/$', v.NewsDeleteView.as_view(), name = 'news_delete'),
-	url(r'^news/category/create/$', v.NewsCategoryCreateUpdateView.as_view(), name = 'news_category_create'),
-	url(r'^news/category/update/(?P<pk>[0-9A-Za-z\_]+)/$', v.NewsCategoryCreateUpdateView.as_view(), name = 'news_category_update'),
-	url(r'^news/category/delete/(?P<pk>[0-9A-Za-z\_]+)/$', v.NewsCategoryDeleteView.as_view(), name = 'news_category_delete'),
+	url(r'^news/$', v.NewsList.as_view(), name = 'news'),
+	url(r'^news/create/$', v.NewsCreate.as_view(), name = 'news_create'),
+	url(r'^news/update/(?P<pk>[0-9]+)/$', v.NewsUpdate.as_view(), name = 'news_update'),
+	url(r'^news/delete/(?P<pk>[0-9]+)/$', v.NewsDelete.as_view(), name = 'news_delete'),
+	url(r'^news/category/create/$', v.NewsCategoryCreate.as_view(), name = 'news_category_create'),
+	url(r'^news/category/update/(?P<pk>[0-9A-Za-z\_]+)/$', v.NewsCategoryCreate.as_view(), name = 'news_category_update'),
+	url(r'^news/category/delete/(?P<pk>[0-9A-Za-z\_]+)/$', v.NewsCategoryDelete.as_view(), name = 'news_category_delete'),
 
 	
-	url(r'^lesson/$', v.LessonListView.as_view(), name = 'lesson_list'),
-	url(r'^lesson/create/$', v.LessonCreateView.as_view(), name = 'lesson_create'),
-	url(r'^lesson/update/(?P<pk>[0-9]+)/$', v.LessonUpdateView.as_view(), name = 'lesson_update'),
-	url(r'^lesson/delete/(?P<pk>[0-9]+)/$', v.LessonDeleteView.as_view(), name = 'lesson_delete'),
-	url(r'^lesson/category/create/$', v.LessonCategoryCreateUpdateView.as_view(), name = 'lesson_category_create'),
-	url(r'^lesson/category/update/(?P<pk>[0-9A-Za-z\_]+)/$', v.LessonCategoryCreateUpdateView.as_view(), name = 'lesson_category_update'),
-	url(r'^lesson/category/delete/(?P<pk>[0-9A-Za-z\_]+)/$', v.LessonCategoryDeleteView.as_view(), name = 'lesson_category_delete'),
+	url(r'^lesson/$', v.LessonList.as_view(), name = 'lesson_list'),
+	url(r'^lesson/create/$', v.LessonCreate.as_view(), name = 'lesson_create'),
+	url(r'^lesson/update/(?P<pk>[0-9]+)/$', v.LessonUpdate.as_view(), name = 'lesson_update'),
+	url(r'^lesson/delete/(?P<pk>[0-9]+)/$', v.LessonDelete.as_view(), name = 'lesson_delete'),
+	url(r'^lesson/category/create/$', v.LessonCategoryCreate.as_view(), name = 'lesson_category_create'),
+	url(r'^lesson/category/update/(?P<pk>[0-9A-Za-z\_]+)/$', v.LessonCategoryCreate.as_view(), name = 'lesson_category_update'),
+	url(r'^lesson/category/delete/(?P<pk>[0-9A-Za-z\_]+)/$', v.LessonCategoryDelete.as_view(), name = 'lesson_category_delete'),
 
 	
 	url(r'^research/$', v.ResearchListView.as_view(), name = 'research_list'),
@@ -90,10 +87,10 @@ urlpatterns = [
 	url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', v.AdminSetPasswordView.as_view()),
 	
 
-	url(r'competition/register/$', v.CompetitionRegisterView.as_view(), name = 'competition_register'),
-	url(r'competition/register/(?P<pk>[0-9]+)/$', v.CompetitionRegisterUserListView.as_view(), name = 'competition_register_user_list'),
-	url(r'competition/register/approve/(?P<pk>[0-9]+)/$', v.CompetitionRegisterUserListView.approve, name = 'approve'),
-	url(r'competition/register/decline/(?P<pk>[0-9]+)/$', v.CompetitionRegisterUserListView.decline, name = 'decline'),
+	url(r'competition/register/$', v.CompetitionRegister.as_view(), name = 'competition_register'),
+	url(r'competition/register/(?P<pk>[0-9]+)/$', v.CompetitionRegisterUser.as_view(), name = 'competition_register_user_list'),
+	url(r'competition/register/approve/(?P<pk>[0-9]+)/$', v.CompetitionRegisterUser.approve, name = 'approve'),
+	url(r'competition/register/decline/(?P<pk>[0-9]+)/$', v.CompetitionRegisterUser.decline, name = 'decline'),
 
 
 	url(r'finance/$', v.ManagerFinanceView.as_view(), name = 'manager_finance'),

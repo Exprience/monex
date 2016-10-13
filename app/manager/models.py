@@ -173,3 +173,13 @@ class CompetitionRegister(models.Model):
 
 class ResearchModel(models.Model):
 	file = models.FileField()
+
+class Currency(models.Model):
+	currency = models.IntegerField()
+	name = models.CharField(max_length = 6)
+	buy = models.FloatField()
+	sell = models.FloatField()
+	created_at = models.DateTimeField(auto_now_add = True)
+
+	def change(self):
+		return u"%.2f" %(self.buy - self.sell)

@@ -1,0 +1,80 @@
+{% extends 'manager/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<section class="content-header">
+  <h1>
+  	{% if object %}
+		{% trans 'Мэдээ засварлах' %}
+		{% else %}
+		{% trans 'Мэдээ нэмэх' %}
+		{% endif %}
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url 'manager:home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li><a href="{% url 'manager:news' %}">{% trans 'Мэдээ' %}</a></li>
+    <li class="active">
+    	{% if object %}
+    	{% trans 'Мэдээ засварлах' %}
+    	{% else %}
+    	{% trans 'Мэдээ нэмэх' %}
+    	{% endif %}
+    </li>
+  </ol>
+</section>
+<div class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box">
+				<form method="post">{% csrf_token %}
+					<div class="box-body">
+            {% include 'manager/form.html' %}
+          </div>
+					<div class="box-footer">
+						<div class="pull-right">
+							<button type="button" id="preview" data-target="#mymodal" data-toggle="modal" class="btn btn-primary btn-flat">Preview</button>
+							<button class="btn btn-success btn-flat" type="submit">{% trans 'Хадгалах' %}</button>
+						</div>
+					</div>
+				</form>	
+			</div>		
+		</div>
+	</div>
+</div>
+<div id="mymodal" class="modal fade">
+  <div class="modal-dialog modal-lg" style="width:1100px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">{% trans 'Хаах' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	$('#preview').click(function(){
+		var title = $('#id_title').val();
+		var body = $('#id_body').val();
+		$('#mymodal .modal-header h4').html(title);
+		$('#mymodal .modal-body').html(body);
+	});
+</script>
+{% endblock %}
+{% block extrajs %}
+<!--Redactor django-->
+<link href="{% static 'redactor/css/redactor.css' %}" type="text/css" media="all" rel="stylesheet" />
+<script src="{% static 'redactor/jquery.redactor.init.js' %}"></script>
+<script src="{% static 'redactor/redactor.js' %}"></script>
+<script src="{% static 'redactor/langs/en.js' %}"></script>
+<script type="text/javascript">
+  $('select').on('change', function() {
+    $('#related_change').attr('href', '/manager/news/category/update/'+ this.value);
+    $('#related_delete').attr('href', '/manager/news/category/delete/'+ this.value);
+  });
+</script>
+{% endblock %}

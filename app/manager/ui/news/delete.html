@@ -4,31 +4,31 @@
 {% block content %}
 <section class="content-header">
   <h1>
-		{% trans 'Мэдээ устгах' %}
+    {% trans 'Мэдээ устгах' %}
   </h1>
   <ol class="breadcrumb">
     <li><a href="{% url 'manager:home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
     <li><a href="{% url 'manager:news' %}">{% trans 'Мэдээ' %}</a></li>
     <li class="active">
-    	{% trans 'Мэдээ устгах' %}
+      {% trans 'Мэдээ устгах' %}
     </li>
   </ol>
 </section>
 <div class="content">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="box">
-				<form method="post">{% csrf_token %}
-					<div class="box-body">{{ form }}</div>
-					<div class="box-footer">
-						<div class="pull-right">
-							<button class="btn btn-danger btn-flat" type="submit">{% trans 'Устгах' %}</button>
-						</div>
-					</div>
-				</form>	
-			</div>		
-		</div>
-	</div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <form method="post">{% csrf_token %}
+          <div class="box-body">{{ form }}</div>
+          <div class="box-footer">
+            <div class="pull-right">
+              <button class="btn btn-danger btn-flat" type="submit">{% trans 'Устгах' %}</button>
+            </div>
+          </div>
+        </form> 
+      </div>    
+    </div>
+  </div>
 </div>
 {% endblock %}
 {% block extrajs %}

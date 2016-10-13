@@ -83,7 +83,7 @@
           </div>
         </div>
         <div id="competition_filter" class="box-body">
-          {% include 'manager/competition/competition_filter.html' %}
+          {% include 'manager/ui/competition/filter.html' %}
         </div>
         <div class="box-footer">
         </div>
@@ -91,61 +91,6 @@
     </div>
   </div>
 </section>
-{% for o in object_list %}
-<div id="history_{{ o.id }}" class="modal fade">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">{% trans 'Түүх' %}</h4>
-      </div>
-      <div class="modal-body">
-        {% if o.history.all %}
-        <table class="table table-bordered table-hover table-striped text-sm">
-          <thead>
-            <tr>
-              <th>{% trans '№' %}</th>
-              <th>{% trans 'Ангилал' %}</th>
-              <th>{% trans 'Эхлэх огноо' %}</th>
-              <th>{% trans 'Дуусах огноо' %}</th>
-              <th>{% trans 'Төлөв' %}</th>
-              <th>{% trans 'Хэн' %}</th>
-              <th>{% trans 'Хэзээ' %}</th>
-              <th>{% trans 'Төрөл' %}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for i in o.history.all %}
-            <tr>
-              <td>{{ forloop.counter }}</td>
-              <td>{{ i.rank.name }}</td>
-              <td>{{ i.start|date:"Y-m-d H:i:s" }}</td>
-              <td>{{ i.start|date:"Y-m-d H:i:s" }}</td>
-              <td>{{ i.get_competition_status_display }}</td>
-              <td>{{ i.history_user }}</td>
-              <td>{{ i.history_date|date:"Y-m-d H:i:s" }}</td>
-              <td>
-                {% if i.history_type == "+" %}
-                {% trans 'Үүсгэсэн' %}
-                {% elif i.history_type == "~" %}
-                {% trans 'Засварласан' %}
-                {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        {% else %}
-        {% trans 'Түүх байхгүй байна.' %}
-        {% endif %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" data-dismiss="modal" class="btn btn-flat btn-default">{% trans 'Хаах' %}</button>
-      </div>
-    </div>
-  </div>
-</div>
-{% endfor %}
 {% endblock %}
 {% block extrajs %}
 <script type="text/javascript">

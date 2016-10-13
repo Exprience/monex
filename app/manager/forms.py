@@ -319,8 +319,8 @@ class CompetitionForm(forms.Form):
 	category = forms.ChoiceField()
 	fee = forms.IntegerField(label = u'Бүртгэлийн хураамж', widget = forms.TextInput(attrs = {'class':'form-control'}))
 	prize = forms.IntegerField(label = u'Эхлэх данс', widget = forms.TextInput(attrs = {'class':'form-control'}))
-	start_date = forms.DateTimeField(label = u'Эхлэх өдөр', widget = DateTimePicker(attrs = {'class':'form-control'}, options={"format": "YYYY-MM-DD HH:mm", "pickSeconds": False}))
-	end_date = forms.DateTimeField(label = u'Дуусах өдөр', widget = DateTimePicker(attrs = {'class':'form-control'}, options={"format": "YYYY-MM-DD HH:mm", "pickSeconds": False}))
+	start_date = forms.CharField(label = u'Эхлэх өдөр', widget = DateTimePicker(attrs = {'class':'form-control'}, options={"format": "YYYY-MM-DD HH:mm", "pickSeconds": False}))
+	end_date = forms.CharField(label = u'Дуусах өдөр', widget = DateTimePicker(attrs = {'class':'form-control'}, options={"format": "YYYY-MM-DD HH:mm", "pickSeconds": False}))
 	register_low = forms.IntegerField(label = u'Бүртгэлийн доод хязгаар', widget = forms.TextInput(attrs = {'class':'form-control'}))
 
 	def __init__(self, manager_id = None, type = None, id = None,*args, **kwargs):

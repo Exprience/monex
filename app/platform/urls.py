@@ -8,7 +8,7 @@ app_name = 'platform'
 
 
 urlpatterns = [
-	url(r'^(?P<pk>[0-9]+)/$', v.HomeView.as_view(), name = 'home'),
+	url(r'^(?P<pk>[0-9]+)/$', v.Platform.as_view(), name = 'home'),
 	url(r'^news/(?P<pk>[0-9]+)/$', v.NewsView.as_view(), name = 'news'),
 	url(r'^account/$', v.AccountView.as_view(), name = 'account'),
 	
