@@ -10,14 +10,13 @@
   <meta name="" content="">
   {% block css %}
   <!--CSS-->
-  <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.css' %}">
-  <link rel="stylesheet" href="{% static 'assets/bootstrap-year-calendar-master/css/bootstrap-year-calendar.css' %}">
-  <link rel="stylesheet" href="{% static 'assets/bootstrap-daterange/css/daterangepicker.css' %}">
-  <link href="/static/css/font-awesome.min.css" rel="stylesheet">
-  <link href="/static/css/styles.css" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/scroll.css">
-  <link href="{% static 'manager/dist/css/AdminLTE.min.css' %}" rel="stylesheet">
-  <link href="/static/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/bootstrap-year-calendar-master/css/bootstrap-year-calendar.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/bootstrap-daterange/css/daterangepicker.css' %}">
+  <link href="{% static 'dist/css/font-awesome.min.css' %}" rel="stylesheet">
+  <link href="{% static 'dist/css/web.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'dist/css/scroll.css' %}">
+  <link href="{% static 'dist/css/AdminLTE.min.css' %}" rel="stylesheet">
   {% endblock %}
 </head>
 </html>
@@ -127,16 +126,16 @@
 </body>
 {% block js %}
 <!--JS--> 
-<script src="{% static 'js/jQuery-2.2.0.min.js' %}"></script>
-<script src="{% static 'assets/bootstrap/js/bootstrap.js' %}"></script>
-<script src="{% static 'assets/bootstrap-player/bootstrap.youtubepopup.js' %}"></script>
-<script src="{% static 'assets/bootstrap-daterange/js/moment.js' %}"></script>
-<script src="{% static 'assets/bootstrap-daterange/js/daterangepicker.js' %}"></script>
-<script src="/static/js/plugins.js"></script>  
-<script src="/static/js/functions.js"></script>
-<script src="/static/js/web.js"></script>
-<script src="/static/js/scroll.js"></script>
-<script src="{% static 'js/bootstrap-notify.min.js' %}"></script>
+<script src="{% static 'dist/js/jQuery-2.2.0.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-player/bootstrap.youtubepopup.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-daterange/js/moment.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-daterange/js/daterangepicker.js' %}"></script>
+<script src="{% static 'dist/js/plugins.js' %}"></script>  
+<script src="{% static 'dist/js/functions.js' %}"></script>
+<script src="{% static 'dist/js/web.js' %}"></script>
+<script src="{% static 'dist/js/scroll.js' %}"></script>
+<script src="{% static 'dist/js/bootstrap-notify.min.js' %}"></script>
 {% endblock %}
 {% block extrajs %}
 

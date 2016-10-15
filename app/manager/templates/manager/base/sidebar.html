@@ -41,23 +41,23 @@
         </ul>
       </li>
       {% endif %}
+      {% if user.is_news_select %}
+      <li><a href="{% url 'manager:news' %}"><i class="fa fa-circle-o text-aqua"></i> Мэдээлэл</a></li>
+      {% endif %}
+      {% if user.is_research_select %}
+      <li><a href="{% url 'manager:research_list' %}"><i class="fa fa-circle-o text-aqua"></i> Судалгаа</a></li>
+      {% endif %}
+      {% if user.is_lesson_select %}
+      <li><a href="{% url 'manager:lesson_list' %}"><i class="fa fa-circle-o text-aqua"></i> Сургалт</a></li>
+      {% endif %}
+      {% comment %}
       <li class="treeview">
         <a href="#">
           <i class="fa fa-circle-o text-aqua"></i>
           <span>Мэдээ</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
-        <ul class="treeview-menu">
-          {% if user.is_news_select %}
-          <li><a href="{% url 'manager:news' %}"><i class="fa fa-circle-o"></i> Мэдээлэл</a></li>
-          {% endif %}
-          {% if user.is_research_select %}
-          <li><a href="{% url 'manager:research_list' %}"><i class="fa fa-circle-o"></i> Судалгаа</a></li>
-          {% endif %}
-          {% if user.is_lesson_select %}
-          <li><a href="{% url 'manager:lesson_list' %}"><i class="fa fa-circle-o"></i> Сургалт</a></li>
-          {% endif %}
-        </ul>
+        <ul class="treeview-menu"></ul>
       </li>
       <li class="treeview">
         <a href="#">
@@ -95,6 +95,7 @@
           <span>Санхүү</span>
         </a>
       </li>
+      {% endcomment %}
     </ul>
   </section>
 </aside>

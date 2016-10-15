@@ -21,7 +21,7 @@ class NotManager(object):
 
 	def dispatch(self, request, *args, **kwargs):
 		if request.user and hasattr(request.user, 'is_manager'):
-			return HttpResponseRedirect(reverse_lazy('manager:manager_home'))
+			return HttpResponseRedirect(reverse_lazy('manager:home'))
 		return super(NotManager, self).dispatch(request, *args, **kwargs)
 
 

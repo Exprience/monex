@@ -4,7 +4,8 @@
       $(document).ready(function(){
         $.notify(
           {
-            message: '{{ m }}'
+            icon: 'fa fa-check-circle',
+            message: '{{ m }}',
           },
           {
             type: '{% if m.tags == "error" %}danger{% else %}{{ m.tags }}{% endif %}',

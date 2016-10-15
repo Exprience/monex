@@ -59,3 +59,12 @@ class BaseDataManager(object):
             client = Client(url, timeout=90, cachingpolicy=1, plugins = [FixUrls()])
         client.options.cache.clear()
         return client
+
+    @staticmethod
+    def get_file(manager_id, file):
+        client = BaseDataManager.get_instance().setup_client('/MXGetFileByPatternWSDLService/MXGetFileByPatternWSDLPort?wsdl')
+        print client
+        print file
+        result = client.service.MXGetFileByPatternWSDLOperation(manager_id, file)
+        print result
+        #return result

@@ -1,126 +1,296 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xsd:schema xmlns="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://j2ee.netbeans.org/xsd/tableSchema">
-	<xsd:element name="MXManagerShowCompetitionLists_Request">
-		<xsd:complexType>
-			<xsd:sequence/>
-		</xsd:complexType>
-	</xsd:element>
-	<xsd:complexType name="MXManagerShowCompetitionLists_ResponseR">
-		<xsd:sequence>
-			<xsd:element name="MXManagerShowCompetitionLists_Response" ></xsd:element>
-		</xsd:sequence>
-	</xsd:complexType>
-	<xsd:element name="MXManagerShowCompetitionLists_Response">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element maxOccurs="unbounded" ref="MXManagerShowCompetitionLists_Record"/>
-			</xsd:sequence>
-		</xsd:complexType>
-	</xsd:element>
-	<xsd:element name="MXManagerShowCompetitionLists_Record">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element name="id">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:int">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="competition_category_id">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:int">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="fee">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:int">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="prize">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:string">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="start_date">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:string">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="end_date">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:string">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="created_at">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:string">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="created_by">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:int">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="register_low">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:int">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="status">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:byte">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-			</xsd:sequence>
-		</xsd:complexType>
-	</xsd:element>
+  <xsd:element name="MXManagerShowCompetitionLists_Request">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="competition_id">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="start_date">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="end_date">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="status">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="competition_id2">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="start_date2">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="end_date2">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="competition_id3">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="status2">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="status3">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="start_date3">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="end_date3">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="competition_id4">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="start_date4">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="end_date4">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="status4">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="created_by">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="MXManagerShowCompetitionLists_ResponseR">
+    <xsd:sequence>
+      <xsd:element name="MXManagerShowCompetitionLists_Response"></xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="MXManagerShowCompetitionLists_Response">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element maxOccurs="unbounded" ref="MXManagerShowCompetitionLists_Record"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="MXManagerShowCompetitionLists_Record">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="id">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:int">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="competition_category_id">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:int">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="fee">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:int">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="prize">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="start_date">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="end_date">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="created_at">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="created_by">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:int">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="register_low">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:int">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="status">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:byte">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
 </xsd:schema>

@@ -9,6 +9,7 @@ from django import http
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.core.exceptions import PermissionDenied
+from django.contrib import messages
 
 
 from django.utils.http import urlsafe_base64_decode
@@ -26,6 +27,7 @@ from app.web.managers import WebDataManager as wm
 class Login(v.FormView):
 	form_class = mf.LoginForm
 	success_url = reverse_lazy('manager:home')
+	success_message = u"Монекд тавтай морил %(email)s"
 
 	def get_success_url(self):
 		return self.request.GET.get('next', self.success_url)
@@ -460,22 +462,19 @@ class LessonCategoryDelete(FormView):
 
 
 #Research
-class ResearchListView(TemplateView):
-	
-	template_name = 'manager/research/research_list.html'
+class ResearchList(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(ResearchListView, self).get_context_data(*args, **kwargs)
+		context = super(ResearchList, self).get_context_data(*args, **kwargs)
 		context['researchs'] = m.select(self.request.user.id, 'R')
 		return context
 
-class ResearchCreateView(FormView):
+class ResearchCreate(FormView):
 	form_class = mf.ResearchForm
-	template_name = 'manager/research/research_form.html'
 	success_url = reverse_lazy('manager:research_list')
 
 	def get_form_kwargs(self):
-		kwargs = super(ResearchCreateView, self).get_form_kwargs()
+		kwargs = super(ResearchCreate, self).get_form_kwargs()
 		kwargs.update({'manager_id': self.request.user.id, 'type':'2'})
 		return kwargs
 
@@ -486,34 +485,48 @@ class ResearchCreateView(FormView):
 		research = ResearchModel.objects.create(file = file)
 		author_name = form.cleaned_data['author_name']
 		author_email = form.cleaned_data['author_email']
-		result = m.create('R', self.request.user.id, category, title = title, author_name = author_name, file = research.file)
+		result = m.create('R', self.request.user.id, category, title = title, author_name = author_name, file = research.file, author_email = author_email)
 		if not result:
 			self.error(u"Үйлдэл амжилтгүй боллоо.")
-			return super(ResearchCreateView, self).form_invalid(form)
-		return super(ResearchCreateView, self).form_valid(form)
+			return super(ResearchCreate, self).form_invalid(form)
+		return super(ResearchCreate, self).form_valid(form)
 	
-class ResearchUpdateView(FormView):
+class ResearchUpdate(FormView):
 	form_class = mf.ResearchForm
 	success_url = reverse_lazy('manager:research_list')
-	template_name = 'manager/research/research_form.html'
 
 	def get_form_kwargs(self):
-		kwargs = super(ResearchUpdateView, self).get_form_kwargs()
+		kwargs = super(ResearchUpdate, self).get_form_kwargs()
 		kwargs.update({'manager_id': self.request.user.id, 'type':'2', 'id': self.pk})
 		return kwargs
 
-class ResearchCategoryCreateUpdateView(FormView):
+	def form_valid(self, form):
+		category = form.cleaned_data['category']
+		title = form.cleaned_data['title']
+		file = form.cleaned_data['file']
+		author_email = form.cleaned_data['author_email']
+		author_name = form.cleaned_data['author_name']
+		result = m.update('R', self.request.user.id, self.pk, category, title = title, author_email = author_email, author_name = author_name, file = file)
+		if result:
+			if not result.isSuccess:
+				self.error(u'Үйлдэл амжилтгүй боллоо')
+				return self.form_invalid(form)
+		else:
+			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
+			return self.form_invalid(form)
+		return super(ResearchUpdate, self).form_valid(form)
+
+class ResearchCategoryCreate(FormView):
 	form_class = mf.CategoryForm
-	template_name = 'manager/research/research_category_form.html'
 	success_url = reverse_lazy('manager:research_list')
 
 	def get_form_kwargs(self):
-		kwargs = super(ResearchCategoryCreateUpdateView, self).get_form_kwargs()
+		kwargs = super(ResearchCategoryCreate, self).get_form_kwargs()
 		kwargs.update({'id': self.pk})
 		return kwargs
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(ResearchCategoryCreateUpdateView, self).get_context_data(*args, **kwargs)
+		context = super(ResearchCategoryCreate, self).get_context_data(*args, **kwargs)
 		context['object'] = self.pk
 		return context
 
@@ -540,13 +553,11 @@ class ResearchCategoryCreateUpdateView(FormView):
 						return self.form_invalid(form)
 				return http.HttpResponse('<script>opener.dismissChangeRelatedObjectPopup(window, "select", "%s", "%s");</script>'%(self.pk, form.cleaned_data['category']))
 
-class ResearchCategoryDeleteView(FormView):
-
-	template_name = 'manager/news/news_category_delete.html'
+class ResearchCategoryDelete(FormView):
 	form_class = mf.CategoryForm
 
 	def get_form_kwargs(self):
-		kwargs = super(ResearchCategoryDeleteView, self).get_form_kwargs()
+		kwargs = super(ResearchCategoryDelete, self).get_form_kwargs()
 		kwargs.update({'delete_id' : self.pk})
 		return kwargs
 
@@ -783,24 +794,20 @@ class StockValueCreateView(FormView):
 
 
 #User
-class UserListView(TemplateView):
-	
-	template_name = 'manager/user/user.html'
-
+class UserList(TemplateView):
+	pass
 
 #Admin
-class AdminInfoView(FormView):
+class AdminInfo(FormView):
 	form_class = mf.ManagerForm
-	template_name = 'manager/user/admin/admin_info.html'
 
 	def get_form_kwargs(self):
-		kwargs = super(AdminInfoView, self).get_form_kwargs()
+		kwargs = super(AdminInfo, self).get_form_kwargs()
 		kwargs.update({'info': True, 'id':self.request.user.id})
 		return kwargs
 
-class AdminPasswordUpdateView(FormView):
+class AdminPasswordUpdate(FormView):
 	form_class = mf.PasswordUpdateForm
-	template_name = 'manager/user/admin/password_update.html'
 	success_url = reverse_lazy('manager:home')
 	success_message = u'Нууц үг амжилттай шинэчлэгдлээ'
 
@@ -809,46 +816,43 @@ class AdminPasswordUpdateView(FormView):
 		if not result:
 			self.error(u'Хуучин нууц үг буруу байна.')
 			return self.form_invalid(form)
-		return super(AdminPasswordUpdateView, self).form_valid(form)
+		return super(AdminPasswordUpdate, self).form_valid(form)
 
-class AdminListView(TemplateView):
-	template_name = 'manager/user/admin/admin_list.html'
+class AdminList(TemplateView):
 
 	def dispatch(self, request, *args, **kwargs):
 		if request.user:
 			if request.user.is_superuser == '0':
 				raise http.Http404
-		return super(AdminListView, self).dispatch(request, *args, **kwargs)
+		return super(AdminList, self).dispatch(request, *args, **kwargs)
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(AdminListView, self).get_context_data(*args, **kwargs)
+		context = super(AdminList, self).get_context_data(*args, **kwargs)
 		context['managers'] = m.admins()
 		return context
 
-class AdminCreateUpdateView(FormView):
+class AdminCreate(FormView):
 	form_class = mf.ManagerForm
-	template_name = 'manager/user/admin/admin_user_form.html'
 	success_url = reverse_lazy('manager:manager_list')
-	success_message = u"Менежер амжилттай хадгалагдлаа амжилттай хийгдлээ."
-
+	success_message = u"%(email)s амжилттай хадгалагдлаа."
+	
 	def get_context_data(self, *args, **kwargs):
-		context = super(AdminCreateUpdateView, self).get_context_data(*args, **kwargs)
+		context = super(AdminCreate, self).get_context_data(*args, **kwargs)
 		context['object'] = self.pk
 		return context
 
 	def get_form_kwargs(self):
-		kwargs = super(AdminCreateUpdateView, self).get_form_kwargs()
+		kwargs = super(AdminCreate, self).get_form_kwargs()
 		if self.pk:
 			kwargs.update({'id': self.pk})
 		return kwargs
 
 	def form_valid(self, form):
 		result = form.save(self.request)
-		return super(AdminCreateUpdateView, self).form_valid(form)
+		return super(AdminCreate, self).form_valid(form)
 
-class AdminSetPasswordView(v.FormView):
+class AdminPasswordSet(v.FormView):
 	form_class = mf.ManagerSetPasswordForm
-	template_name = 'manager/password/set_password.html'
 	success_url = reverse_lazy('manager:manager_login')
 	success_message = u'Бүртгэл амжилттай баталгаажлаа.'
 
@@ -857,12 +861,14 @@ class AdminSetPasswordView(v.FormView):
 		self.user = m.get_manager(uid)
 		if not default_token_generator.check_token(self.user, self.kwargs.pop('token', None)):
 			raise http.Http404
-		return super(AdminSetPasswordView, self).dispatch(request, *args, **kwargs)
+		return super(AdminPasswordSet, self).dispatch(request, *args, **kwargs)
 
 	def form_valid(self, form):
 		result = form.save(self.user)
-		return super(AdminSetPasswordView, self).form_valid(form)
+		return super(AdminPasswordSet, self).form_valid(form)
 
+class AdminPasswordReset(v.FormView):
+	form_class = mf.PasswordResetForm
 
 #Competition Register	
 class CompetitionRegister(TemplateView):
@@ -877,17 +883,18 @@ class CompetitionRegisterUser(TemplateView):
 	def get_context_data(self, *args, **kwargs):
 		context = super(CompetitionRegisterUser, self).get_context_data(*args, **kwargs)
 		context['users'] = wm.register('S', competition_id = self.pk, is_manager = True, manager_id = self.request.user.id)
+		context['pk'] = self.pk
 		return context
 
-	@classmethod
-	def approve(self, request, pk = 0):
-		result = wm.register('U', id = pk, is_manager = True, manager_id = request.user.id, is_approved = True)
-		return http.HttpResponseRedirect(reverse_lazy('manager:home'))
+def approve(request, ck = 0, pk = 0):
+	result = wm.register('U', id = pk, is_manager = True, manager_id = request.user.id, is_approved = True)
+	messages.success(request, u'Үйлдэл амжилттай хийгдлээ')
+	return http.HttpResponseRedirect(reverse_lazy('manager:competition_register_user_list' , kwargs = {'pk': ck}))
 
-	@classmethod
-	def decline(self, request, pk = 0):
-		result = wm.register('U', id = pk, is_manager = True, manager_id = request.user.id)
-		return http.HttpResponseRedirect(reverse_lazy('manager:home'))
+def decline(request, ck = 0, pk = 0):
+	result = wm.register('U', id = pk, is_manager = True, manager_id = request.user.id)
+	messages.success(request, u'Үйлдэл амжилттай хийгдлээ')
+	return http.HttpResponseRedirect(reverse_lazy('manager:competition_register_user_list' , kwargs = {'pk': ck}))
 
 
 #Finance

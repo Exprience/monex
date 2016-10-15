@@ -3,13 +3,17 @@
 
 
 import re
+import base64
 
-
+from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views import generic as g
 from django.forms.utils import ErrorList
 from django.contrib.messages.views import SuccessMessageMixin
+import managers as cm
+
+
 
 def handler404(request):
 	if hasattr(request.user, "is_manager"):
@@ -75,3 +79,16 @@ class FormView(SuccessMessageMixin, BaseMixin, g.FormView):
 
 class TemplateView(BaseMixin, g.TemplateView):
 	pass
+
+
+class File(g.View):
+
+    def get(self, request, *args, **kwargs):
+    	file = self.kwargs.get('file', None)
+        if file:
+            f = cm.BaseDataManager.get_file(request.user.id, file)
+            content_type = 'application/pdf'
+            return HttpResponse(base64.b64decode(f.file), content_type=content_type)
+        else:
+            raise Http404
+        return super(File, self).get(request, *args, **kwargs)

@@ -141,22 +141,29 @@ class ManagerDataManager(BaseDataManager):
 	@staticmethod
 	def select(manager_id, type):
 		client = ManagerDataManager.get_instance().setup_client('%ssoap/manager/select/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
-		result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id)
+		result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id, "1", "1", "2")
+		
 		if type is 'N':
 			if manager_id is "":
 				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXUserShowNews_Record)
 			else:
 				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXManagerShowNewsLists_Record)				
+		
 		if type is 'R':
 			if manager_id is "":
 				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXUserShowResearchLists_Record)
 			else:
 				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXManagerShowResearchLists_Record)
+		
 		if type is 'L':
-			if manager_id is "":
-				records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXUserShowLessonLists_Record)
+			if result.lesson_list.MXManagerShowLessonLists_Response:
+				if manager_id is "":
+					records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXUserShowLessonLists_Record)
+				else:
+					records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXManagerShowLessonLists_Record)
 			else:
-				records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXManagerShowLessonLists_Record)
+				records = None
+		
 		if type is 'C':
 			if manager_id is "":
 				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXUserShowCompetitionLists_Record)
@@ -189,6 +196,7 @@ class ManagerDataManager(BaseDataManager):
 		research.author_name = author_name
 		research.title = title
 		research.research_category_id = category
+		research.author_email = author_email
 
 		lesson = client.factory.create('ns1:LessonRecord')
 		lesson.created_by = created_by
@@ -214,7 +222,7 @@ class ManagerDataManager(BaseDataManager):
 		return result
 
 	@staticmethod
-	def update(type, manager_id, id, category, title = "", body = "", url = "", author_name = "", author_email = "", fee = "", prize="", start_date = config.NOW , end_date = config.NOW, register_low = ""):
+	def update(type, manager_id, id, category, title = "", body = "", url = "", author_name = "", author_email = "", fee = "", prize="", start_date = config.NOW , end_date = config.NOW, register_low = "", file = None):
 		client = ManagerDataManager.get_instance().setup_client('/MX_Manager_Update_News_Research_LessonService/MX_Manager_Update_News_Research_LessonPort?wsdl')
 		
 		news = client.factory.create('ns0:News')
@@ -226,10 +234,16 @@ class ManagerDataManager(BaseDataManager):
 		research = client.factory.create('ns0:Research')
 		research.MXManagerUpdateResearch_Request.research_category_id = category
 		research.MXManagerUpdateResearch_Request.title = title
-		research.MXManagerUpdateResearch_Request.author_name = ""
-		research.MXManagerUpdateResearch_Request.author_email = ""
-		research.MXManagerUpdateResearch_Request.file_type = ""
-		research.MXManagerUpdateResearch_Request.pdf_file = ""
+		research.MXManagerUpdateResearch_Request.author_name = author_name
+		research.MXManagerUpdateResearch_Request.author_email = author_email
+		try:
+			with open(file.path, "rb") as f:
+				data = f.read()
+				research.MXManagerUpdateResearch_Request.pdf_file = base64.b64encode(data)
+			research.MXManagerUpdateResearch_Request.file_type = os.path.splitext(file.path)[1]
+		except:
+			research.MXManagerUpdateResearch_Request.pdf_file = file
+			research.MXManagerUpdateResearch_Request.file_type = ""
 		research.MXManagerUpdateResearch_Request.id = id
 
 		lesson = client.factory.create('ns0:Lesson')

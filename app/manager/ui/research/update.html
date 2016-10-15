@@ -1,0 +1,50 @@
+{% extends 'manager/base.html' %}
+{% load i18n %}
+{% block content %}
+<section class="content-header">
+  <h1>
+    {% if object %}
+    {% trans 'Судалгаа засварлах' %}
+    {% else %}
+    {% trans 'Судалгаа нэмэх' %}
+    {% endif %}
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url 'manager:home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li><a href="{% url 'manager:research_list' %}">{% trans 'Судалгаа' %}</a></li>
+    <li class="active">
+      {% if object %}
+      {% trans 'Судалгаа засварлах' %}
+      {% else %}
+      {% trans 'Судалгаа нэмэх' %}
+      {% endif %}
+    </li>
+  </ol>
+</section>
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+          <div class="box-body">
+            {% include 'manager/form.html' %}
+          </div>
+          <div class="box-footer">
+            <div class="pull-right">
+              <button type="submit" class="btn btn-success btn-flat">{% trans 'Хадгалах' %}</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+  $('select').on('change', function() {
+    $('#related_change').attr('href', '/manager/research/category/update/'+ this.value);
+    $('#related_delete').attr('href', '/manager/research/category/delete/'+ this.value);
+  });
+</script>
+{% endblock %}

@@ -231,9 +231,9 @@ class ManagerForm(forms.Form):
 				uid = urlsafe_base64_encode(force_bytes(result.pk))
 				token = default_token_generator.make_token(result)
 				link = 'http://%s/manager/reset/%s/%s/' %(domain, uid, token)
-				manager.apply_manager(self.cleaned_data['email'], link, token)
+				manager.apply_manager("uuganbat@innosol.mn", link, token)
 		else:
-			result = manager.register("", "", news = news, research = research, lesson = lesson, competition_type = competition_type, competition = competition, currency = currency, stock = stock, bank = bank, competition_approval = competition_approval, is_create = False, id = self.id, is_active = "1")
+			result = manager.register("", "", news = news, research = research, lesson = lesson, competition_type = competition_type, competition = competition, currency = currency, stock = stock, bank = bank, competition_approval = competition_approval, is_create = False, id = self.id, is_active = self.cleaned_data['is_active'])
 		return result
 
 
@@ -313,7 +313,14 @@ class ResearchForm(forms.Form):
 		widget = self.fields['category'].widget
 		if not is_delete:
 			self.fields['category'].widget = PopUpWidget(widget, 'research', can_add_related = True, can_change_related = True, can_delete_related = True)
-
+		if id:
+			result = manager.individually(manager_id, "R", id)
+			self.fields['category'].initial = result.research_category_id.value
+			self.fields['title'].initial = result.title.value
+			self.fields['file'].initial = result.pdf_file.value
+			self.fields['author_name'].initial = result.author_name.value
+			if hasattr(result.author_email, 'value'):
+				self.fields['author_email'].initial = result.author_email.value
 
 class CompetitionForm(forms.Form):
 	category = forms.ChoiceField()
@@ -385,6 +392,10 @@ class PasswordUpdateForm(forms.Form):
 	def save(self, request):
 		result = manager.set_password(request.user.id, self.cleaned_data['new_password1'], self.cleaned_data['old_password'], is_create = False)
 		return result
+
+class PasswordResetForm(forms.Form):
+	email = forms.EmailField(widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder': 'И-мэйл'}))
+
 
 
 class BankForm(forms.Form):

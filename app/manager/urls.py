@@ -42,13 +42,13 @@ urlpatterns = [
 	url(r'^lesson/category/delete/(?P<pk>[0-9A-Za-z\_]+)/$', v.LessonCategoryDelete.as_view(), name = 'lesson_category_delete'),
 
 	
-	url(r'^research/$', v.ResearchListView.as_view(), name = 'research_list'),
-	url(r'^research/create/$', v.ResearchCreateView.as_view(), name = 'research_create'),
-	url(r'^research/update/(?P<pk>[0-9]+)/$', v.ResearchUpdateView.as_view(), name = 'research_update'),
-	url(r'^research/delete/(?P<pk>[0-9]+)/$', v.ResearchUpdateView.as_view(), name = 'research_delete'),
-	url(r'^research/category/create/$', v.ResearchCategoryCreateUpdateView.as_view(), name = 'research_category_create'),
-	url(r'^research/category/update/(?P<pk>[0-9A-Za-z\_]+)/$', v.ResearchCategoryCreateUpdateView.as_view(), name = 'research_category_update'),
-	url(r'^research/category/delete/(?P<pk>[0-9A-Za-z\_]+)/$', v.ResearchCategoryDeleteView.as_view(), name = 'research_category_delete'),
+	url(r'^research/$', v.ResearchList.as_view(), name = 'research_list'),
+	url(r'^research/create/$', v.ResearchCreate.as_view(), name = 'research_create'),
+	url(r'^research/update/(?P<pk>[0-9]+)/$', v.ResearchUpdate.as_view(), name = 'research_update'),
+	url(r'^research/delete/(?P<pk>[0-9]+)/$', v.ResearchUpdate.as_view(), name = 'research_delete'),
+	url(r'^research/category/create/$', v.ResearchCategoryCreate.as_view(), name = 'research_category_create'),
+	url(r'^research/category/update/(?P<pk>[0-9A-Za-z\_]+)/$', v.ResearchCategoryCreate.as_view(), name = 'research_category_update'),
+	url(r'^research/category/delete/(?P<pk>[0-9A-Za-z\_]+)/$', v.ResearchCategoryDelete.as_view(), name = 'research_category_delete'),
 	
 	
 	url(r'^bank/$', v.BankListView.as_view(), name = 'bank_list'),
@@ -76,21 +76,23 @@ urlpatterns = [
 	url(r'^stock/value/create/$', v.StockValueCreateView.as_view(), name = 'stock_value_create'),
 
 
-	url(r'^users/$', v.UserListView.as_view(), name = 'user_list'),
+	url(r'^users/$', v.UserList.as_view(), name = 'user_list'),
 	
 	
-	url(r'^info/$', v.AdminInfoView.as_view(), name = 'info'),
-	url(r'^password/update/$', v.AdminPasswordUpdateView.as_view(), name = 'password_update'),
-	url(r'^admin/users/$', v.AdminListView.as_view(), name = 'manager_list'),
-	url(r'^admin/users/create/$', v.AdminCreateUpdateView.as_view(), name = 'manager_create'),
-	url(r'^admin/users/update/(?P<pk>[0-9]+)/$', v.AdminCreateUpdateView.as_view(), name = 'manager_update'),
-	url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', v.AdminSetPasswordView.as_view()),
+	url(r'^info/$', v.AdminInfo.as_view(), name = 'info'),
+	url(r'^password/update/$', v.AdminPasswordUpdate.as_view(), name = 'password_update'),
+	url(r'^admin/users/$', v.AdminList.as_view(), name = 'manager_list'),
+	url(r'^admin/users/create/$', v.AdminCreate.as_view(), name = 'manager_create'),
+	url(r'^admin/users/update/(?P<pk>[0-9]+)/$', v.AdminCreate.as_view(), name = 'manager_update'),
+	url(r'^admin/password/reset/$', v.AdminPasswordReset.as_view(), name = 'password_reset'),
+	url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', v.AdminPasswordSet.as_view()),
+
 	
 
 	url(r'competition/register/$', v.CompetitionRegister.as_view(), name = 'competition_register'),
 	url(r'competition/register/(?P<pk>[0-9]+)/$', v.CompetitionRegisterUser.as_view(), name = 'competition_register_user_list'),
-	url(r'competition/register/approve/(?P<pk>[0-9]+)/$', v.CompetitionRegisterUser.approve, name = 'approve'),
-	url(r'competition/register/decline/(?P<pk>[0-9]+)/$', v.CompetitionRegisterUser.decline, name = 'decline'),
+	url(r'competition/register/approve/(?P<ck>[0-9]+)/(?P<pk>[0-9]+)/$', v.approve, name = 'approve'),
+	url(r'competition/register/decline/(?P<ck>[0-9]+)/(?P<pk>[0-9]+)/$', v.decline, name = 'decline'),
 
 
 	url(r'finance/$', v.ManagerFinanceView.as_view(), name = 'manager_finance'),

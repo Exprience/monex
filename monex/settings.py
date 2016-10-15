@@ -48,13 +48,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'app.chat',
+    #'app.chat',
     'app.config',
     'app.user',
     'app.manager',
     'app.web',
-    'app.competition',
-    'app.online_support',
+    #'app.competition',
+    #'app.online_support',
     'app.platform',
     
     'redactor',
@@ -187,6 +187,7 @@ MEDIA_URL = '/media/'
 
 REDACTOR_OPTIONS = {'lang': 'en'}
 REDACTOR_UPLOAD = 'uploads/'
+REDACTOR_UPLOAD_HANDLER = 'app.config.handlers.NewsUploader'
 
 
 EMAIL_HOST = 'smtp.gmail.com'

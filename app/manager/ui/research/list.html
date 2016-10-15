@@ -1,0 +1,67 @@
+{% extends 'manager/base.html' %}
+{% load i18n %}
+{% block content %}
+<section class="content-header">
+  <h1>
+    {% trans 'Судалгаа' %}
+    {% if user.is_research_create %}
+    <a href="{% url 'manager:research_create' %}"><i class="fa fa-plus"></i></a>
+    {% endif %}
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url 'manager:home' %}"><i class="fa fa-dashboard"></i> {% trans 'Нүүр' %}</a></li>
+    <li>{% trans 'Судалгаа' %}</li>
+  </ol>
+</section>
+<div class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box">
+				<div class="box-body">
+					<table id="research_table" class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>№</th>
+                <th>Ангилал</th>
+                <th>Гарчиг</th>
+                <th>Судалгаа хийсэн багш</th>
+                <th>Судалгаа хийсэн багшийн и-мэйл</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for research in researchs %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ research.research_category_id }}</td>
+                <td><a href="{% url 'file' research.pdf_file %}">{{ research.title }}</a></td>
+                <td>{{ research.author_name }}</td>
+                <td>{{ research.author_email }}</td>
+                <td>
+                  {% if user.is_research_update %}
+                  <a href="{% url 'manager:research_update' research.id %}" class="btn btn-flat btn-primary btn-xs">
+                    <i class="fa fa-edit"></i> Засварлах
+                  </a>
+                  {% endif %}
+                  {% if user.is_research_delete %}
+                  <a href="{% url 'manager:research_delete' research.id %}" class="btn btn-flat btn-danger btn-xs">
+                    <i class="fa fa-edit"></i> Устгах
+                  </a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    managerDatatable('#research_table');
+  });
+</script>
+{% endblock %}

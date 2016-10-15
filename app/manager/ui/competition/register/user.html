@@ -33,10 +33,10 @@
                 <td>{{ user.created_at }}</td>
                 <td>{{ user.file }}</td>
                 <td>
-                  <a href="{% url 'manager:approve' user.id %}" class="btn btn-flat btn-primary btn-xs">
+                  <a href="{% url 'manager:approve' pk user.id %}" class="btn btn-flat btn-primary btn-xs">
                     {% trans 'Зөвшөөрөх' %}
                   </a>
-                  <a href="{% url 'manager:decline' user.id %}" class="btn btn-flat btn-danger btn-xs">
+                  <a href="{% url 'manager:decline' pk user.id %}" class="btn btn-flat btn-danger btn-xs">
                     {% trans 'Цуцлах' %}
                   </a>
                 </td>

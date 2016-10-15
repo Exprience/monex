@@ -1,0 +1,21 @@
+{% include "manager/scripts.html" %}
+<body class="hold-transition login-page">
+  <div class="login-box">
+    <div class="login-logo">
+      <a href="{% url 'manager:manager_login' %}"><b>Monex</b></a>
+    </div>
+    <div class="login-box-body">
+      <p class="login-box-msg">Нууц үгээ мартсан</p>
+      <form method="post">{% csrf_token %}
+        {% include "manager/form.html" %}
+        <div class="row">
+          <div class="col-xs-12">
+            <button type="submit" class="btn btn-primary btn-block btn-flat">Илгээх</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+{% include "config/error.html" %}
+{% include "config/messages.html" %}

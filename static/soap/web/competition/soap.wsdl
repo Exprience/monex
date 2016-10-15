@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://xml.netbeans.org/schema/MX_User_Manager_Competition_Register_CUS" xmlns:ns0="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Competition_Register_CUS/src/MX_User_Manager_Competition_Register_CUS_WSDL" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MX_User_Manager_Competition_Register_CUS_WSDL" targetNamespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Competition_Register_CUS/src/MX_User_Manager_Competition_Register_CUS_WSDL">
-	<types>
-		<xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Competition_Register_CUS/src/MX_User_Manager_Competition_Register_CUS_WSDL">
-			<xsd:import namespace="http://xml.netbeans.org/schema/MX_User_Manager_Competition_Register_CUS" schemaLocation="STATIC_URLsoap/web/competition/soap.xsd"/>
-			<xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/web/competition/record.xsd"/>
-		</xsd:schema>
-	</types>
-	<message name="MX_User_Manager_Competition_Register_CUS_WSDLOperationRequest">
-		<part name="isManager" type="xsd:boolean"></part>
-		<part name="CUS" type="xsd:string"></part>
-		<part type="ns:competition_registerR" name="competitonRegister"></part>
-		<part name="managerId" type="xsd:string"></part>
-		<part name="isApproved" type="xsd:boolean"></part>
-	</message>
-	<message name="MX_User_Manager_Competition_Register_CUS_WSDLOperationResponse">
-		<part name="Response" type="xsd:int"></part>
-		<part type="ns0:MXManagerSelectCompReg_ResponseR" name="competitionRegisterResponse"></part>
-		<part name="id" type="xsd:string"></part>
-	</message>
-	<portType name="MX_User_Manager_Competition_Register_CUS_WSDLPortType">
-		<operation name="MX_User_Manager_Competition_Register_CUS_WSDLOperation">
-			<input message="tns:MX_User_Manager_Competition_Register_CUS_WSDLOperationRequest" name="input1"></input>
-			<output message="tns:MX_User_Manager_Competition_Register_CUS_WSDLOperationResponse" name="output1"></output>
-		</operation>
-	</portType>
-	<binding name="MX_User_Manager_Competition_Register_CUS_WSDLBinding" type="tns:MX_User_Manager_Competition_Register_CUS_WSDLPortType">
-		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
-		<operation name="MX_User_Manager_Competition_Register_CUS_WSDLOperation">
-			<soap:operation/>
-			<input name="input1">
-				<soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Competition_Register_CUS/src/MX_User_Manager_Competition_Register_CUS_WSDL" use="literal"/>
-			</input>
-			<output name="output1">
-				<soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Competition_Register_CUS/src/MX_User_Manager_Competition_Register_CUS_WSDL" use="literal"/>
-			</output>
-		</operation>
-	</binding>
-	<service name="MX_User_Manager_Competition_Register_CUS_WSDLService">
-		<port binding="tns:MX_User_Manager_Competition_Register_CUS_WSDLBinding" name="MX_User_Manager_Competition_Register_CUS_WSDLPort">
-			<soap:address location="http://a-PC:9080/MX_User_Manager_Competition_Register_CUS_WSDLService/MX_User_Manager_Competition_Register_CUS_WSDLPort"/>
-		</port>
-	</service>
-	<plnk:partnerLinkType name="MX_User_Manager_Competition_Register_CUS_WSDL">
-<!--
- A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
-In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
-A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.
--->
-<plnk:role name="MX_User_Manager_Competition_Register_CUS_WSDLPortTypeRole" portType="tns:MX_User_Manager_Competition_Register_CUS_WSDLPortType"/>
-</plnk:partnerLinkType>
+  <types>
+    <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Competition_Register_CUS/src/MX_User_Manager_Competition_Register_CUS_WSDL">
+      <xsd:import namespace="http://xml.netbeans.org/schema/MX_User_Manager_Competition_Register_CUS" schemaLocation="STATIC_URLsoap/web/competition/soap.xsd"/>
+      <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/web/competition/record.xsd"/>
+    </xsd:schema>
+  </types>
+  <message name="MX_User_Manager_Competition_Register_CUS_WSDLOperationRequest">
+    <part name="isManager" type="xsd:boolean"></part>
+    <part name="CUS" type="xsd:string"></part>
+    <part type="ns:competition_registerR" name="competitonRegister"></part>
+    <part name="managerId" type="xsd:string"></part>
+    <part name="isApproved" type="xsd:boolean"></part>
+  </message>
+  <message name="MX_User_Manager_Competition_Register_CUS_WSDLOperationResponse">
+    <part name="Response" type="xsd:int"></part>
+    <part type="ns0:MXManagerSelectCompReg_ResponseR" name="competitionRegisterResponse"></part>
+    <part name="id" type="xsd:string"></part>
+  </message>
+  <portType name="MX_User_Manager_Competition_Register_CUS_WSDLPortType">
+    <operation name="MX_User_Manager_Competition_Register_CUS_WSDLOperation">
+      <input message="tns:MX_User_Manager_Competition_Register_CUS_WSDLOperationRequest" name="input1"></input>
+      <output message="tns:MX_User_Manager_Competition_Register_CUS_WSDLOperationResponse" name="output1"></output>
+    </operation>
+  </portType>
+  <binding name="MX_User_Manager_Competition_Register_CUS_WSDLBinding" type="tns:MX_User_Manager_Competition_Register_CUS_WSDLPortType">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="MX_User_Manager_Competition_Register_CUS_WSDLOperation">
+      <soap:operation/>
+      <input name="input1">
+        <soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Competition_Register_CUS/src/MX_User_Manager_Competition_Register_CUS_WSDL" use="literal"/>
+      </input>
+      <output name="output1">
+        <soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Competition_Register_CUS/src/MX_User_Manager_Competition_Register_CUS_WSDL" use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="MX_User_Manager_Competition_Register_CUS_WSDLService">
+    <port binding="tns:MX_User_Manager_Competition_Register_CUS_WSDLBinding" name="MX_User_Manager_Competition_Register_CUS_WSDLPort">
+      <soap:address location="http://a-PC:9080/MX_User_Manager_Competition_Register_CUS_WSDLService/MX_User_Manager_Competition_Register_CUS_WSDLPort"/>
+    </port>
+  </service>
+  <plnk:partnerLinkType name="MX_User_Manager_Competition_Register_CUS_WSDL">
+    <!--
+    A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+    In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+    A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.
+    -->
+    <plnk:role name="MX_User_Manager_Competition_Register_CUS_WSDLPortTypeRole" portType="tns:MX_User_Manager_Competition_Register_CUS_WSDLPortType"/>
+  </plnk:partnerLinkType>
 </definitions>

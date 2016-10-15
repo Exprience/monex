@@ -1,106 +1,227 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xsd:schema xmlns="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://j2ee.netbeans.org/xsd/tableSchema">
-	<xsd:element name="MXManagerShowLessonLists_Request">
-		<xsd:complexType>
-			<xsd:sequence/>
-		</xsd:complexType>
-	</xsd:element>
-	<xsd:complexType name="MXManagerShowLessonLists_ResponseR">
-		<xsd:sequence>
-			<xsd:element name="MXManagerShowLessonLists_Response" ></xsd:element>
-		</xsd:sequence>
-	</xsd:complexType>
-	<xsd:element name="MXManagerShowLessonLists_Response">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element maxOccurs="unbounded" ref="MXManagerShowLessonLists_Record"/>
-			</xsd:sequence>
-		</xsd:complexType>
-	</xsd:element>
-	<xsd:element name="MXManagerShowLessonLists_Record">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element name="id">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:int">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="lesson_category_id">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:int">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="title">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:string">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="url">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:string">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="author_name">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:string">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="author_email">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:string">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="created_at">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:string">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-				<xsd:element name="created_by">
-					<xsd:complexType>
-						<xsd:simpleContent>
-							<xsd:extension base="xsd:int">
-								<xsd:attribute name="isNull" type="xsd:boolean"/>
-								<xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
-							</xsd:extension>
-						</xsd:simpleContent>
-					</xsd:complexType>
-				</xsd:element>
-			</xsd:sequence>
-		</xsd:complexType>
-	</xsd:element>
+  <xsd:element name="MXManagerShowLessonLists_Request">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="lesson_category_id">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="author_name">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="title">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="lesson_category_id2">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="author_name2">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="lesson_category_id3">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="title2">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="author_name3">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="title3">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="lesson_category_id4">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="author_name4">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="title4">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="MXManagerShowLessonLists_ResponseR">
+    <xsd:sequence>
+      <xsd:element name="MXManagerShowLessonLists_Response" ></xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="MXManagerShowLessonLists_Response">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element maxOccurs="unbounded" ref="MXManagerShowLessonLists_Record"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="MXManagerShowLessonLists_Record">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="id">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:int">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="lesson_category_id">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:int">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="title">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="url">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="author_name">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="author_email">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="created_at">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="created_by">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:int">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
 </xsd:schema>
