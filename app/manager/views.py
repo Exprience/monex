@@ -504,9 +504,10 @@ class ResearchUpdate(FormView):
 		category = form.cleaned_data['category']
 		title = form.cleaned_data['title']
 		file = form.cleaned_data['file']
+		research = ResearchModel.objects.create(file = file)
 		author_email = form.cleaned_data['author_email']
 		author_name = form.cleaned_data['author_name']
-		result = m.update('R', self.request.user.id, self.pk, category, title = title, author_email = author_email, author_name = author_name, file = file)
+		result = m.update('R', self.request.user.id, self.pk, category, title = title, author_email = author_email, author_name = author_name, file = research.file)
 		if result:
 			if not result.isSuccess:
 				self.error(u'Үйлдэл амжилтгүй боллоо')
@@ -515,6 +516,25 @@ class ResearchUpdate(FormView):
 			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
 			return self.form_invalid(form)
 		return super(ResearchUpdate, self).form_valid(form)
+
+class ResearchDelete(FormView):
+	form_class = mf.ResearchForm
+	success_url = reverse_lazy('manager:research_list')
+
+	def get_form_kwargs(self):
+		kwargs = super(ResearchDelete, self).get_form_kwargs()
+		kwargs.update({'manager_id': self.request.user.id, 'type':'2', 'id':self.pk, 'is_delete': True})
+		return kwargs
+
+	def form_valid(self, form):
+		result = m.delete('R', self.request.user.id, self.pk)
+		if result == False:
+			self.error(u'Үйлдэл амжилтгүй боллоо')
+			return self.form_invalid(form)
+		if result == None:
+			self.error(u'Системд алдаа гарлаа та засагдтал түр хүлээнэ үү')
+			return self.form_invalid(form)
+		return super(ResearchDelete, self).form_valid(form)
 
 class ResearchCategoryCreate(FormView):
 	form_class = mf.CategoryForm

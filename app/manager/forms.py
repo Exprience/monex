@@ -322,6 +322,16 @@ class ResearchForm(forms.Form):
 			if hasattr(result.author_email, 'value'):
 				self.fields['author_email'].initial = result.author_email.value
 
+		if is_delete:
+			self.fields['category'].disabled = True
+			self.fields['category'].widget.attrs = {'class':'form-control'}
+			self.fields['title'].disabled = True
+			#self.fields['file'].disabled = True
+			#self.fields['file'].required = False
+			self.fields['author_name'].disabled = True
+			self.fields['author_email'].disabled = True
+
+
 class CompetitionForm(forms.Form):
 	category = forms.ChoiceField()
 	fee = forms.IntegerField(label = u'Бүртгэлийн хураамж', widget = forms.TextInput(attrs = {'class':'form-control'}))

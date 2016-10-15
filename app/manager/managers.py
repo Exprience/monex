@@ -242,8 +242,7 @@ class ManagerDataManager(BaseDataManager):
 				research.MXManagerUpdateResearch_Request.pdf_file = base64.b64encode(data)
 			research.MXManagerUpdateResearch_Request.file_type = os.path.splitext(file.path)[1]
 		except:
-			research.MXManagerUpdateResearch_Request.pdf_file = file
-			research.MXManagerUpdateResearch_Request.file_type = ""
+			pass
 		research.MXManagerUpdateResearch_Request.id = id
 
 		lesson = client.factory.create('ns0:Lesson')
