@@ -12,10 +12,10 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 
 
-from django.utils.http import urlsafe_base64_decode
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_text
 from django.contrib.auth.tokens import default_token_generator
-
+from django.contrib.sites.shortcuts import get_current_site
 
 import forms as mf
 from models import ResearchModel
@@ -889,8 +889,25 @@ class AdminPasswordSet(v.FormView):
 
 class AdminPasswordReset(v.FormView):
 	form_class = mf.PasswordResetForm
+	success_url = reverse_lazy("manager:manager_login")
 
-#Competition Register	
+	def form_valid(self, form):
+		email = form.cleaned_data['email']
+		manager = m.get_manager(email, isId = False)
+		if hasattr(manager, "pk"):
+			current_site = get_current_site(self.request)
+			site_name = current_site.name
+			domain = current_site.domain
+			uid = urlsafe_base64_encode(force_bytes(manager.pk))
+			token = default_token_generator.make_token(manager)
+			link = 'http://%s/manager/reset/%s/%s/' %(domain, uid, token)
+			m.apply_manager(email, link, token)
+		else:
+			self.form_error(form, u"Бүртгэлтэй хэрэглэгч байхгүй байна.")
+			return super(AdminPasswordReset, self).form_invalid(form)
+		return super(AdminPasswordReset, self).form_valid(form)
+
+#Competition Register
 class CompetitionRegister(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):

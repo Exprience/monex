@@ -272,12 +272,17 @@ class ManagerDataManager(BaseDataManager):
 		return result
 
 	@staticmethod
-	def get_manager(id):
+	def get_manager(value, isId = True):
 		client = ManagerDataManager.get_instance().setup_client('%ssoap/manager/get/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
-		result = client.service.MX_ManagerGetIdLastLoginCredentialsWSDLOperation(id)
+		result = client.service.MX_ManagerGetIdLastLoginCredentialsWSDLOperation(value, isId)
 		user = Manager()
-		user.pk = result.Credentials.MXManagerSelectCredentials_Response.MXManagerSelectCredentials_Record.id.value
-		user.fill_manager(result.Credentials.MXManagerSelectCredentials_Response.MXManagerSelectCredentials_Record)
+		if isId:
+			user.pk = result.Credentials.MXManagerSelectCredentials_Response.MXManagerSelectCredentials_Record.id.value
+			user.fill_manager(result.Credentials.MXManagerSelectCredentials_Response.MXManagerSelectCredentials_Record)
+		else:
+			if result.Credentials.MXManagerSelectCredentials_Response:
+				user.pk = result.Credentials.MXManagerSelectCredentials_Response.MXManagerSelectCredentialsByEmail_Record.id.value
+				user.fill_manager(result.Credentials.MXManagerSelectCredentials_Response.MXManagerSelectCredentialsByEmail_Record)
 		return user
 
 	@staticmethod

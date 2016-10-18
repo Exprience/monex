@@ -60,7 +60,7 @@ INSTALLED_APPS = (
     'redactor',
     'captcha',
     'bootstrap3_datetime',
-    
+    "django_cron",
 )
 
 
@@ -210,3 +210,9 @@ CAPTCHA_TEXT_FIELD_TEMPLATE = 'config/captcha/captcha_text_field.html'
 
 
 WS_SERVER=get_local('WS_SERVER', '192.168.1.20')
+
+
+CRON_CLASSES = [
+    "app.config.cron.MyCronJob",
+    # ...
+]
