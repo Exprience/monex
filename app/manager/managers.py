@@ -142,42 +142,35 @@ class ManagerDataManager(BaseDataManager):
 	def select(manager_id, type, value1 ="", value2 = "", value3 = "", value4 = ""):
 		client = ManagerDataManager.get_instance().setup_client('%ssoap/manager/select/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
 		result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id, value1, value2, value3, value4)
-		
+		records = None
 		if type is 'N':
 			if result.news_list.MXManagerShowNewsLists_Response:
 				if manager_id is "":
 					records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXUserShowNews_Record)
 				else:
 					records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXManagerShowNewsLists_Record)				
-			else:
-				records = None
 
-		if type is 'R':
+		elif type is 'R':
 			if result.research_list.MXManagerShowResearchLists_Response:
 				if manager_id is "":
 					records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXUserShowResearchLists_Record)
 				else:
 					records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXManagerShowResearchLists_Record)
-			else:
-				records = None
-
-		if type is 'L':
+	
+		elif type is 'L':
 			if result.lesson_list.MXManagerShowLessonLists_Response:
 				if manager_id is "":
 					records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXUserShowLessonLists_Record)
 				else:
 					records = config.get_dict(result.lesson_list.MXManagerShowLessonLists_Response.MXManagerShowLessonLists_Record)
-			else:
-				records = None
 		
-		if type is 'C':
+		elif type is 'C':
 			if result.competition_list.MXManagerShowCompetitionLists_Response:
 				if manager_id is "":
 					records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXUserShowCompetitionLists_Record)
 				else:
 					records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXManagerShowCompetitionLists_Record)
-			else:
-				records = None
+
 		return records
 
 	@staticmethod

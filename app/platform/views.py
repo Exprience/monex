@@ -47,7 +47,7 @@ class Platform(FormView):
 		currencys.append(models.Currency.objects.filter(name = u"USDKRW").last())
 		currencys.append(models.Currency.objects.filter(name = u"USDRUB").last())
 		context['currencys'] = currencys
-		#context['packages'] = pm.currency("S", self.pk, self.request.user.id)
+		context['packages'] = pm.currency("S", self.pk, self.request.user.id)
 		return context
 
 
