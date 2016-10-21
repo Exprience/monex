@@ -1,22 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://j2ee.netbeans.org/wsdl/MX_Manager_Add_Currency_Value/src/MX_Manager_Add_Currency_Value" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MX_Manager_Add_Currency_Value" targetNamespace="http://j2ee.netbeans.org/wsdl/MX_Manager_Add_Currency_Value/src/MX_Manager_Add_Currency_Value">
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:ns="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://j2ee.netbeans.org/wsdl/MX_Manager_Add_Currency_Value/src/MX_Manager_Add_Currency_Value" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="MX_Manager_Add_Currency_Value" targetNamespace="http://j2ee.netbeans.org/wsdl/MX_Manager_Add_Currency_Value/src/MX_Manager_Add_Currency_Value">
   <types>
     <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/MX_Manager_Add_Currency_Value/src/MX_Manager_Add_Currency_Value">
       <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/manager/currency/create.xsd"/>
     </xsd:schema>
   </types>
-  <message name="MX_Manager_Add_Currency_ValueOperationRequest">
-    <part name="managerId" type="xsd:string"></part>
-    <part type="ns:MXManagerInsertIntoCurrencyValue_RequestR" name="currency_value"></part>
-  </message>
   <message name="MX_Manager_Add_Currency_ValueOperationResponse">
     <part name="isSuccess" type="xsd:string"></part>
     <part name="id" type="xsd:string"></part>
   </message>
+  <message name="MX_Manager_Add_Currency_ValueOperationRequest">
+    <part name="managerId" type="xsd:string"></part>
+    <part name="currency_value" type="ns:MXManagerInsertIntoCurrencyValue_RequestR"></part>
+  </message>
   <portType name="MX_Manager_Add_Currency_ValuePortType">
     <operation name="MX_Manager_Add_Currency_ValueOperation">
-      <input message="tns:MX_Manager_Add_Currency_ValueOperationRequest" name="input1"></input>
-      <output message="tns:MX_Manager_Add_Currency_ValueOperationResponse" name="output1"></output>
+      <input name="input1" message="tns:MX_Manager_Add_Currency_ValueOperationRequest"></input>
+      <output name="output1" message="tns:MX_Manager_Add_Currency_ValueOperationResponse"></output>
     </operation>
   </portType>
   <binding name="MX_Manager_Add_Currency_ValueBinding" type="tns:MX_Manager_Add_Currency_ValuePortType">
@@ -24,15 +23,15 @@
     <operation name="MX_Manager_Add_Currency_ValueOperation">
       <soap:operation/>
       <input name="input1">
-        <soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_Manager_Add_Currency_Value/src/MX_Manager_Add_Currency_Value" use="literal"/>
+        <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/MX_Manager_Add_Currency_Value/src/MX_Manager_Add_Currency_Value"/>
       </input>
       <output name="output1">
-        <soap:body namespace="http://j2ee.netbeans.org/wsdl/MX_Manager_Add_Currency_Value/src/MX_Manager_Add_Currency_Value" use="literal"/>
+        <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/MX_Manager_Add_Currency_Value/src/MX_Manager_Add_Currency_Value"/>
       </output>
     </operation>
   </binding>
   <service name="MX_Manager_Add_Currency_ValueService">
-    <port binding="tns:MX_Manager_Add_Currency_ValueBinding" name="MX_Manager_Add_Currency_ValuePort">
+    <port name="MX_Manager_Add_Currency_ValuePort" binding="tns:MX_Manager_Add_Currency_ValueBinding">
       <soap:address location="http://a-PC:9080/MX_Manager_Add_Currency_ValueService/MX_Manager_Add_Currency_ValuePort"/>
     </port>
   </service>
@@ -42,6 +41,6 @@
     In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
     A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.
     -->
-  <plnk:role name="MX_Manager_Add_Currency_ValuePortTypeRole" portType="tns:MX_Manager_Add_Currency_ValuePortType"/>
-</plnk:partnerLinkType>
+    <plnk:role name="MX_Manager_Add_Currency_ValuePortTypeRole" portType="tns:MX_Manager_Add_Currency_ValuePortType"/>
+  </plnk:partnerLinkType>
 </definitions>

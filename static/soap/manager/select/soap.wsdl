@@ -21,6 +21,7 @@
     <part name="search_by_1" type="xsd:string"></part>
     <part name="search_by_2" type="xsd:string"></part>
     <part name="search_by_3" type="xsd:string"></part>
+    <part name="search_by_4" type="xsd:string"></part>
   </message>
   <portType name="MXManagerShowNewsResearchLessonListsWSDLPortType">
     <operation name="MXManagerShowNewsResearchLessonListsWSDLOperation">

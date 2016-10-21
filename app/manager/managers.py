@@ -139,22 +139,28 @@ class ManagerDataManager(BaseDataManager):
 		return result
 
 	@staticmethod
-	def select(manager_id, type):
+	def select(manager_id, type, value1 ="", value2 = "", value3 = "", value4 = ""):
 		client = ManagerDataManager.get_instance().setup_client('%ssoap/manager/select/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
-		result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id, "1", "1", "2")
+		result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id, value1, value2, value3, value4)
 		
 		if type is 'N':
-			if manager_id is "":
-				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXUserShowNews_Record)
+			if result.news_list.MXManagerShowNewsLists_Response:
+				if manager_id is "":
+					records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXUserShowNews_Record)
+				else:
+					records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXManagerShowNewsLists_Record)				
 			else:
-				records = config.get_dict(result.news_list.MXManagerShowNewsLists_Response.MXManagerShowNewsLists_Record)				
-		
+				records = None
+
 		if type is 'R':
-			if manager_id is "":
-				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXUserShowResearchLists_Record)
+			if result.research_list.MXManagerShowResearchLists_Response:
+				if manager_id is "":
+					records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXUserShowResearchLists_Record)
+				else:
+					records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXManagerShowResearchLists_Record)
 			else:
-				records = config.get_dict(result.research_list.MXManagerShowResearchLists_Response.MXManagerShowResearchLists_Record)
-		
+				records = None
+
 		if type is 'L':
 			if result.lesson_list.MXManagerShowLessonLists_Response:
 				if manager_id is "":
@@ -165,10 +171,13 @@ class ManagerDataManager(BaseDataManager):
 				records = None
 		
 		if type is 'C':
-			if manager_id is "":
-				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXUserShowCompetitionLists_Record)
+			if result.competition_list.MXManagerShowCompetitionLists_Response:
+				if manager_id is "":
+					records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXUserShowCompetitionLists_Record)
+				else:
+					records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXManagerShowCompetitionLists_Record)
 			else:
-				records = config.get_dict(result.competition_list.MXManagerShowCompetitionLists_Response.MXManagerShowCompetitionLists_Record)
+				records = None
 		return records
 
 	@staticmethod

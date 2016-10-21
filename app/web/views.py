@@ -2,13 +2,18 @@
 # -*- coding: utf-8 -*-
 
 
+import re
+
+
 from django.views import generic as g
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render_to_response
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 import forms as f
+from app.manager import models as mmodels
 from app.config import config, views as v
 from app.user import views as user_v
 from app.manager.managers import ManagerDataManager as mm
@@ -16,6 +21,19 @@ from managers import WebDataManager as wm
 
 #Exports
 __all__ = []
+
+class BaseMixin(object):
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(BaseMixin, self).get_context_data(*args, **kwargs)
+		context['breaking_news'] = mm.select("", 'N', value1 = "1")
+		context['usdeur'] = mmodels.Currency.objects.filter(name = "USDEUR").last()
+		context['usdmnt'] = mmodels.Currency.objects.filter(name = "USDMNT").last()
+		context['usdjpy'] = mmodels.Currency.objects.filter(name = "USDJPY").last()
+		context['usdkrw'] = mmodels.Currency.objects.filter(name = "USDKRW").last()
+		context['usdrub'] = mmodels.Currency.objects.filter(name = "USDRUB").last()
+		return context
+
 
 class NotManager(object):
 
@@ -25,63 +43,88 @@ class NotManager(object):
 		return super(NotManager, self).dispatch(request, *args, **kwargs)
 
 
-
 class Home(NotManager, v.TemplateView):
-	template_name = 'web/home/home.html'
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(Home, self).get_context_data(*args, **kwargs)
+		
+		news = mm.select("", 'N')
+		news = news[0]
+		path = re.compile(r'<img [^>]*src="([^"]+)')
+		url = path.findall(news['body'])
+		if url:
+			news['img_url'] = url[0]
+		context['news'] = news
+
+		lesson = mm.select("", "L")[0]
+		lesson['image'] = "http://img.youtube.com/vi/%s/0.jpg"%lesson['url'][32:]
+		context['lesson'] = lesson
+		return context
 
 
-class News(NotManager, v.TemplateView):
+class News(BaseMixin, NotManager, v.TemplateView):
 
 	template_name = 'web/news/news.html'
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(News, self).get_context_data(*args, **kwargs)
-		context['newss'] = mm.select("", 'N')
+		news = mm.select("", 'N')
+		for n in news:			
+			path = re.compile(r'<img [^>]*src="([^"]+)')
+			url = path.findall(n['body'])
+			if url:
+				n['img_url'] = url[0]
+		paginator = Paginator(news, 5)
+		page = self.request.GET.get('page')
+		try:
+			contacts = paginator.page(page)
+		except PageNotAnInteger:
+			contacts = paginator.page(1)
+		except EmptyPage:
+			contacts = paginator.page(paginator.num_pages)
+		context['newss'] = contacts
 		return context
 
+class NewsFilter(News):
 
+	pass
 
-
-class NewsSelf(NotManager, v.TemplateView):
+class NewsDetail(BaseMixin, NotManager, v.TemplateView):
 	template_name = 'web/news/news_self.html'
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(NewsSelf, self).get_context_data(*args, **kwargs)
+		context = super(NewsDetail, self).get_context_data(*args, **kwargs)
 		context['news'] = mm.individually("", 'N', self.pk)
 		return context
 
 
-class Research(NotManager, user_v.LoginRequired, v.TemplateView):
+class Research(BaseMixin, NotManager, user_v.LoginRequired, v.TemplateView):
+	
 	template_name = 'web/research/research.html'
 
-
-
-
 class ResearchFilter(Research):
+	
 	template_name = 'web/research/research_filter.html'
 
 
-
-
-class Lesson(NotManager, g.FormView):
+class Lesson(BaseMixin, NotManager, g.FormView):
 	template_name = 'web/lesson/lesson.html'
 	form_class = f.LessonMailForm
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(Lesson, self).get_context_data(*args, **kwargs)
-		context['lessons'] = mm.select("", 'L')
+		lessons = mm.select("", 'L')
+		for lesson in lessons:
+			lesson['image'] = "http://img.youtube.com/vi/%s/0.jpg"%lesson['url'][32:]
+		context['lessons'] = lessons
 		return context
 
-
-
-
 class LessonFilter(Lesson):
+	
 	template_name = 'web/lesson/lesson_filter.html'
 
 
-
-
-class Competition(NotManager, v.TemplateView):
+class Competition(BaseMixin, NotManager, v.TemplateView):
 	template_name = 'web/competition/competition.html'
 
 	def get_context_data(self, *args, **kwargs):
@@ -93,27 +136,21 @@ class Competition(NotManager, v.TemplateView):
 			context['competitions'] = competitions
 		return context
 
-
 class WebCompetitionCalendarFilter(Competition):
+	
 	template_name = 'web/competition/competition_filter.html'
 
 
-
-
-class Calendar(NotManager, v.TemplateView):
+class Calendar(BaseMixin, NotManager, v.TemplateView):
+	
 	template_name = 'web/calendar/calendar.html'
 
-	
-
-
-
 class CalendarFilter(Calendar):
+	
 	template_name = 'web/calendarWWW/calendar_filter.html'
 
 
-
-
-class BagtsView(NotManager, g.FormView):
+class BagtsView(BaseMixin, NotManager, g.FormView):
 	def __init__(self, *args, **kwargs):
 		super(BagtsView, self).__init__(*args, **kwargs)
 		self.title = "Тэмцээний ангилал"
@@ -130,7 +167,7 @@ class BagtsView(NotManager, g.FormView):
 		return super(BagtsView, self).form_valid(form, commit = False, **kwargs)
 
 
-class CompetitionRegisterView(NotManager, user_v.LoginRequired, v.FormView):
+class CompetitionRegisterView(BaseMixin, NotManager, user_v.LoginRequired, v.FormView):
 	template_name = "web/competition/competition_register.html"
 	form_class = f.CompetitionRegisterForm
 	success_url = reverse_lazy('web:competition')
@@ -148,8 +185,7 @@ class CompetitionRegisterView(NotManager, user_v.LoginRequired, v.FormView):
 		return super(CompetitionRegisterView, self).form_valid(form)
 
 
-
-class LessonMailView(NotManager, v.FormView):
+class LessonMailView(BaseMixin, NotManager, v.FormView):
 
 	def __init__(self, *args, **kwargs):
 		super(LessonMailView, self).__init__(*args, **kwargs)

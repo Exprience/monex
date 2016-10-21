@@ -1,20 +1,56 @@
 {% extends 'web/base.html' %}
 {% block content %}
 <div class="col-md-9">
-	<div class="wall">
-		<h2 class="title">Мэдээлэл</h2>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-			{% for news in newss %}
-			<div class="wall-wall">
-				<span class="service-image"><img src="{{ m.img_url }}" alt="{{ m.img_url }}"></span>
-				<span class="accordion-title"><a href="{% url 'web:news_view' news.id %}">{{ news.title|truncatechars:60 }}</a></span>
-				<p>{{ news.body|truncatechars:200|striptags }}</p>
-			</div>
-			<hr>
-			{% endfor %}
-		</div>
-	</div>
+  <div class="wall">
+    <h2 class="title">Мэдээлэл</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="page-content">
+        {% for news in newss %}
+        <div class="wall-wall">
+          {% if news.img_url %}
+          <span class="service-image"><img src="{{ news.img_url }}" alt="{{ m.img_url }}"></span>
+          {% endif %}
+          <span class="accordion-title"><a href="{% url 'web:news_view' news.id %}">{{ news.title|truncatechars:60 }}</a></span>
+          <p>{{ news.body|truncatechars:200|striptags }}</p>
+        </div>
+        <hr>
+        {% endfor %}
+      </div>
+      <ul id="pagination-demo" class="pagination-sm"></ul>
+      <div class="pagination">
+        <span class="step-links">
+          {% if newss.has_previous %}
+          <a href="?page={{ newss.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current">
+          Page {{ newss.number }} of {{ newss.paginator.num_pages }}.
+          </span>
+
+          {% if newss.has_next %}
+          <a href="?page={{ newss.next_page_number }}">next</a>
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  </div>
 </div>
+{% endblock %}
+{% block extrajs %}
+{% comment %}
+<script type="text/javascript">
+  $('#pagination-demo').twbsPagination({
+    totalPages: {{ newss.paginator.num_pages }},
+    visiblePages: 5,
+    onPageClick: function (event, page) {
+      $.get("", {page: page}, function(data) {
+        //alert(data);
+        $('#page-content').html(data);
+      });
+    }
+  });
+</script>
+{% endcomment %}
 {% endblock %}

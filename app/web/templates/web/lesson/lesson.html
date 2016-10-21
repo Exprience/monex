@@ -2,74 +2,76 @@
 {% load i18n %}
 {% block content %}
 <div class="wall">
-	<h2 class="title">Сургалт</h2>
-	<div class="wall">
-		<form id="lesson_form" class="text-sm" method="get" style="margin-bottom:20px;">
-			<div class="row">
-				<div class="col-md-4 col-md-offset-3">
-					<div class="form-group-sm has-feedback">
-						<input type="text" name="name" class="form-control" placeholder="{% trans 'Сургалтын нэр:' %}">
-					</div>	
-				</div>
-				<div class="col-md-1">
-					<button id="filter_button" type="submit" class="btn btn-flat btn-sm">{% trans 'Шүүх' %}</button>
-				</div>
-			</div>
-		</form>
-		{% for m in lessons %}
-		<div class="col-md-6">
-			<h4 class="title">{{ m.video_name }}</h4>
-			<article class="lesson">
-				<a class="youtube" href="{{ m.url }}">
-					<img src="{{ m.image }}" alt="post Image">
-				</a>
-				<div class="post-meta">
-					<div class="entry-meta">
-						<span class="entry-date">
-							<time>{{ m.created_at }}</time>
-						</span>
-						<span class="author-name">
-							{{ m.author_name }}
-						</span>
-						{% comment %}
-						{% if user.is_authenticated %}
-						<span class="author-name">
-							<a href="{% url 'web:lesson_mail' user.id m.id %}" data-modal="modalview">
-								<button class="btn btn-xs btn-warning">{% trans 'Мэйл илгээх' %}</button>
-							</a>
-						</span>
-						{% endif %}
-						{% endcomment %}
-					</div><!-- /.entry-meta -->
-				</div><!-- /.post-meta -->
-			</article>
-		</div>
-		{% endfor %}
-	</div>
+  <h2 class="title">Сургалт</h2>
+  <div class="wall">
+    {% comment %}
+    <form id="lesson_form" class="text-sm" method="get" style="margin-bottom:20px;">
+      <div class="row">
+        <div class="col-md-4 col-md-offset-3">
+          <div class="form-group-sm has-feedback">
+            <input type="text" name="name" class="form-control" placeholder="{% trans 'Сургалтын нэр:' %}">
+          </div>  
+        </div>
+        <div class="col-md-1">
+          <button id="filter_button" type="submit" class="btn btn-flat btn-sm">{% trans 'Шүүх' %}</button>
+        </div>
+      </div>
+    </form>
+    {% endcomment %}
+    {% for m in lessons %}
+    <div class="col-md-6" style="margin-bottom: 30px;">
+      <h4 class="title">{{ m.title }}</h4>
+      <article class="lesson">
+        <a class="youtube" href="{{ m.url }}">
+          <img src="{{ m.image }}" alt="post Image">
+        </a>
+        <div class="post-meta">
+          <div class="entry-meta">
+            <span class="entry-date">
+              <time>{{ m.created_at }}</time>
+            </span>
+            <span class="author-name">
+              {{ m.author_name }}
+            </span>
+            {% comment %}
+            {% if user.is_authenticated %}
+            <span class="author-name">
+              <a href="{% url 'web:lesson_mail' user.id m.id %}" data-modal="modalview">
+                <button class="btn btn-xs btn-warning">{% trans 'Мэйл илгээх' %}</button>
+              </a>
+            </span>
+            {% endif %}
+            {% endcomment %}
+          </div><!-- /.entry-meta -->
+        </div><!-- /.post-meta -->
+      </article>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}
 {% block extrajs %}
 <script type="text/javascript">
-	function lesson_filter(id, form_id, load_id){
-		$(id).click(function(){
-			$(form_id).submit(function(event){
-				event.preventDefault();
-				$.ajax({
-					url: "{% url 'web:lesson_filter' %}",
-					method: 'GET',
-					data: $(this).serialize()
-				}).done(function(response){
-					$(load_id).html(response)
-					$("ul.nav-tabs li:nth-child(1)").addClass( "active" );
-					$('div.tab-content .tab-pane:nth-child(1)').addClass( "active" );
-				});
-			});
-		});
-	}
+  function lesson_filter(id, form_id, load_id){
+    $(id).click(function(){
+      $(form_id).submit(function(event){
+        event.preventDefault();
+        $.ajax({
+          url: "{% url 'web:lesson_filter' %}",
+          method: 'GET',
+          data: $(this).serialize()
+        }).done(function(response){
+          $(load_id).html(response)
+          $("ul.nav-tabs li:nth-child(1)").addClass( "active" );
+          $('div.tab-content .tab-pane:nth-child(1)').addClass( "active" );
+        });
+      });
+    });
+  }
 </script>
 <script type="text/javascript">
-	$(document).ready(function(){
-		lesson_filter('#filter_button', '#lesson_form', '#lesson_filter');
-	});
+  $(document).ready(function(){
+    lesson_filter('#filter_button', '#lesson_form', '#lesson_filter');
+  });
 </script>
 {% endblock %}

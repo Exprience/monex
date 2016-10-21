@@ -87,7 +87,8 @@ class File(g.View):
     	file = self.kwargs.get('file', None)
         if file:
             f = cm.BaseDataManager.get_file(request.user.id, file)
-            content_type = 'application/pdf'
+            #content_type = 'application/pdf'
+            content_type = 'image/png'
             return HttpResponse(base64.b64decode(f.file), content_type=content_type)
         else:
             raise Http404

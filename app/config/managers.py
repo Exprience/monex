@@ -1,9 +1,10 @@
 # !/usr/bin/env/python
 # -*- coding:utf-8 -*-
 
-
+import os
 import logging
 import suds
+import base64
 
 
 from django.conf import settings
@@ -63,8 +64,27 @@ class BaseDataManager(object):
     @staticmethod
     def get_file(manager_id, file):
         client = BaseDataManager.get_instance().setup_client('/MXGetFileByPatternWSDLService/MXGetFileByPatternWSDLPort?wsdl')
-        print client
-        print file
         result = client.service.MXGetFileByPatternWSDLOperation(manager_id, file)
-        print result
-        #return result
+        print "##################################"
+        print "##################################"
+        print "##################################"
+        print "##################################"
+        print "##################################"
+        print dir(result)
+        print "##################################"
+        print "##################################"
+        print "##################################"
+        print "##################################"
+        print "##################################"
+        return result
+    
+    @staticmethod
+    def file_upload(type, id, file_name, file_url):
+        client = BaseDataManager.get_instance().setup_client("/MX_Manager_File_UploadService/MX_Manager_File_UploadPort?wsdl")
+        with open(str(file_url), "rb") as f:
+            data = f.read()
+            file = base64.b64encode(data)
+            file_type = os.path.splitext(file_url)[1][1:]
+            name = os.path.splitext(file_name)[0]
+        result = client.service.MX_Manager_File_UploadOperation(type, id, name, file_type, file)
+        return result

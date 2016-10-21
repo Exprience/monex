@@ -31,51 +31,48 @@
       <div class="col-md-3">
         {% block rightcontent %}
         <div class="wall">
-          <div id="blog-sidebar" class="blog-sidebar widget-area" role="complementary">
+          <div class="blog-sidebar widget-area">
             <div class="sidebar-content">
               <aside class="widget">
                 <h3 class="widget-title">{% trans 'Валют' %}</h3>
-                <ul class="nav nav-tabs text-sm">
-                  {% for bank in banks %}
-                  <li>
-                    <a href="#bank_{{ bank.id }}" data-toggle="tab">
-                      <img src="/media/{{ bank.icon }}"/ width="24" height="24">
-                    </a>
-                  </li>
-                  {% endfor %}
-                </ul>
-                <div class="tab-content text-sm">
-                  {% for bank in banks %}
-                  <div class="tab-pane" id="bank_{{ bank.id }}">
-                    <table class="table table-bordered table-striped" style="margin-top:10px;">
-                      <thead>
-                        <tr>
-                          <th colspan="3">
-                            <h5 style="margin-top:5px;">{{ bank }}</h5>
-                          </th>
-                        </tr>
-                        <tr>
-                          <th>{% trans 'Валют' %}</th>
-                          <th>{% trans 'Авах' %}</th>
-                          <th>{% trans 'Зарах' %}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for c in bank.get_currency %}
-                        <tr>
-                          <td>
-                            <img src="/media/{{c.currency.icon}}" width="20" height="20"> {{ c.currency.bill }}
-                          </td>
-                          <td>{{ c.buy }}</td>
-                          <td>{{ c.sell }}</td>
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                  {% endfor %}
-                </div>
+                <table class="table table-bordered table-striped table-hover text-sm">
+                  <thead>
+                    <tr>
+                      <th>{% trans 'Валют' %}</th>
+                      <th>{% trans 'Авах' %}</th>
+                      <th>{% trans 'Зарах' %}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{ usdeur.name }}</td>
+                      <td>{{ usdeur.buy }}</td>
+                      <td>{{ usdeur.sell }}</td>
+                    </tr>
+                    <tr>
+                      <td>{{ usdmnt.name }}</td>
+                      <td>{{ usdmnt.buy }}</td>
+                      <td>{{ usdmnt.sell }}</td>
+                    </tr>
+                    <tr>
+                      <td>{{ usdjpy.name }}</td>
+                      <td>{{ usdjpy.buy }}</td>
+                      <td>{{ usdjpy.sell }}</td>
+                    </tr>
+                    <tr>
+                      <td>{{ usdkrw.name }}</td>
+                      <td>{{ usdkrw.buy }}</td>
+                      <td>{{ usdkrw.sell }}</td>
+                    </tr>
+                    <tr>
+                      <td>{{ usdrub.name }}</td>
+                      <td>{{ usdrub.buy }}</td>
+                      <td>{{ usdrub.sell }}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </aside>
+              {% comment %}
               <aside class="widget">
                 <h3 class="widget-title">{% trans 'Хувьцаа/ТОП 20' %}</h3>
                 <table class="table table-bordered table-striped table-hover text-sm">
@@ -88,6 +85,7 @@
                   </thead>
                 </table>
               </aside>
+              {% endcomment %}
               <aside class="widget">
                 <h3 class="widget-title">{% trans "Суурь шинжилгээ" %}</h3>
                 <ul class="category-list">
@@ -131,6 +129,7 @@
 <script src="{% static 'plugins/bootstrap-player/bootstrap.youtubepopup.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-daterange/js/moment.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-daterange/js/daterangepicker.js' %}"></script>
+<script src="{% static 'plugins/pagination/jquery.twbsPagination.js' %}"></script>
 <script src="{% static 'dist/js/plugins.js' %}"></script>  
 <script src="{% static 'dist/js/functions.js' %}"></script>
 <script src="{% static 'dist/js/web.js' %}"></script>

@@ -19,7 +19,7 @@
       </td>
       <td class="text-center" style="vertical-align: middle;">{{ currency.change }}</td>
       <td class="text-center">
-        <button class="btn btn-plat btn-xs" data-toggle="ajax-modal" href="{% url 'platform:currency_buy' pk currency.id %}">
+        <button class="btn btn-plat btn-xs" data-toggle="ajax-modal" href="{% url 'platform:currency_buy' pk currency.currency %}">
           <span class="fa fa-arrow-down" style="color: #dd4b39;"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency.sell }}
         </button>
       </td>

@@ -17,7 +17,7 @@ urlpatterns = [
 	
 	url(r'^news/$', v.News.as_view(), name = 'news'),
 	url(r'^news/(?P<id>[0-9]+)/$', v.News.as_view(), name = 'news'),
-	url(r'^news/view/(?P<pk>[0-9]+)/$', v.NewsSelf.as_view(), name = 'news_view'),
+	url(r'^news/view/(?P<pk>[0-9]+)/$', v.NewsDetail.as_view(), name = 'news_view'),
 	
 
 	url(r'^research/$', v.Research.as_view(), name = 'research'),

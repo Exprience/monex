@@ -61,6 +61,7 @@ INSTALLED_APPS = (
     'captcha',
     'bootstrap3_datetime',
     "django_cron",
+    'bootstrap_pagination'
 )
 
 
@@ -96,6 +97,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "django.core.context_processors.request",
             ],
         },
     },
@@ -214,5 +216,8 @@ WS_SERVER=get_local('WS_SERVER', '192.168.1.20')
 
 CRON_CLASSES = [
     "app.config.cron.MyCronJob",
-    # ...
 ]
+
+#TEMPLATE_CONTEXT_PROCESSORS = (
+#    "django.core.context_processors.request",
+#)

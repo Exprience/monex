@@ -183,3 +183,7 @@ class Currency(models.Model):
 
 	def change(self):
 		return u"%.2f" %(self.buy - self.sell)
+
+
+class FileInput(models.Model):
+	file = models.FileField()

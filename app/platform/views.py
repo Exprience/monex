@@ -42,8 +42,12 @@ class Platform(FormView):
 		#context['currencys'] = mm.list("L", config.PREVIOUS, config.NOW)
 		currencys = []
 		currencys.append(models.Currency.objects.filter(name = u"USDEUR").last())
+		currencys.append(models.Currency.objects.filter(name = u"USDMNT").last())
+		currencys.append(models.Currency.objects.filter(name = u"USDJPY").last())
+		currencys.append(models.Currency.objects.filter(name = u"USDKRW").last())
+		currencys.append(models.Currency.objects.filter(name = u"USDRUB").last())
 		context['currencys'] = currencys
-		context['packages'] = pm.currency("S", self.pk, self.request.user.id)
+		#context['packages'] = pm.currency("S", self.pk, self.request.user.id)
 		return context
 
 
@@ -109,7 +113,14 @@ class CurrencyView(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(CurrencyView, self).get_context_data(*args, **kwargs)
-		context['currencys'] = mm.list("L", config.PREVIOUS, config.NOW)
+		currencys = []
+		currencys.append(models.Currency.objects.filter(name = u"USDEUR").last())
+		currencys.append(models.Currency.objects.filter(name = u"USDMNT").last())
+		currencys.append(models.Currency.objects.filter(name = u"USDJPY").last())
+		currencys.append(models.Currency.objects.filter(name = u"USDKRW").last())
+		currencys.append(models.Currency.objects.filter(name = u"USDRUB").last())
+		context['currencys'] = currencys
+		#context['currencys'] = mm.list("L", config.PREVIOUS, config.NOW)
 		return context
 
 class CurrencyValueView(TemplateView):
@@ -118,7 +129,8 @@ class CurrencyValueView(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(CurrencyValueView, self).get_context_data(*args, **kwargs)
-		context['packages'] = pm.currency("S", self.pk, self.request.user.id)
+
+		#context['packages'] = pm.currency("S", self.pk, self.request.user.id)
 		return context
 
 class CurrencyBuyView(FormView):

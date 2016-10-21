@@ -51,9 +51,9 @@
 
 <section class="tickercontainer">
   <ul class="scroller newsticker">
-    <li><a>fasdfasdf</a><span>asdf asdf</span>My First News Item</li> 
-    <li><a>fasdfasdf</a><span>asdf asdf</span>My First News Item</li> 
-    <li><a>fasdfasdf</a><span>asdf asdf</span>My First News Item</li> 
+    {% for news in breaking_news %}
+    <li><a>{{ news.created_at }}</a>{{ news.title }}</li>
+    {% endfor %}
   </ul>
 </section>
 <header id="main-menu" class="main-menu">
