@@ -2,6 +2,9 @@
 # -*- coding:utf-8 -*-
 
 
+import json
+from datetime import datetime
+
 from django import http
 
 
@@ -129,6 +132,180 @@ class Platform(TemplateView):
 		return context
 
 
+class Currency(Platform):
+	
+	pass
+
+class CurrencyPackage(Platform):
+	
+	pass
+
+class CurrencyBuy(FormView):
+	form_class = f.CurrencyBuyForm
+	success_url = "/"
+
+	def dispatch(self, request,*args,**kwargs):
+		self.cid = int(self.kwargs.pop("cid", None))
+		self.vid = int(self.kwargs.pop("vid", None))
+		return super(CurrencyBuy, self).dispatch(request, *args, **kwargs)
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(CurrencyBuy, self).get_context_data(*args, **kwargs)
+		currency = mm.list("I", config.PREVIOUS, config.NOW, id = self.vid)[0]
+		if currency['currency_id'] == u"1":
+			currency['name'] = "USDMNT"
+		elif currency['currency_id'] == u"2":
+			currency['name'] = "USDEUR"
+		elif currency['currency_id'] == u"3":
+			currency['name'] = "USDKRW"
+		elif currency['currency_id'] == u"4":
+			currency['name'] = "USDJPY"
+		elif currency['currency_id'] == u"5":
+			currency['name'] = "USDRUB"
+		context['currency'] = currency
+		return context
+
+	def form_valid(self, form):
+		piece = form.cleaned_data['piece']
+		pm.currency("C", self.cid, self.request.user.id, piece = piece, value_id = self.vid)
+		return super(CurrencyBuy, self).form_valid(form)
+
+class CurrencySell(FormView):
+	form_class = f.CurrencyBuyForm
+	success_url = "/"
+
+	def dispatch(self, request,*args,**kwargs):
+		self.cid = int(self.kwargs.pop("cid", None))
+		self.pid = int(self.kwargs.pop("pid", None))
+		return super(CurrencySell, self).dispatch(request, *args, **kwargs)
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(CurrencySell, self).get_context_data(*args, **kwargs)
+		return context
+
+	def form_valid(self, form):
+		pm.currency("U", self.cid, self.request.user.id, value_id = 3, id = self.pid)
+		return super(CurrencySell, self).form_valid(form)
+
+
+class News(TemplateView):
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(News, self).get_context_data(*args, **kwargs)
+		context['news'] = mm.select(u"", u'N')
+		return context
+
+
+class Alert(TemplateView):
+	
+	def get_context_data(self, *args, **kwargs):
+		context = super(Alert, self).get_context_data(*args, **kwargs)
+		alerts = pm.alert("S", self.request.user.id, self.pk)
+		alerts.reverse()
+		context['alerts'] = alerts
+		return context
+
+class AlertCreate(FormView):
+	form_class = f.AlertForm
+
+	def form_valid(self, form):
+		isBuy = form.cleaned_data['alert_type']
+		isHigherThan = form.cleaned_data['condition']
+		price = form.cleaned_data['price']
+		result = pm.alert("C", self.request.user.id, self.pk, isBuy = isBuy, isHigherThan = isHigherThan, price = price)
+		context = {}
+		context['alert_create'] = True
+		context['id'] = result.id.value
+		context['competition_id'] = self.pk
+		context['price'] = price
+		if isBuy == u'1':
+			context['isBuy'] = u"Авах"
+		else:
+			context['isBuy'] = u"Зарах"
+
+		if isHigherThan == u'1':
+			context['isHigherThan'] = u">="
+		else:
+			context['isHigherThan'] = u"<="
+		context['created_at'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+		return http.HttpResponse(json.dumps(context), content_type = "application/json")
+		
+class AlertUpdate(AlertCreate):
+	
+	def dispatch(self, request, *args, **kwargs):
+		self.id = self.kwargs.pop('id', None)
+		return super(AlertUpdate, self).dispatch(request, *args, **kwargs)
+
+	def get_form_kwargs(self):
+		kwargs = super(AlertUpdate, self).get_form_kwargs()
+		kwargs.update({'id': self.id, 'user_id': self.request.user.id, 'competition_id':self.pk})
+		return kwargs
+
+	def form_valid(self, form):
+		isBuy = form.cleaned_data['alert_type']
+		isHigherThan = form.cleaned_data['condition']
+		price = form.cleaned_data['price']
+		pm.alert("U", self.request.user.id, self.pk, isBuy = isBuy, isHigherThan = isHigherThan, price = price, id = self.id)
+		context = {}
+		context['alert_update'] = True
+		context['id'] = self.id
+		context['competition_id'] = self.pk
+		context['price'] = price
+		if isBuy == u'1':
+			context['isBuy'] = u"Авах"
+		else:
+			context['isBuy'] = u"Зарах"
+
+		if isHigherThan == u'1':
+			context['isHigherThan'] = u">="
+		else:
+			context['isHigherThan'] = u"<="
+		context['created_at'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+		return http.HttpResponse(json.dumps(context), content_type = "application/json")
+
+class AlertDelete(AlertUpdate):
+
+	def get_form_kwargs(self):
+		kwargs = super(AlertDelete, self).get_form_kwargs()
+		kwargs.update({'is_delete': True})
+		return kwargs
+
+	def form_valid(self, form):
+		pm.alert("D", self.request.user.id, self.pk, id = self.id)
+		context = {}
+		context['alert_delete'] = True
+		context['id'] = self.id
+		return http.HttpResponse(json.dumps(context), content_type = "application/json")
+
+
+
+
+class OrderView(FormView):
+	form_class = f.OrderForm
+	template_name = 'platform/trade/stock.html'
+
+
+class CalendarView(TemplateView):
+	
+	template_name = 'platform/news/calendar.html'
+
+
+class AccountView(TemplateView):
+	
+	template_name = 'platform/account.html'
+
+
+class Default(TemplateView):
+	
+	template_name = 'platform/default.html'
+
+
+class AccountInfoView(object):
+	template_name = 'platform/account/untitled.html'
+	form_class= f.AccountForm
+			
+
+
 class Stock(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
@@ -182,98 +359,3 @@ class StockSellView(FormView):
 	def form_valid(self, form):
 		pm.currency("U", self.cid, self.request.user.id, value_id = 3, id = self.sid, isCurrency = False)
 		return super(StockSellView, self).form_valid(form)
-
-
-class Currency(Platform):
-	pass
-
-class CurrencyPackage(Platform):
-	pass
-
-class CurrencyBuy(FormView):
-	form_class = f.CurrencyBuyForm
-	success_url = "/"
-
-	def dispatch(self, request,*args,**kwargs):
-		self.cid = int(self.kwargs.pop("cid", None))
-		self.vid = int(self.kwargs.pop("vid", None))
-		return super(CurrencyBuy, self).dispatch(request, *args, **kwargs)
-
-	def get_context_data(self, *args, **kwargs):
-		context = super(CurrencyBuy, self).get_context_data(*args, **kwargs)
-		currency = mm.list("I", config.PREVIOUS, config.NOW, id = self.vid)[0]
-		if currency['currency_id'] == u"1":
-			currency['name'] = "USDMNT"
-		elif currency['currency_id'] == u"2":
-			currency['name'] = "USDEUR"
-		elif currency['currency_id'] == u"3":
-			currency['name'] = "USDKRW"
-		elif currency['currency_id'] == u"4":
-			currency['name'] = "USDJPY"
-		elif currency['currency_id'] == u"5":
-			currency['name'] = "USDRUB"
-		context['currency'] = currency
-		return context
-
-	def form_valid(self, form):
-		piece = form.cleaned_data['piece']
-		pm.currency("C", self.cid, self.request.user.id, piece = piece, value_id = self.vid)
-		return super(CurrencyBuy, self).form_valid(form)
-
-class CurrencySell(FormView):
-	form_class = f.CurrencyBuyForm
-	success_url = "/"
-
-	def dispatch(self, request,*args,**kwargs):
-		self.cid = int(self.kwargs.pop("cid", None))
-		self.pid = int(self.kwargs.pop("pid", None))
-		return super(CurrencySell, self).dispatch(request, *args, **kwargs)
-
-	def get_context_data(self, *args, **kwargs):
-		context = super(CurrencySell, self).get_context_data(*args, **kwargs)
-		return context
-
-	def form_valid(self, form):
-		pm.currency("U", self.cid, self.request.user.id, value_id = 3, id = self.pid)
-		return super(CurrencySell, self).form_valid(form)
-
-
-class NewsView(TemplateView):
-	
-	template_name = 'platform/news.html'
-
-	def get_context_data(self, *args, **kwargs):
-		context = super(NewsView, self).get_context_data(*args, **kwargs)
-		context['news'] = mm.select(u"", u'N')
-		return context
-
-
-class AlertView(TemplateView):
-	
-	template_name = "platform/trade/alert.html"
-
-
-class OrderView(FormView):
-	form_class = f.OrderForm
-	template_name = 'platform/trade/stock.html'
-
-
-class CalendarView(TemplateView):
-	
-	template_name = 'platform/news/calendar.html'
-
-
-class AccountView(TemplateView):
-	
-	template_name = 'platform/account.html'
-
-
-class Default(TemplateView):
-	
-	template_name = 'platform/default.html'
-
-
-class AccountInfoView(object):
-	template_name = 'platform/account/untitled.html'
-	form_class= f.AccountForm
-			

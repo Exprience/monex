@@ -47,10 +47,23 @@ $(document).ajaxStart(function() { Pace.restart(); });
 				}
 				else {
 					$('#ModalGeneral').modal('hide');
+					
+					if(xhr.alert_create == true){
+						alert_create(xhr.id, xhr.price, xhr.isBuy, xhr.isHigherThan, xhr.created_at, xhr.competition_id);
+					}
+
+					if(xhr.alert_update == true){
+						alert_update(xhr.id, xhr.price, xhr.isBuy, xhr.isHigherThan, xhr.created_at, xhr.competition_id);
+					}
+
+					if(xhr.alert_delete == true){
+						alert_delete(xhr.id);
+					}
+
 					$.notify(
 					{
 						icon: 'icon fa fa-check-circle',
-						message: "Худалдан авалт амжилттай боллоо"
+						message: "Үйлдэл амжилттай хийгдлээ"
 					},
 					{
 						type: 'success',
@@ -69,6 +82,24 @@ $(document).ajaxStart(function() { Pace.restart(); });
 
 
 })(jQuery);
+
+function alert_delete(id){
+	$('#alert_'+id).remove();
+};
+
+function alert_create(id, price, isBuy, isHigherThan, created_at, competition_id){
+	$('#alert_table').prepend('<tr id=alert_'+id+'><td>'+price+'</td><td class="text-center">'+isBuy+'</td>\
+	<td class="text-center">'+isHigherThan+'</td><td class="text-center">'+created_at+'</td>\
+	<td class="text-center"><button data-toggle="ajax-modal" href="/platform/alert/update/'+competition_id+'/'+id+'/" class="btn btn-plat btn-xs">Засах</button></td>\
+	<td class="text-center"><button data-toggle="ajax-modal" href="/platform/alert/delete/'+competition_id+'/'+id+'/" class="btn btn-plat btn-xs">Устгах</button></td></tr>');
+};
+
+function alert_update(id, price, isBuy, isHigherThan, created_at, competition_id){
+	$('#alert_'+id).replaceWith('<tr id=alert_'+id+'><td>'+price+'</td><td class="text-center">'+isBuy+'</td>\
+	<td class="text-center">'+isHigherThan+'</td><td class="text-center">'+created_at+'</td>\
+	<td class="text-center"><button data-toggle="ajax-modal" href="/platform/alert/update/'+competition_id+'/'+id+'/" class="btn btn-plat btn-xs">Засах</button></td>\
+	<td class="text-center"><button data-toggle="ajax-modal" href="/platform/alert/delete/'+competition_id+'/'+id+'/" class="btn btn-plat btn-xs">Устгах</button></td></tr>');
+};
 
 $(document).ready(function(){
 	$(".scrolling").slimScroll({

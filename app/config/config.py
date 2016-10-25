@@ -6,7 +6,7 @@ import hashlib
 import random
 import string
 import math
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 
@@ -22,8 +22,8 @@ UNIQUE_EMAIL = u'Хэрэглэгчийн и-мэйл бүртгэлтэй ба�
 
 
 NOW = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-PREVIOUS = (datetime.now() - relativedelta(month=1)).strftime("%Y-%m-%d %H:%M:%S")
-
+PREVIOUS = (datetime.now() - timedelta(30)).strftime("%Y-%m-%d %H:%M:%S")
+DE_DAY = (datetime.now() + timedelta(90)).strftime("%Y-%m-%d %H:%M:%S")
 
 def password():
     chars = string.ascii_uppercase + string.digits

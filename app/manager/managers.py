@@ -143,7 +143,6 @@ class ManagerDataManager(BaseDataManager):
 		client = ManagerDataManager.get_instance().setup_client('%ssoap/manager/select/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled = True)
 		result = client.service.MXManagerShowNewsResearchLessonListsWSDLOperation(type, manager_id, value1, value2, value3, value4)
 		records = None
-		print result
 		if type is 'N':
 			if result.news_list.MXManagerShowNewsLists_Response:
 				if manager_id is "":

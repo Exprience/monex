@@ -1,0 +1,48 @@
+{% load static %}
+<div class="watchlist-body">
+  <button data-toggle="ajax-modal" href="{% url 'platform:alert_create' pk %}" class="btn btn-plat btn-xs">Нэмэх</button> 
+</div>
+<table class="table table-bordered" id="alert_table">
+  <thead>
+    <tr>
+      <th>Үнэ</th>
+      <th class="text-center">Авах/Зарах</th>
+      <th class="text-center">Нөхцөл</th>
+      <th class="text-center">Үүссэн</th>
+      <th class="text-center">Засах</th>
+      <th class="text-center">Устгах</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for alert in alerts %}
+    <tr id="alert_{{ alert.id }}">
+      <td>{{ alert.price }}</td>
+      <td class="text-center">
+        {% if alert.isBuy == "1" %}
+          Авах
+        {% else %}
+          Зарах
+        {% endif %}
+      </td>
+      <td class="text-center">
+        {% if alert.isHigherThan == '1' %}
+          >=
+        {% elif alert.isHigherThan == '0' %}
+          <=
+        {% endif %}
+      </td>
+      <td class="text-center">{{ alert.created_at }}</td>
+      <td class="text-center">
+        <button href="{% url 'platform:alert_update' pk alert.id %}" data-toggle="ajax-modal" class="btn btn-plat btn-xs">
+          Засах
+        </button>
+      </td>
+      <td class="text-center">
+        <button href="{% url 'platform:alert_delete' pk alert.id %}" data-toggle="ajax-modal" class="btn btn-plat btn-xs">
+          Устгах
+        </button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

@@ -3,26 +3,39 @@
 
 
 from django import forms
+from managers import PlatformDataManager as pm
 
 
-class PriceAlertForm(forms.Form):
+class AlertForm(forms.Form):
 	ALERT_CHOICES = (
-		('Авах үнэ', 'Buy Price'),
-		('Зарах үнэ', 'Sell Price'),)
-	alert_type = forms.ChoiceField(choices = ALERT_CHOICES, label='Alert Type',  widget = forms.Select(attrs = {'class':"form-control", 'float':"right"}))
+		(1, 'Авах үнэ'),
+		(0, 'Зарах үнэ'),)
+	alert_type = forms.ChoiceField(choices = ALERT_CHOICES, label='Сэрүүлэг төрөл',  widget = forms.Select(attrs = {'class':"form-control"}))
 	CONDITION_CHOICES = (
-		('>=', '>='),
-		('<=', '<='),)
-	condition = forms.ChoiceField(choices = CONDITION_CHOICES, label='Condition', widget = forms.Select(attrs = {'class':"form-control"}))
+		(1, '>='),
+		(0, '<='),)
+	condition = forms.ChoiceField(choices = CONDITION_CHOICES, label='Нөхцөл', widget = forms.Select(attrs = {'class':"form-control"}))
 	
-	ACTIVE_CHOICES = (
-    	('ON', 'ON'),
-    	('OFF', 'OFF'),)
-	active = forms.ChoiceField(choices = ACTIVE_CHOICES,label='Active', widget = forms.Select(attrs = {'class':"form-control"}))
-	price = forms.CharField(label='Price', widget = forms.TextInput(attrs = {'class':"form-control",'placeholder':'Value'}))
-	exp_date = forms.DateField(label='Expire Date',widget = forms.DateInput(attrs = {'class':"form-control",'style': 'height:30px', 'font-color':'black'}))
-	comment = forms.CharField(label='Comment',max_length=300, widget = forms.TextInput(attrs = {'class':"form-control", 'style': 'height: 70px','placeholder':'Comment'}))
-
+	#ACTIVE_CHOICES = (
+    #	('ON', 'ON'),
+    #	('OFF', 'OFF'),)
+	#active = forms.ChoiceField(choices = ACTIVE_CHOICES,label='Active', widget = forms.Select(attrs = {'class':"form-control"}))
+	price = forms.CharField(label='Үнэ', widget = forms.TextInput(attrs = {'class':"form-control",'placeholder': u'Утга'}))
+	#exp_date = forms.DateField(label='Expire Date',widget = forms.DateInput(attrs = {'class':"form-control",'style': 'height:30px', 'font-color':'black'}))
+	#comment = forms.CharField(label='Comment',max_length=300, widget = forms.TextInput(attrs = {'class':"form-control", 'style': 'height: 70px','placeholder':'Comment'}))
+	def __init__(self, user_id = None, competition_id = None, id = None, is_delete = False, *args, **kwargs):
+		super(AlertForm, self).__init__(*args, **kwargs)
+		if id:
+			result = pm.alert("I", user_id, competition_id, id = id)
+			value = result.priceAlert.MXUserSelectPriceAlert_Response.MXUserSelectIndividuallyPriceAlert_Record
+			self.fields['alert_type'].initial = value.isBuy.value
+			self.fields['condition'].initial = value.isHigherThan.value
+			self.fields['price'].initial = value.price.value
+		if is_delete:
+			self.fields['alert_type'].disabled = True
+			self.fields['condition'].disabled = True
+			self.fields['price'].disabled = True
+			
 
 class BuyFrom(forms.Form):
 	currency = forms.ChoiceField()
@@ -59,6 +72,7 @@ class OrderForm(forms.Form):
 		)
 	buy_sell = forms.ChoiceField(choices = B_Choices)
 	exp_date = forms.ChoiceField()
+
 class AccountForm (forms.Form):
 	sur_name = forms.CharField(label='Овог', widget = forms.TextInput(attrs = {'class':"form-control",'placeholder':'Value'}))
 	name = forms.CharField(label='Нэр', widget = forms.TextInput(attrs = {'class':"form-control",'placeholder':'Value'}))

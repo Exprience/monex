@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:ns="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://j2ee.netbeans.org/wsdl/MX_User_Price_Alert_CUDS/src/MX_User_Price_Alert_CUDSWSDL" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="MX_User_Price_Alert_CUDSWSDL" targetNamespace="http://j2ee.netbeans.org/wsdl/MX_User_Price_Alert_CUDS/src/MX_User_Price_Alert_CUDSWSDL">
+  <types>
+    <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/MX_User_Price_Alert_CUDS/src/MX_User_Price_Alert_CUDSWSDL">
+      <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/platform/alert/soap.xsd"/>
+    </xsd:schema>
+  </types>
+  <message name="MX_User_Price_Alert_CUDSWSDLOperationRequest">
+    <part name="CUDS" type="xsd:string"></part>
+    <part name="PriceAlert" type="ns:MXUserSelectPriceAlert_RecordR"></part>
+  </message>
+  <message name="MX_User_Price_Alert_CUDSWSDLOperationResponse">
+    <part name="isSuccess" type="xsd:string"></part>
+    <part name="id" type="xsd:string"></part>
+    <part name="priceAlert" type="ns:MXUserSelectPriceAlert_ResponseR"></part>
+  </message>
+  <portType name="MX_User_Price_Alert_CUDSWSDLPortType">
+    <operation name="MX_User_Price_Alert_CUDSWSDLOperation">
+      <input name="input1" message="tns:MX_User_Price_Alert_CUDSWSDLOperationRequest"></input>
+      <output name="output1" message="tns:MX_User_Price_Alert_CUDSWSDLOperationResponse"></output>
+    </operation>
+  </portType>
+  <binding name="MX_User_Price_Alert_CUDSWSDLBinding" type="tns:MX_User_Price_Alert_CUDSWSDLPortType">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="MX_User_Price_Alert_CUDSWSDLOperation">
+      <soap:operation/>
+      <input name="input1">
+        <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/MX_User_Price_Alert_CUDS/src/MX_User_Price_Alert_CUDSWSDL"/>
+      </input>
+      <output name="output1">
+        <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/MX_User_Price_Alert_CUDS/src/MX_User_Price_Alert_CUDSWSDL"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="MX_User_Price_Alert_CUDSWSDLService">
+    <port name="MX_User_Price_Alert_CUDSWSDLPort" binding="tns:MX_User_Price_Alert_CUDSWSDLBinding">
+      <soap:address location="http://a-PC:9080/MX_User_Price_Alert_CUDSWSDLService/MX_User_Price_Alert_CUDSWSDLPort"/>
+    </port>
+  </service>
+  <plnk:partnerLinkType name="MX_User_Price_Alert_CUDSWSDL">
+<!--
+ A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.
+-->
+<plnk:role name="MX_User_Price_Alert_CUDSWSDLPortTypeRole" portType="tns:MX_User_Price_Alert_CUDSWSDLPortType"/>
+</plnk:partnerLinkType>
+</definitions>
