@@ -1,0 +1,53 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+  {% block head %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>MONEX</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+  <!--jQuery-->
+  <script src="{% static 'platform/dist/js/jQuery-2.2.0.js' %}"></script>
+
+  <!--Bootstrap-->
+  <link rel="stylesheet" href="{% static 'platform/plugins/bootstrap/css/bootstrap.min.css' %}">
+  <script src="{% static 'platform/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+
+  <!--Font-awesome-->
+  <link rel="stylesheet" href="{% static 'dist/css/font-awesome.min.css' %}">
+
+  <!-- Style -->
+  <link rel="stylesheet" href="{% static 'platform/dist/css/styles.css' %}">
+
+  <!--Pace-->
+  <link rel="stylesheet" href="{% static 'plugins/pace/pace.min.css' %}">
+  <script src="{% static 'plugins/pace/pace.min.js' %}"></script>
+  
+  <!--slimScrol-->
+  <script src="{% static 'plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>
+  
+  <script src="{% static 'dist/js/bootstrap-notify.min.js' %}"></script>
+
+  <script src="{% static 'plugins/canvasjs/canvasjs.min.js' %}"></script>
+  
+  <script src="{% static 'platform/dist/js/platform.js' %}"></script>
+
+  {% endblock %}
+</head>
+<body>
+  {% block header %}{% include 'platform/ui/header.html' %}{% endblock %}
+  {% block content %}
+  {% endblock %}
+  {% block footer %}
+  {% endblock %}
+  <div id="ModalGeneral" class="modal fade" tabindex="-1" role="dialog"></div>
+</body>
+</html>
+{% include "config/error.html" %}
+{% include "config/messages.html" %}
+{% block extrajs %}
+{% endblock %}

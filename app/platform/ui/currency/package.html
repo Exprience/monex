@@ -1,0 +1,45 @@
+<table class="table table-bordered fixed_headers">
+  <thead>
+    <tr>
+      <th width="200">Валют</th>
+      <th class="text-center">Төлөв</th>
+      <th class="text-center">L/S</th>
+      <th class="text-center">Ширхэг</th>
+      <th class="text-center">Худалдан авсан ханш</th>
+      <th class="text-center">Одоогийн ханш</th>
+      <th class="text-center">STOP</th>
+      <th class="text-center">LIMIT</th>
+      <th class="text-center">Ашиг/Алдагдал(MNT)</th>
+      <th class="text-center"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for package in packages %}
+    <tr>
+      <td>{{ package.name }}</td>
+      <td class="text-center">{{ package.status }}</td>
+      <td class="text-center">Long</td>
+      <td class="text-center">{{ package.piece }}</td>
+      <td class="text-center">{{ package.sell }}</td>
+      <td class="text-center">{{ package.buy_now }}</td>
+      <td class="text-center">
+        {% if package.status == "1" %}
+        <button class="btn btn-plat btn-xs">Нэмэх</button>
+        {% endif %}
+      </td>
+      <td class="text-center">
+        {% if package.status == "1" %}
+        <button class="btn btn-plat btn-xs">Нэмэх</button>
+        {% endif %}
+      </td>
+      <td class="text-center">{% if package.status == "1" %}{{ package.total }}{% endif %}
+      </td>
+      <td>
+        {% if package.status == "1" %}
+        <button class="btn btn-plat btn-xs" data-toggle="ajax-modal" href="{% url 'platform:currency_sell' pk package.id %}">Зарах</button>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

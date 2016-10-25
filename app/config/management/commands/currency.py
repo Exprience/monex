@@ -22,13 +22,27 @@ class Command(BaseCommand):
 		response = urllib2.urlopen("https://openexchangerates.org/api/latest.json?app_id=10c73ccb4d0a43d988c8ab011fd90bf2")
 		data = json.load(response)
 
-		models.Currency.objects.create(currency = 2, name = u"USDEUR", buy = float(data["rates"]["EUR"]), sell = float(data["rates"]["EUR"]) + float("%.6f" % (random.random())))
-		#eur_buy  = float(data["rates"]["EUR"])
-		#eur_sell = eur_buy + float("%.6f" %(random.random()))
-		#print eur_buy
-		#print eur_sell
-		#mm.currency_create("7", "1", "2", str(eur_buy), str(eur_sell))
-		models.Currency.objects.create(currency = 1, name = u"USDMNT", buy = float(data["rates"]["MNT"]), sell = float(data["rates"]["MNT"]) + float("%.6f" % (random.random())))
-		models.Currency.objects.create(currency = 4, name = u"USDJPY", buy = float(data["rates"]["JPY"]), sell = float(data["rates"]["JPY"]) + float("%.6f" % (random.random())))
-		models.Currency.objects.create(currency = 3, name = u"USDKRW", buy = float(data["rates"]["KRW"]), sell = float(data["rates"]["KRW"]) + float("%.6f" % (random.random())))
-		models.Currency.objects.create(currency = 5, name = u"USDRUB", buy = float(data["rates"]["RUB"]), sell = float(data["rates"]["RUB"]) + float("%.6f" % (random.random())))
+		eur_buy  = float(data["rates"]["EUR"])
+		eur_sell = eur_buy + float("%.6f" %(random.random()))
+		models.Currency.objects.create(currency = 2, name = u"USDEUR", buy = eur_buy, sell = eur_sell)
+		mm.currency_create("7", "1", "2", str(eur_buy), str(eur_sell))
+
+		mnt_buy  = float(data["rates"]["MNT"])
+		mnt_sell = mnt_buy + float("%.6f" %(random.random()))
+		models.Currency.objects.create(currency = 1, name = u"USDMNT", buy = mnt_buy, sell = mnt_sell)
+		mm.currency_create("7", "1", "1", str(mnt_buy), str(mnt_sell))
+
+		jpy_buy  = float(data["rates"]["JPY"])
+		jpy_sell = jpy_buy + float("%.6f" %(random.random()))
+		models.Currency.objects.create(currency = 4, name = u"USDJPY", buy = jpy_buy, sell = jpy_sell)
+		mm.currency_create("7", "1", "4", str(jpy_buy), str(jpy_sell))
+
+		krw_buy  = float(data["rates"]["KRW"])
+		krw_sell = krw_buy + float("%.6f" %(random.random()))
+		models.Currency.objects.create(currency = 3, name = u"USDKRW", buy = krw_buy, sell = krw_sell)
+		mm.currency_create("7", "1", "3", str(krw_buy), str(krw_sell))
+
+		rub_buy  = float(data["rates"]["RUB"])
+		rub_sell = rub_buy + float("%.6f" %(random.random()))
+		models.Currency.objects.create(currency = 5, name = u"USDRUB", buy = rub_buy, sell = rub_sell)
+		mm.currency_create("7", "1", "5", str(rub_buy), str(rub_sell))

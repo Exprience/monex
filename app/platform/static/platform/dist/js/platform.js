@@ -87,3 +87,21 @@ $(document).ready(function(){
 	    //disableFadeOut: false
 	});
 })
+
+$(document).ready(function(){
+	$("#value").slimScroll({
+	    height: $("#value").height(),
+	    //size: '10px',
+	    //position: 'left',
+	    //color: '#ffcc00',
+	    //alwaysVisible: true,
+	    //distance: '20px',
+	    //start: $('#child_image_element'),
+	    //railVisible: true,
+	    //railColor: '#222',
+	    //railOpacity: 0.3,
+	    //wheelStep: 10,
+	    //allowPageScroll: false,
+	    //disableFadeOut: false
+	});
+})

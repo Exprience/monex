@@ -69,6 +69,7 @@ class News(BaseMixin, NotManager, v.TemplateView):
 	def get_context_data(self, *args, **kwargs):
 		context = super(News, self).get_context_data(*args, **kwargs)
 		news = mm.select("", 'N')
+		news.reverse()
 		for n in news:			
 			path = re.compile(r'<img [^>]*src="([^"]+)')
 			url = path.findall(n['body'])

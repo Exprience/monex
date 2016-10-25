@@ -1,4 +1,4 @@
-{% extends 'platform/base.html' %}
+{% extends 'platform/ui/base.html' %}
 {% block content %}
 <div class="container-fluid watchlist">
   <div class="row">
@@ -7,12 +7,14 @@
         <div class="panel-heading">
           <ul class="list-inline">
             <li class="active"><a class="ajax-load" load-url="{% url 'platform:currency' pk %}" href="#watchlist">Валют</a></li>
+            {% comment %}
             <li><a class="ajax-load" load-url="{% url 'platform:stock' pk %}" href="#watchlist">Хувьцаа</a></li>
+            {% endcomment %}
             <li><a class="ajax-load" load-url="{% url 'platform:alert' %}" href="#watchlist">Сэрүүлэг</a></li>
           </ul>
         </div>
         <div id="watchlist" class="panel-body scrolling">
-          {% include 'platform/trade/currency.html' %}
+          {% include 'platform/ui/currency.html' %}
         </div>
       </div>
     </div>
@@ -38,24 +40,42 @@
         <div class="panel-heading">
           <ul class="list-inline">
             <li class="active">
-              <a class="ajax-load" load-url="{% url 'platform:currency_value' pk %}" href="#value">
+              <a class="ajax-load" load-url="{% url 'platform:currency_package' pk %}" href="#value">
                 Валют
               </a>
             </li>
+            {% comment %}
             <li>
               <a class="ajax-load" load-url="{% url 'platform:stock_value' pk %}" href="#value">
                 Хувьцаа
               </a>
             </li>
+            {% endcomment %}
             <li>
-              <a class="ajax-load" load-url="{% url 'platform:stock' pk %}" href="#value">
+              <a class="ajax-load" load-url="" href="#value">
                 Захиалга
               </a>
             </li>
           </ul>
         </div><!-- panel-heading -->
-        <div class="scrolling panel-body" id="value">
-          {% include "platform/trade/position_currency.html" %}
+        <div class="panel-body" id="value" style="height: 75%;">
+          {% include "platform/ui/currency/package.html" %}
+        </div>
+        <div class="panel-body text-center" style="height: 10%; margin-top: 5px; color: white;">
+          <div class="row">
+            <div class="col-lg-4" style="margin-top: 5px;">
+              <span style="color: #888;">Cash available:</span>
+              <span>100000000</span>
+            </div>
+            <div class="col-lg-4" style="margin-top: 5px;">
+              <span>Cash available:</span>
+              <span>1000000</span>
+            </div>
+            <div class="col-lg-4" style="margin-top: 5px;">
+              <span>Cash available:</span>
+              <span>100000000</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -3,47 +3,19 @@
 {% block content %}
 {% comment %}
 <div class="wall">
-  <h3 class="title">{{ news.title.value }}</h3>
+  
   {{ news.body.value|safe }}
 </div>
 {% endcomment %}
 <div class="wall">
+  <h3 class="title">{{ news.title.value }}</h3>
   <div id="blog-post-content" class="blog-post-content">
     <article class="post type-post">
-      <div class="post-top">
-        <div class="post-thumbnail">
-          <img class="img-responsive" src="/static/web/img/blog-img-02.jpg" width="1000" alt="post Image">
-        </div><!-- /.post-thumbnail -->  
-        <div class="post-meta">
-          <div class="entry-meta">
-            <div class="entry-meta-content">
-              <span class="author-name">
-                <a href="#">John Doe</a>
-              </span>
-              <span class="entry-date">
-                <time datetime="2015-01-15">15 Jan 2015</time>
-              </span>
-            </div><!-- /.meta-content -->
-          </div><!-- /.entry-meta -->
-        </div><!-- /.post-meta -->
-      </div><!-- /.post-top -->
-      <div class="post-content">
-        <h2 class="entry-title"><a href="blog-single.html">Mama HTML5 Portfolio Template</a></h2>
-        <p class="entry-text">
-          Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit. Sed ut imperdiet nisi. Proin condimentum fermentum nunc. Etiam pharetra, erat sed fermentum feugiat, velit mauris egestas quam, ut aliquam massa nisl quis neque. Suspendisse in orci enim.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore dolore magna aliquyam erat,  sed diam voluptua. At vero eos et accusam et juo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-        </p>
-
-        <blockquote>
-          Lorem ipsum dolsit amet, consetetur sadipscing elitsed diam nonumy  eirmod tempor invidunt ut labore dolore magna aliquyam erat,  sed diam voluptua viero eos et accusam et juo dolores et ea rebum.
-        </blockquote>
-        <p>
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-          At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sitamet, consetetur sadipscing elitr,  sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.  At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren.
-        </p>
-      </div><!-- /.post-content -->
+      <div class="post-content">{{ news.body.value|safe }}</div><hr>
+      <div class="pull-right">
+        <span class="author-name">{{ news.created_by.value }}</span> /
+        <span class="entry-date"><time datetime="2015-01-15">{{ news.created_at.value }}</time></span>
+      </div>
     </article>
   </div>
 </div>
