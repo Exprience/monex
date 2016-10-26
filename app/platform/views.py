@@ -127,7 +127,7 @@ class Platform(TemplateView):
 			elif currency['currency_id'] == u"5":
 				package['name'] = "USDRUB"
 				package['buy_now'] = models.Currency.objects.filter(name = 'USDRUB').last().buy
-		
+		packages.reverse()
 		context['packages'] = packages
 		return context
 
@@ -167,8 +167,12 @@ class CurrencyBuy(FormView):
 
 	def form_valid(self, form):
 		piece = form.cleaned_data['piece']
-		pm.currency("C", self.cid, self.request.user.id, piece = piece, value_id = self.vid)
-		return super(CurrencyBuy, self).form_valid(form)
+		result = pm.currency("C", self.cid, self.request.user.id, piece = piece, value_id = self.vid)
+		print result
+		pm.currency("I", self.cid, self.request.user.id, value_id = result.id.value)
+		context = {}
+		context['currency_buy'] = True
+		return http.HttpResponse(json.dumps(context), content_type = "application/json")
 
 class CurrencySell(FormView):
 	form_class = f.CurrencyBuyForm

@@ -68,14 +68,16 @@ class PlatformDataManager(BaseDataManager):
 		result = client.service.MX_User_Manager_Currency_Stock_CUS_WSDLOperation(type, isCurrency, isManager, manager_id, currencyR, stockR)
 		if type == "S" and isCurrency:
 			if result.Currency.MXUserShowCurrencyCUS_Response == "":
-				record = None
+				record = []
 			else:
 				record = config.get_dict(result.Currency.MXUserShowCurrencyCUS_Response.MXUserShowCurrencyCUS_Record)
 		else:
 			if result.Stock.MXUserShowStockCUS_Response == "":
-				record = None
+				record = []
 			else:
 				record = config.get_dict(result.Stock.MXUserShowStockCUS_Response.MXUserShowStockCUS_Record)
+		if type == "C":
+			return result
 		return record
 
 	@staticmethod

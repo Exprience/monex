@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://j2ee.netbeans.org/xsd/tableSchema">
+  <xsd:element name="MXUserShowCurrencySellOrder_Request">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="competition_id">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="user_id">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="MXUserShowCurrencySellOrder_Response">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element maxOccurs="unbounded" ref="MXUserShowCurrencySellOrder_Record"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="MXUserShowCurrencySellOrder_Record">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="id">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:int">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="currency_buy_sell_id">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:int">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="max">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:float">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="min">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:float">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="ttlive">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="status">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:byte">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="created_at">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="isNull" type="xsd:boolean"/>
+                <xsd:attribute name="isDefaultColumn" type="xsd:boolean"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

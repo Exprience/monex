@@ -60,6 +60,11 @@ $(document).ajaxStart(function() { Pace.restart(); });
 						alert_delete(xhr.id);
 					}
 
+					if(xhr.currency_buy == true){
+						//alert_delete(xhr.id);
+						alert('augasdgasdgagas');
+					}
+
 					$.notify(
 					{
 						icon: 'icon fa fa-check-circle',

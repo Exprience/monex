@@ -1,6 +1,7 @@
 Django==1.9.6
 Pillow==3.3.0
 argparse==1.2.1
+django-bootstrap-pagination==1.6.2
 django-bootstrap3-datetimepicker==2.2.3
 django-common-helpers==0.8.0
 django-cron==0.5.0
