@@ -119,7 +119,7 @@
         {% for d in datas %}
         {
           x: new Date({{ d.created_at.year }}, {{ d.created_at.month }}, {{ d.created_at.day }}, {{ d.created_at.hour }}, {{ d.created_at.minute }}, {{ d.created_at.second }}),
-          y: [5198, 5629, 5159, 5385]
+          y: [{{ d.buy }}, {{ d.buy }}, {{ d.sell }}, {{ d.sell }}]
         },
         {% endfor %}
         ]

@@ -336,8 +336,7 @@ class CompetitionForm(forms.Form):
 	category = forms.ChoiceField()
 	fee = forms.IntegerField(label = u'Бүртгэлийн хураамж', widget = forms.TextInput(attrs = {'class':'form-control'}))
 	prize = forms.IntegerField(label = u'Эхлэх данс', widget = forms.TextInput(attrs = {'class':'form-control'}))
-	start_date = forms.CharField(label = u'Эхлэх өдөр', widget = DateTimePicker(attrs = {'class':'form-control'}, options={"format": "YYYY-MM-DD HH:mm", "pickSeconds": False}))
-	end_date = forms.CharField(label = u'Дуусах өдөр', widget = DateTimePicker(attrs = {'class':'form-control'}, options={"format": "YYYY-MM-DD HH:mm", "pickSeconds": False}))
+	date = forms.CharField(label = u'Он сар', widget = forms.TextInput(attrs = {'class':'form-control'}))
 	register_low = forms.IntegerField(label = u'Бүртгэлийн доод хязгаар', widget = forms.TextInput(attrs = {'class':'form-control'}))
 
 	def __init__(self, manager_id = None, type = None, id = None,*args, **kwargs):
@@ -350,8 +349,7 @@ class CompetitionForm(forms.Form):
 			self.fields['category'].initial = result.competition_category_id.value
 			self.fields['fee'].initial = result.fee.value
 			self.fields['prize'].initial = result.prize.value
-			self.fields['start_date'].initial = result.start_date.value
-			self.fields['end_date'].initial = result.end_date.value
+			self.fields['date'].initial = "%s - %s" %(result.start_date.value, result.end_date.value)
 			self.fields['register_low'].initial = result.register_low.value
 
 
@@ -395,8 +393,11 @@ class PasswordUpdateForm(forms.Form):
 	def clean(self):
 		cleaned_data = super(PasswordUpdateForm, self).clean()
 		if self.is_valid():
+
 			if cleaned_data['new_password1'] != cleaned_data['new_password2']:
 				raise forms.ValidationError(u'Нууц үг таарахгүй байна', code="invalid")
+			if cleaned_data['old_password'] == cleaned_data['new_password2']:
+				raise forms.ValidationError(u'Нууц үг ижил байна', code="invalid")
 		return cleaned_data
 
 	def save(self, request):

@@ -38,6 +38,7 @@ function managerDaterange(button_id){
       "applyClass": "btn-success",
       "cancelClass": "btn-default",
       locale: {
+        format: 'YYYY-MM-DD',
         applyLabel: 'Шүүх',
         cancelLabel: 'Цуцлах',
         customRangeLabel : 'Гараар сонгох',
@@ -48,6 +49,7 @@ function managerDaterange(button_id){
           '1 сар','2 сар','3 сар','4 сар','5 сар','6 сар','7 сар','8 сар','9 сар','10 сар','11 сар','12 сар',
         ],
       },
+      //startDate:moment(),
       //opens : 'left',
       ranges: {
         'Өнөөдөр': [moment(), moment()],
@@ -148,3 +150,6 @@ function dismissDeleteRelatedObjectPopup(win, id, value, text) {
   );
   win.close();
 }
+
+
+managerDaterange('input[name="date"]');

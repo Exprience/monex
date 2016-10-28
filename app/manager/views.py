@@ -3,7 +3,7 @@
 
 
 import urllib
-
+from datetime import datetime
 
 from django import http
 from django.core.urlresolvers import reverse_lazy
@@ -94,9 +94,20 @@ class CompetitionCreate(FormView):
 		category = form.cleaned_data['category']
 		register_low = form.cleaned_data['register_low']
 		prize = form.cleaned_data['prize']
-		start_date = form.cleaned_data['start_date']
-		end_date = form.cleaned_data['end_date']
+		date = form.cleaned_data['date']
 		fee = form.cleaned_data['fee']
+
+		start_date = date.split(' - ')[0]
+		start_date = datetime.strptime(start_date, '%Y-%m-%d')
+		if start_date < datetime.now():
+			self.form_error(form, u"Өнөөдрөөс хойшхи утга оруулана уу")
+			return self.form_invalid(form)
+		start_date = start_date.strftime("%Y-%m-%d %H:%M:%S")
+		
+		end_date = date.split(' - ')[1]
+		end_date = datetime.strptime(end_date, '%Y-%m-%d')
+		end_date = end_date.strftime("%Y-%m-%d %H:%M:%S")
+		
 		m.create('C', self.request.user.id, category, status = s.COMPETITION_START_REGISTER, register_low = register_low, start_date = start_date, end_date = end_date, prize = prize, fee = fee)
 		return super(CompetitionCreate, self).form_valid(form)
 
@@ -119,9 +130,20 @@ class CompetitionUpdate(FormView):
 		category = form.cleaned_data['category']
 		register_low = form.cleaned_data['register_low']
 		prize = form.cleaned_data['prize']
-		start_date = form.cleaned_data['start_date']
-		end_date = form.cleaned_data['end_date']
+		date = form.cleaned_data['date']
 		fee = form.cleaned_data['fee']
+
+		start_date = date.split(' - ')[0]
+		start_date = datetime.strptime(start_date, '%Y-%m-%d')
+		if start_date < datetime.now():
+			self.form_error(form, u"Өнөөдрөөс хойшхи утга оруулана уу")
+			return self.form_invalid(form)
+		start_date = start_date.strftime("%Y-%m-%d %H:%M:%S")
+		
+		end_date = date.split(' - ')[1]
+		end_date = datetime.strptime(end_date, '%Y-%m-%d')
+		end_date = end_date.strftime("%Y-%m-%d %H:%M:%S")
+
 		result = m.update('C', self.request.user.id, self.pk, category, register_low = register_low, start_date = start_date, end_date = end_date, prize = prize, fee = fee)
 		if not result.isSuccess:
 			self.error(u'Үйлдэл амжилтгүй боллоо')
@@ -834,7 +856,7 @@ class AdminPasswordUpdate(FormView):
 	def form_valid(self, form):
 		result = form.save(self.request)
 		if not result:
-			self.error(u'Хуучин нууц үг буруу байна.')
+			self.form_error(form, u'Хуучин нууц үг буруу байна.')
 			return self.form_invalid(form)
 		return super(AdminPasswordUpdate, self).form_valid(form)
 
