@@ -14,6 +14,7 @@ from app.web.managers import WebDataManager as wm
 from app.manager.managers import ManagerDataManager as mm
 from managers import PlatformDataManager as pm
 from app.manager import models
+from app.user import views as uv
 
 
 class FormView(cv.FormView):
@@ -31,7 +32,7 @@ class TemplateView(cv.TemplateView):
 		return context
 
 
-class Platform(TemplateView):
+class Platform(uv.LoginRequired, TemplateView):
 
 	def get(self, request, *args, **kwargs):
 		competition = mm.individually("", "C", self.pk)
@@ -43,92 +44,35 @@ class Platform(TemplateView):
 		context = super(Platform, self).get_context_data(*args, **kwargs)
 		currencys = mm.list("L", config.PREVIOUS, config.NOW)
 		for currency in currencys:
-			if currency['currency_id'] == u"1":
-				currency['name'] = "USDMNT"
-				value = models.Currency.objects.filter(name = "USDMNT").order_by('id').reverse()
-				if currency['buy'] > value[1].buy:
-					currency['buy_change'] = '1'
-				elif currency['buy'] < value[1].buy:
-					currency['buy_change'] = '0'
+			value = models.Currency.objects.filter(name = currency['symbol']).order_by('id')
+			value.reverse()
+			if currency['buy'] > value[1].buy:
+				currency['buy_change'] = '1'
+			elif currency['buy'] < value[1].buy:
+				currency['buy_change'] = '0'
 
-				if currency['sell'] > value[1].sell:
-					currency['sell_change'] = '1'
-				elif currency['sell'] < value[1].sell:
-					currency['sell_change'] = '0'
-
-			if currency['currency_id'] == u"2":
-				currency['name'] = "USDEUR"
-				value = models.Currency.objects.filter(name = "USDEUR").order_by('id').reverse()
-				if currency['buy'] > value[1].buy:
-					currency['buy_change'] = '1'
-				elif currency['buy'] < value[1].buy:
-					currency['buy_change'] = '0'
-
-				if currency['sell'] > value[1].sell:
-					currency['sell_change'] = '1'
-				elif currency['sell'] < value[1].sell:
-					currency['sell_change'] = '0'
-			if currency['currency_id'] == u"3":
-				currency['name'] = "USDKRW"
-				value = models.Currency.objects.filter(name = "USDKRW").order_by('id').reverse()
-				if currency['buy'] > value[1].buy:
-					currency['buy_change'] = '1'
-				elif currency['buy'] < value[1].buy:
-					currency['buy_change'] = '0'
-
-				if currency['sell'] > value[1].sell:
-					currency['sell_change'] = '1'
-				elif currency['sell'] < value[1].sell:
-					currency['sell_change'] = '0'
-			if currency['currency_id'] == u"4":
-				currency['name'] = "USDJPY"
-				value = models.Currency.objects.filter(name = "USDJPY").order_by('id').reverse()
-				if currency['buy'] > value[1].buy:
-					currency['buy_change'] = '1'
-				elif currency['buy'] < value[1].buy:
-					currency['buy_change'] = '0'
-
-				if currency['sell'] > value[1].sell:
-					currency['sell_change'] = '1'
-				elif currency['sell'] < value[1].sell:
-					currency['sell_change'] = '0'
-			if currency['currency_id'] == u"5":
-				currency['name'] = "USDRUB"
-				value = models.Currency.objects.filter(name = "USDRUB").order_by('id').reverse()
-				if currency['buy'] > value[1].buy:
-					currency['buy_change'] = '1'
-				elif currency['buy'] < value[1].buy:
-					currency['buy_change'] = '0'
-
-				if currency['sell'] > value[1].sell:
-					currency['sell_change'] = '1'
-				elif currency['sell'] < value[1].sell:
-					currency['sell_change'] = '0'
+			if currency['sell'] > value[1].sell:
+				currency['sell_change'] = '1'
+			elif currency['sell'] < value[1].sell:
+				currency['sell_change'] = '0'
 
 		context['currencys'] = currencys
+		
 		packages = pm.currency("S", self.pk, self.request.user.id)
+		
+		package_list = []
 		for package in packages:
-			
-			currency = mm.list("I", config.PREVIOUS, config.NOW, id = package['buy_currency_value_id'])[0]
-			
-			package['sell'] = currency['sell']
-			if currency['currency_id'] == u"1":
-				package['name'] = "USDMNT"
-				package['buy_now'] = models.Currency.objects.filter(name = 'USDMNT').last().buy
-			elif currency['currency_id'] == u"2":
-				package['name'] = "USDEUR"
-				package['buy_now'] = models.Currency.objects.filter(name = 'USDEUR').last().buy
-			elif currency['currency_id'] == u"3":
-				package['name'] = "USDKRW"
-				package['buy_now'] = models.Currency.objects.filter(name = 'USDKRW').last().buy
-			elif currency['currency_id'] == u"4":
-				package['name'] = "USDJPY"
-				package['buy_now'] = models.Currency.objects.filter(name = 'USDJPY').last().buy
-			elif currency['currency_id'] == u"5":
-				package['name'] = "USDRUB"
-				package['buy_now'] = models.Currency.objects.filter(name = 'USDRUB').last().buy
-		packages.reverse()
-		context['packages'] = packages
+			if package['status'] == u'1':
+				for c in currencys:
+					if c['symbol'] == package['symbol']:
+						sell_id = c['id']
+				
+				package['sell_now'] = models.Currency.objects.filter(name = package['symbol']).last().buy
+				package['sell_id'] = sell_id
+				package_list.append(package)
+		package_list.reverse()
+		context['packages'] = package_list
+		context['datas'] = models.Currency.objects.filter(name = "USDMNT")
 		return context
 
 
@@ -142,45 +86,49 @@ class CurrencyPackage(Platform):
 
 class CurrencyBuy(FormView):
 	form_class = f.CurrencyBuyForm
-	success_url = "/"
 
 	def dispatch(self, request,*args,**kwargs):
 		self.cid = int(self.kwargs.pop("cid", None))
 		self.vid = int(self.kwargs.pop("vid", None))
+		self.individually = mm.list("I", config.PREVIOUS, config.NOW, id = self.vid)[0]
 		return super(CurrencyBuy, self).dispatch(request, *args, **kwargs)
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(CurrencyBuy, self).get_context_data(*args, **kwargs)
-		currency = mm.list("I", config.PREVIOUS, config.NOW, id = self.vid)[0]
-		if currency['currency_id'] == u"1":
-			currency['name'] = "USDMNT"
-		elif currency['currency_id'] == u"2":
-			currency['name'] = "USDEUR"
-		elif currency['currency_id'] == u"3":
-			currency['name'] = "USDKRW"
-		elif currency['currency_id'] == u"4":
-			currency['name'] = "USDJPY"
-		elif currency['currency_id'] == u"5":
-			currency['name'] = "USDRUB"
-		context['currency'] = currency
+		context['currency'] = self.individually
 		return context
 
 	def form_valid(self, form):
 		piece = form.cleaned_data['piece']
-		result = pm.currency("C", self.cid, self.request.user.id, piece = piece, value_id = self.vid)
-		print result
-		pm.currency("I", self.cid, self.request.user.id, value_id = result.id.value)
+		lasts = mm.list("L", config.PREVIOUS, config.NOW)
+		for last in lasts:
+			if last['currency_id'] == self.individually['currency_id']:
+				sell_id = last['id']
+		result = pm.currency("C", self.cid, self.request.user.id, piece = piece, value_id = self.vid)	
+		currency = self.individually
 		context = {}
 		context['currency_buy'] = True
+		context['competition_id'] = self.cid
+		context['id'] = result.id.value
+		context['currency'] = currency['symbol']
+		context['piece'] = piece
+		context['buy'] = currency['sell']
+		context['sell'] = models.Currency.objects.filter(name = currency['symbol']).last().buy
+		context['sell_id'] = sell_id
 		return http.HttpResponse(json.dumps(context), content_type = "application/json")
 
 class CurrencySell(FormView):
 	form_class = f.CurrencyBuyForm
-	success_url = "/"
+
+	def get_form_kwargs(self):
+		kwargs = super(CurrencySell, self).get_form_kwargs()
+		kwargs.update({'required':True})
+		return kwargs
 
 	def dispatch(self, request,*args,**kwargs):
 		self.cid = int(self.kwargs.pop("cid", None))
 		self.pid = int(self.kwargs.pop("pid", None))
+		self.sid = int(self.kwargs.pop("sid", None))
 		return super(CurrencySell, self).dispatch(request, *args, **kwargs)
 
 	def get_context_data(self, *args, **kwargs):
@@ -188,8 +136,11 @@ class CurrencySell(FormView):
 		return context
 
 	def form_valid(self, form):
-		pm.currency("U", self.cid, self.request.user.id, value_id = 3, id = self.pid)
-		return super(CurrencySell, self).form_valid(form)
+		pm.currency("U", self.cid, self.request.user.id, value_id = self.sid, id = self.pid)
+		context = {}
+		context['currency_sell'] = True
+		context['id'] = self.pid
+		return http.HttpResponse(json.dumps(context), content_type = "application/json")
 
 
 class News(TemplateView):
@@ -284,12 +235,21 @@ class AlertDelete(AlertUpdate):
 
 
 
-class OrderView(FormView):
-	form_class = f.OrderForm
-	template_name = 'platform/trade/stock.html'
+class Order(TemplateView):
+	
+	def get_context_data(self, *args, **kwargs):
+		context = super(Order, self).get_context_data(*args, **kwargs)
+		pm.order()
+		return context
 
+class Chart(TemplateView):
+	
+	def get_context_data(self, *args, **kwargs):
+		context = super(Chart, self).get_context_data(*args, **kwargs)
+		context['datas'] = models.Currency.objects.filter(name = "USDMNT")
+		return context
 
-class CalendarView(TemplateView):
+'''class CalendarView(TemplateView):
 	
 	template_name = 'platform/news/calendar.html'
 
@@ -362,4 +322,4 @@ class StockSellView(FormView):
 
 	def form_valid(self, form):
 		pm.currency("U", self.cid, self.request.user.id, value_id = 3, id = self.sid, isCurrency = False)
-		return super(StockSellView, self).form_valid(form)
+		return super(StockSellView, self).form_valid(form)'''

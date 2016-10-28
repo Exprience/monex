@@ -11,7 +11,7 @@
   <tbody>
     {% for currency in currencys %}
     <tr>
-      <td  style="vertical-align: middle;">{{ currency.name }}</td>
+      <td  style="vertical-align: middle;">{{ currency.symbol }}</td>
       <td class="text-center">
         <button style="width: 110px;" class="btn btn-plat btn-xs" data-toggle="ajax-modal" href="{% url 'platform:currency_buy' pk currency.id %}">
           {% if currency.buy_change == '1' %}
@@ -22,7 +22,7 @@
           {{ currency.buy }}
         </button>
       </td>
-      <td class="text-center" style="vertical-align: middle;">{{ currency.change }}</td>
+      <td class="text-center" style="vertical-align: middle;">{{ currency.sell_change }}</td>
       <td class="text-center">
         <button style="width: 110px;" class="btn btn-plat btn-xs" data-toggle="ajax-modal" href="{% url 'platform:currency_buy' pk currency.id %}">
           {% if currency.sell_change == '1' %}

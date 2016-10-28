@@ -92,6 +92,10 @@ class AccountForm (forms.Form):
 class CurrencyBuyForm(forms.Form):
 	piece = forms.IntegerField(label="", widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':u'Ширхэг'}))
 
+	def __init__(self, required = False, *args, **kwargs):
+		super(CurrencyBuyForm, self).__init__(*args, **kwargs)
+		if required:
+			self.fields['piece'].required = False
 
 class StockBuyForm(forms.Form):
 	piece = forms.IntegerField(label="", widget = forms.TextInput(attrs = {'class':'form-control', 'placeholder':u'Ширхэг'}))

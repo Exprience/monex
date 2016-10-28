@@ -23,9 +23,11 @@ __all__ = ['BaseDataManager']
 # Log бичих
 class LogPlugin(MessagePlugin):
     def sending(self, context):
-        print('sending', str(context.envelope))
+        pass
+        #print('sending', str(context.envelope))
     def received(self, context):
-        print('received', str(context.reply))
+        pass
+        #print('received', str(context.reply))
 
 
 class FixUrls(DocumentPlugin):

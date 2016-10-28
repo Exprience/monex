@@ -1,6 +1,6 @@
 {% extends 'platform/ui/base.html' %}
 {% block content %}
-<div class="container-fluid watchlist">
+<div id="container" class="container-fluid watchlist">
   <div class="row">
     <div class="col-lg-6">
       <div class="watchlist-panel panel panel-default">
@@ -29,7 +29,14 @@
           </ul> 
         </div>
         <div class="panel-body scrolling">
-          <div id="chartContainer" style="height: 99.8%; width: 100%;"></div>
+          <div class="watchlist-body">
+            <span>USDMNT</span>
+            <div class="pull-right">
+              <button id="fullscreen" class="btn btn-xs btn-plat">FULL SCREEN</button>
+              <button id="unlock" class="btn btn-xs btn-plat"><i class="fa fa-lock"></i></button>
+            </div>
+          </div>
+          <div id="chartContainer" style="height: 80%; width: 100%;"></div>
         </div>
       </div>
     </div>
@@ -50,12 +57,13 @@
                 Хувьцаа
               </a>
             </li>
-            {% endcomment %}
+            
             <li>
-              <a class="ajax-load" load-url="" href="#value">
+              <a class="ajax-load" load-url="{% url 'platform:order' pk %}" href="#value">
                 Захиалга
               </a>
             </li>
+            {% endcomment %}
           </ul>
         </div><!-- panel-heading -->
         <div class="panel-body" id="value" style="height: 75%;">
@@ -63,18 +71,20 @@
         </div>
         <div class="panel-body text-center" style="height: 10%; margin-top: 5px; color: white;">
           <div class="row">
+            <div class="col-lg-6" style="margin-top: 5px;">
+              <span style="color: #888;">Миний түрийвч:</span>
+              <span>100000000</span>
+            </div>
+            <div class="col-lg-6" style="margin-top: 5px;">
+              <span style="color: #888;">Нийт ашиг:</span>
+              <span>1000000</span>
+            </div>
+            {% comment %}
             <div class="col-lg-4" style="margin-top: 5px;">
               <span style="color: #888;">Cash available:</span>
               <span>100000000</span>
             </div>
-            <div class="col-lg-4" style="margin-top: 5px;">
-              <span>Cash available:</span>
-              <span>1000000</span>
-            </div>
-            <div class="col-lg-4" style="margin-top: 5px;">
-              <span>Cash available:</span>
-              <span>100000000</span>
-            </div>
+            {% endcomment %}
           </div>
         </div>
       </div>
@@ -84,34 +94,50 @@
 {% endblock %}
 {% block extrajs %}
 <script type="text/javascript">
-  window.onload = function() {
+  window.onload = function () {
     var chart = new CanvasJS.Chart("chartContainer", {
-      axisX: {
-        interval: 10
+      //title: {
+      //  text: "Basic Candle Stick Chart"
+      //},
+      zoomEnabled: true,
+      axisY: {
+        includeZero: false,
+        //title: "Prices",
+        //prefix: "$ "
       },
+      //axisX: {
+        //interval: 1,
+        //intervalType: "hour",
+        //valueFormatString: "HH:MM",
+      //},
       backgroundColor: "#333",
-      data: [{
-        type: "line",
+      data: [
+      {
+        type: "candlestick",
+        risingColor: "#F79B8E",
         dataPoints: [
-        { x: 10, y: 45 },
-        { x: 20, y: 14 },
-        { x: 30, y: 20 },
-        { x: 40, y: 60 },
-        { x: 50, y: 50 },
-        { x: 60, y: 80 },
-        { x: 70, y: 40 },
-        { x: 80, y: 60 },
-        { x: 90, y: 10 },
-        { x: 100, y: 50 },
-        { x: 110, y: 40 },
-        { x: 120, y: 14 },
-        { x: 130, y: 70 },
-        { x: 140, y: 40 },
-        { x: 150, y: 90 },
+        {% for d in datas %}
+        {
+          x: new Date({{ d.created_at.year }}, {{ d.created_at.month }}, {{ d.created_at.day }}, {{ d.created_at.hour }}, {{ d.created_at.minute }}, {{ d.created_at.second }}),
+          y: [5198, 5629, 5159, 5385]
+        },
+        {% endfor %}
         ]
-      }]
+      }
+      ]
     });
     chart.render();
   }
 </script>
+<script type="text/javascript">
+  $(document).on('click', '#unlock', function(){
+    var myWindow = window.open("{% url 'platform:chart' pk %}", "", "width=600,height=400");
+  });
+</script>
+<script type="text/javascript">
+  $('#fullscreen').on('click', function(){
+    $('#chartContainer').fullScreen(true)
+  });
+</script>
 {% endblock %}
+

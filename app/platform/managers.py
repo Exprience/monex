@@ -63,21 +63,21 @@ class PlatformDataManager(BaseDataManager):
 		stockRecord.sell_total = 200
 		stockRecord.status = 1
 		stockRecord.total = 200
+
 		stock.MXUserShowStockCUS_Record = stockRecord
 		stockR.MXUserShowStockCUS_Response = stock
+
 		result = client.service.MX_User_Manager_Currency_Stock_CUS_WSDLOperation(type, isCurrency, isManager, manager_id, currencyR, stockR)
+		record = []
 		if type == "S" and isCurrency:
-			if result.Currency.MXUserShowCurrencyCUS_Response == "":
-				record = []
-			else:
+			if not result.Currency.MXUserShowCurrencyCUS_Response == "":
 				record = config.get_dict(result.Currency.MXUserShowCurrencyCUS_Response.MXUserShowCurrencyCUS_Record)
 		else:
-			if result.Stock.MXUserShowStockCUS_Response == "":
-				record = []
-			else:
+			if not result.Stock.MXUserShowStockCUS_Response == "":
 				record = config.get_dict(result.Stock.MXUserShowStockCUS_Response.MXUserShowStockCUS_Record)
 		if type == "C":
 			return result
+		
 		return record
 
 	@staticmethod
@@ -104,3 +104,60 @@ class PlatformDataManager(BaseDataManager):
 			record = config.get_dict(result.priceAlert.MXUserSelectPriceAlert_Response.MXUserSelectPriceAlert_Record)
 			return record
 		return result
+
+	@staticmethod
+	def order():
+		#client = PlatformDataManager.get_instance().setup_client('/MX_User_Manager_Currency_Stock_Order_CUSWSDLService/MX_User_Manager_Currency_Stock_Order_CUSWSDLPort?wsdl')
+		client = PlatformDataManager.get_instance().setup_client('%ssoap/platform/order/soap.wsdl' % settings.STATIC_DOMAIN_URL, serverAddressFilled=True)
+
+
+		currency_buy = client.factory.create('ns1:MXUserShowCurrencyBuyOrder_Record')
+		currency_buy.bank_id = 1
+		currency_buy.buy_date = config.NOW
+		currency_buy.competition_id = 1
+		currency_buy.created_at = config.NOW
+		currency_buy.currency_id = 1
+		currency_buy.id = ""
+		currency_buy.order_type = True
+		currency_buy.piece = 2000
+		currency_buy.price = 2000
+		currency_buy.status = ""
+		currency_buy.ttlive = config.NOW
+		currency_buy.user_id = 11
+
+
+		currency_sell = client.factory.create('ns1:MXUserShowCurrencySellOrder_Record')		
+		currency_sell.created_at = config.NOW
+		currency_sell.currency_buy_sell_id
+		currency_sell.id = 1
+		currency_sell.max = 3000
+		currency_sell.min = 2000
+		currency_sell.status = ""
+		currency_sell.ttlive = config.NOW
+		
+
+		stock_buy = client.factory.create('ns0:MXUserShowStockBuyOrder_Record')
+		stock_buy.buy_date = config.NOW
+		stock_buy.competition_id = 1
+		stock_buy.created_at = config.NOW
+		stock_buy.id = ""
+		stock_buy.order_type = True
+		stock_buy.price = 2000
+		stock_buy.status = ""
+		stock_buy.stock_id = 1
+		stock_buy.ttlive = config.NOW
+		stock_buy.user_id = 11
+
+
+		stock_sell = client.factory.create('ns0:MXUserShowStockSellOrder_Record')		
+		stock_sell.competition_id = 1
+		stock_sell.created_at = config.NOW
+		stock_sell.id = 1
+		stock_sell.max = 3000
+		stock_sell.min = 2000
+		stock_sell.status = ""
+		stock_sell.stock_buy_sell_id
+		stock_sell.user_id = 11
+
+		#result = client.service.MX_User_Manager_Currency_Stock_Order_CUSWSDLOperation('S', True, True, currency_buy, currency_sell, stock_buy, stock_sell)
+		print client

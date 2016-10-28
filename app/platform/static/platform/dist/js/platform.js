@@ -61,8 +61,11 @@ $(document).ajaxStart(function() { Pace.restart(); });
 					}
 
 					if(xhr.currency_buy == true){
-						//alert_delete(xhr.id);
-						alert('augasdgasdgagas');
+						currency_buy(xhr.competition_id, xhr.id, xhr.currency, xhr.piece, xhr.buy, xhr.sell, xhr.sell_id);
+					}
+
+					if(xhr.currency_sell == true){
+						currency_sell(xhr.id);
 					}
 
 					$.notify(
@@ -105,6 +108,25 @@ function alert_update(id, price, isBuy, isHigherThan, created_at, competition_id
 	<td class="text-center"><button data-toggle="ajax-modal" href="/platform/alert/update/'+competition_id+'/'+id+'/" class="btn btn-plat btn-xs">Засах</button></td>\
 	<td class="text-center"><button data-toggle="ajax-modal" href="/platform/alert/delete/'+competition_id+'/'+id+'/" class="btn btn-plat btn-xs">Устгах</button></td></tr>');
 };
+
+function currency_buy(competition_id, id, currency, piece, buy, sell, sell_id) {
+	$('#position_table').prepend('<tr>\
+		<td>'+ currency +'</td>\
+		<td class="text-center">1</td>\
+		<td class="text-center">Long</td>\
+		<td class="text-center">'+ piece +'</td>\
+		<td class="text-center">'+ buy +'</td>\
+		<td class="text-center">'+ sell +'</td>\
+		<td class="text-center"><button class="btn btn-xs btn-plat">Нэмэх</button></td>\
+		<td class="text-center"><button class="btn btn-xs btn-plat">Нэмэх</button></td>\
+		<td class="text-center">Бичлэг байхгүй байна</td>\
+		<td><button class="btn btn-xs btn-plat" data-toggle="ajax-modal" href="/platform/currency/sell/'+competition_id+'/'+id+'/'+ sell_id +'/">Зарах</button></td>\
+		</tr>')
+}
+
+function currency_sell(id) {
+	$('#package_'+id).remove();
+}
 
 $(document).ready(function(){
 	$(".scrolling").slimScroll({

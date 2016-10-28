@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://j2ee.netbeans.org/xsd/tableSchema" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Currency_Stock_Order_CUS/src/MX_User_Manager_Currency_Stock_Order_CUSWSDL" xmlns:ns0="http://xml.netbeans.org/schema/MX_User_Manager_Currency_Stock_Order_CUS" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="MX_User_Manager_Currency_Stock_Order_CUSWSDL" targetNamespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Currency_Stock_Order_CUS/src/MX_User_Manager_Currency_Stock_Order_CUSWSDL">
   <types>
     <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/MX_User_Manager_Currency_Stock_Order_CUS/src/MX_User_Manager_Currency_Stock_Order_CUSWSDL">
-      <xsd:import namespace="http://xml.netbeans.org/schema/MX_User_Manager_Currency_Stock_Order_CUS" schemaLocation="STATIC_URLsoap/platform/order/soap.wsdl"/>
+      <xsd:import namespace="http://xml.netbeans.org/schema/MX_User_Manager_Currency_Stock_Order_CUS" schemaLocation="STATIC_URLsoap/platform/order/soap.xsd"/>
       <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/platform/order/icurrency_sell.xsd"/>
       <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/platform/order/icurrency_buy.xsd"/>
-      <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/platform/order/currency_sell.xsd"/>
       <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/platform/order/currency_buy.xsd"/>
+      <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/platform/order/currency_sell.xsd"/>
       <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/platform/order/stock_buy.xsd"/>
-      <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/platform/order/stock_sell.xsd"/>
+      <xsd:import namespace="http://j2ee.netbeans.org/xsd/tableSchema" schemaLocation="STATIC_URLsoap/platform/order/stock_buy.xsd"/>
     </xsd:schema>
   </types>
   <message name="MX_User_Manager_Currency_Stock_Order_CUSWSDLOperationRequest">

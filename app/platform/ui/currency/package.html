@@ -1,4 +1,4 @@
-<table class="table table-bordered fixed_headers">
+<table id="position_table" class="table table-bordered fixed_headers">
   <thead>
     <tr>
       <th width="200">Валют</th>
@@ -6,7 +6,7 @@
       <th class="text-center">L/S</th>
       <th class="text-center">Ширхэг</th>
       <th class="text-center">Худалдан авсан ханш</th>
-      <th class="text-center">Одоогийн ханш</th>
+      <th class="text-center">Одоогийн зарах ханш</th>
       <th class="text-center">STOP</th>
       <th class="text-center">LIMIT</th>
       <th class="text-center">Ашиг/Алдагдал(MNT)</th>
@@ -15,13 +15,13 @@
   </thead>
   <tbody>
     {% for package in packages %}
-    <tr>
-      <td>{{ package.name }}</td>
+    <tr id="package_{{ package.id }}">
+      <td>{{ package.symbol }}</td>
       <td class="text-center">{{ package.status }}</td>
       <td class="text-center">Long</td>
       <td class="text-center">{{ package.piece }}</td>
-      <td class="text-center">{{ package.sell }}</td>
-      <td class="text-center">{{ package.buy_now }}</td>
+      <td class="text-center">{{ package.buy_currency_value_id }}</td>
+      <td class="text-center">{{ package.sell_now }}</td>
       <td class="text-center">
         {% if package.status == "1" %}
         <button class="btn btn-plat btn-xs">Нэмэх</button>
@@ -36,7 +36,7 @@
       </td>
       <td>
         {% if package.status == "1" %}
-        <button class="btn btn-plat btn-xs" data-toggle="ajax-modal" href="{% url 'platform:currency_sell' pk package.id %}">Зарах</button>
+        <button class="btn btn-plat btn-xs" data-toggle="ajax-modal" href="{% url 'platform:currency_sell' pk package.id package.sell_id %}">Зарах</button>
         {% endif %}
       </td>
     </tr>

@@ -1,0 +1,48 @@
+{% extends 'platform/ui/base.html' %}
+{% block header %}
+{% endblock %}
+{% block content %}
+<div class="watchlist-panel panel panel-default">
+  <div class="panel-body scrolling">
+    <div id="chartContainer" style="height: 60%; width: 100%;"></div>
+  </div>
+</div>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+  window.onload = function () {
+    var chart = new CanvasJS.Chart("chartContainer", {
+      //title: {
+      //  text: "Basic Candle Stick Chart"
+      //},
+      zoomEnabled: true,
+      axisY: {
+        includeZero: false,
+        //title: "Prices",
+        //prefix: "$ "
+      },
+      //axisX: {
+      //  interval: 2,
+      //  intervalType: "month",
+      //  valueFormatString: "MMM-YY",
+      //},
+      backgroundColor: "#333",
+      data: [
+      {
+        type: "candlestick",
+        risingColor: "#F79B8E",
+        dataPoints: [
+        {% for d in datas %}
+        {
+          x: new Date({{ d.created_at.year }}, {{ d.created_at.month }}, {{ d.created_at.day }}, {{ d.created_at.hour }}, {{ d.created_at.minute }}, {{ d.created_at.second }}),
+          y: [5198, 5629, 5159, 5385]
+        },
+        {% endfor %}
+        ]
+      }
+      ]
+    });
+    chart.render();
+  }
+</script>
+{% endblock %}

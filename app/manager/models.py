@@ -181,6 +181,9 @@ class Currency(models.Model):
 	sell = models.FloatField()
 	created_at = models.DateTimeField(auto_now_add = True)
 
+	class Meta:
+		ordering = ['created_at']
+
 	def change(self):
 		return u"%.2f" %(self.buy - self.sell)
 
