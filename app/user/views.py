@@ -81,10 +81,10 @@ class Register(FormView):
 		password = form.cleaned_data['password']
 		user = um.register(username, email, password)
 		if user.isSuccess:
-			return super(RegisterView, self).form_valid(form)
+			return super(Register, self).form_valid(form)
 		else:
 			self.error("Бүртгүүлэхэд алдаа гарлаа")
-			return super(RegisterView, self).form_invalid(form)
+			return super(Register, self).form_invalid(form)
 		
 
 class ResetPassword(FormView):
