@@ -32,7 +32,7 @@ class LogPlugin(MessagePlugin):
 
 class FixUrls(DocumentPlugin):
     def loaded(self, ctx):
-        ctx.document = ctx.document.replace('a-PC', settings.WS_SERVER).replace('192.168.1.20', settings.WS_SERVER).replace('localhost:9080', '%s:9080' % settings.WS_SERVER).replace('STATIC_URL', settings.STATIC_DOMAIN_URL)
+        ctx.document = ctx.document.replace('a-PC', settings.WS_SERVER).replace('192.168.1.3', settings.WS_SERVER).replace('localhost:9080', '%s:9080' % settings.WS_SERVER).replace('STATIC_URL', settings.STATIC_DOMAIN_URL)
         return ctx
 
 
