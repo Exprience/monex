@@ -211,7 +211,7 @@ CAPTCHA_LETTER_ROTATION = 0
 CAPTCHA_TEXT_FIELD_TEMPLATE = 'config/captcha/captcha_text_field.html'
 
 
-WS_SERVER=get_local('WS_SERVER', '192.168.1.20')
+WS_SERVER=get_local('WS_SERVER', '192.168.1.3')
 
 
 CRON_CLASSES = [
